@@ -9,8 +9,13 @@ class BeltLevels(Enum):
     BLACK = 'black'
     RED = 'red'
 
+
+class Strengths(BaseModel):
+    area: str
+
 class BJJUser(BaseModel):
     id: int
     name: str
     belt: str
     gym: str
+    strengths: list[Strengths] = []

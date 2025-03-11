@@ -5,11 +5,23 @@ from schemas import BeltLevels, BJJUser
 app = FastAPI()
 
 USERS = [
-    {"id": 1, "name": "Adam Ellis", "belt": "black", "gym": "DPG"},
-    {"id": 2, "name": "Achal", "belt": "blue", "gym": "Maven"},
-    {"id": 3, "name": "DanVP", "belt": "blue", "gym": "Maven"},
-    {"id": 4, "name": "ArmyChris", "belt": "white", "gym": "Maven"}
+    {"id": 1, "name": "Adam Ellis", "belt": "black", "gym": "DPG", "strengths": [
+        {"area": "leg locks"},
+        {"area": "mobility"},
+        {"area": "inversion"},
+    ]},
+    {"id": 2, "name": "Achal", "belt": "blue", "gym": "Maven", "strengths": [
+        {"area": "pressure"},
+        {"area": "DLR"},
+        {"area": "halfguard"},
+    ]},
+    {"id": 3, "name": "DanVP", "belt": "blue", "gym": "Maven", "strengths": [
+        {"area": "wrestling"},
+        {"area": "butterfly guard"},
+    ]},
+    {"id": 4, "name": "ArmyChris", "belt": "white", "gym": "Maven", "strengths": []}
 ]
+
 
 @app.get("/users")
 async def users() -> list[BJJUser]:
