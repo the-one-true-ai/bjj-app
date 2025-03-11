@@ -2,12 +2,12 @@ from enum import Enum
 from pydantic import BaseModel
 
 class BeltLevels(Enum):
-    WHITE = 'white'
-    BLUE = 'blue'
-    PURPLE = 'purple'
-    BROWN = 'brown'
-    BLACK = 'black'
-    RED = 'red'
+    white = 'white'
+    blue = 'blue'
+    purple = 'purple'
+    brown = 'brown'
+    black = 'black'
+    red = 'red'
 
 
 class Strengths(BaseModel):

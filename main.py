@@ -37,7 +37,7 @@ async def user(user_id: int) -> BJJUser:
     return user
 
 @app.get("/users/belt/{belt_level}")
-async def user_belt(belt_level: str) -> list[BJJUser]:
-    belt_results = [BJJUser(**user) for user in USERS if user['belt'] == belt_level]
-    print(belt_results)
-    return belt_results
+async def user_belt(belt_level: BeltLevels) -> list[BJJUser]:
+
+    return [BJJUser(**user) for user in USERS if user['belt'] == belt_level.value]
+    
