@@ -35,3 +35,9 @@ async def user(user_id: int) -> BJJUser:
     if user is None:
         raise HTTPException(status_code=404, detail="User not found.")
     return user
+
+@app.get("/users/belt/{belt_level}")
+async def user_belt(belt_level: str) -> list[BJJUser]:
+    belt_results = [BJJUser(**user) for user in USERS if user['belt'] == belt_level]
+    print(belt_results)
+    return belt_results
