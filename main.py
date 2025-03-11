@@ -28,11 +28,13 @@ async def users(
     
     user_list = [BJJUser(**user) for user in USERS]
 
+    # Filtering by belt
     if belt:
         user_list = [
             user for user in user_list if user.belt == belt.value
         ]
     
+    # Filtering by strengths
     if has_strengths == True:
         user_list = [
             user for user in user_list if len(user.strengths) > 0
@@ -42,6 +44,7 @@ async def users(
             user for user in user_list if len(user.strengths) <= 0
         ]
 
+    # Return
     return user_list
     
     
