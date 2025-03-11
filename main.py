@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from schemas import Belts, BJJUser
+from schemas import Belts, UserBase, UserCreate, UserWithID
 
 
 app = FastAPI()
@@ -19,14 +19,25 @@ USERS = [
 ]
 
 
+
+# Method to create a user
+@app.post("/users")
+async def create_user(user_data: UserCreate) -> UserWithID:
+    print(user_data)  # Log the incoming data for debugging
+    new_id = USERS[-1]['id'] + 1
+    new_user = UserWithID(id=new_id, **user_data.dict())
+    USERS.append(new_user.dict())
+    return new_user
+
+
 # Method to get all users, optional query parameter of belt added
 @app.get("/users")
 async def users(
     belt: Belts | None = None,
-    has_strengths: bool = False
-    ) -> list[BJJUser]:
+    has_strengths: bool | None = None
+    ) -> list[UserWithID]:
     
-    user_list = [BJJUser(**user) for user in USERS]
+    user_list = [UserWithID(**user) for user in USERS]
 
     # Filtering by belt
     if belt:
@@ -39,25 +50,22 @@ async def users(
         user_list = [
             user for user in user_list if len(user.strengths) > 0
         ]
-    else:
+    elif has_strengths == False:
         user_list = [
             user for user in user_list if len(user.strengths) <= 0
         ]
+    else:
+        user_list = user_list
 
     # Return
     return user_list
-    
-    
 
 # Method to get a user by user_id
 @app.get("/user/{user_id}")
-async def user(user_id: int) -> BJJUser:
-    user = next((BJJUser(**user) for user in USERS if user['id'] == user_id), None)
+async def user(user_id: int) -> UserWithID:
+    user = next((UserWithID(**user) for user in USERS if user['id'] == user_id), None)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found.")
     return user
 
 
-# Method to get user by user name
-# Method to get user by strengths
-# Method to get user by gym

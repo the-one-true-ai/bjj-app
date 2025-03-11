@@ -1,0 +1,9 @@
+POST http://localhost:8000/users/
+Content-Type: application/json
+
+{
+  "name": "Andy",
+  "belt": "black",
+  "gym": "Andy Roberts",
+  "strengths": []
+}
