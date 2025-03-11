@@ -15,21 +15,33 @@ USERS = [
         {"area": "halfguard"},
     ]},
     {"id": 3, "name": "DanVP", "belt": "blue", "gym": "Maven", "strengths": [
-        {"area": "wrestling"},
-        {"area": "butterfly guard"},
     ]},
     {"id": 4, "name": "Chris", "belt": "white", "gym": "Maven", "strengths": []}
 ]
 
 
-# Method to get all users
+# Method to get all users, optional query parameter of belt added
 @app.get("/users")
-async def users(belt: Belts | None = None) -> list[BJJUser]:
+async def users(
+    belt: Belts | None = None,
+    strengths: bool = False
+    ) -> list[BJJUser]:
+    
+    result_list = [BJJUser(**user) for user in USERS]
+
     if belt:
-        return [
-            BJJUser(**user) for user in USERS if user['belt'] == belt.value
+        result_list = [
+            user for user in result_list if user.belt == belt.value
         ]
-    return [BJJUser(**user) for user in USERS]
+    
+    if strengths:
+        result_list = [
+            user for user in result_list if len(user.strengths) > 0
+        ]
+
+    return result_list
+    
+    
 
 # Method to get a user by user_id
 @app.get("/user/{user_id}")
@@ -38,12 +50,6 @@ async def user(user_id: int) -> BJJUser:
     if user is None:
         raise HTTPException(status_code=404, detail="User not found.")
     return user
-
-# Method to get all users by belt level
-@app.get("/users/belt/{belt}")
-async def get_users_by_belt(belt: Belts) -> list[BJJUser]:
-    # Add handling if no results returned
-    return [BJJUser(**user) for user in USERS if user['belt'] == belt.value]
 
 
 # Method to get user by user name
