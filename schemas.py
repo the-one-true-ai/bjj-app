@@ -2,7 +2,7 @@ from enum import Enum
 from pydantic import BaseModel
 
 # Validators
-class BeltLevels(Enum): # '_' denotes a helper class, might be moved to a different file later.
+class Belts(Enum): # '_' denotes a helper class, might be moved to a different file later.
     white = 'white'
     blue = 'blue'
     purple = 'purple'
