@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Path, Query
 from schemas import Belts, UserBase, UserCreate, UserWithID
-from typing import Annotated
+from typing import Annotated, get_type_hints
 
 
 app = FastAPI()
@@ -26,8 +26,8 @@ USERS = [
 async def create_user(user_data: UserCreate) -> UserWithID:
     print(user_data)  # Log the incoming data for debugging
     new_id = USERS[-1]['id'] + 1
-    new_user = UserWithID(id=new_id, **user_data.dict())
-    USERS.append(new_user.dict())
+    new_user = UserWithID(id=new_id, **user_data.model_dump()).model_dump()
+    USERS.append(new_user)
     return new_user
 
 
