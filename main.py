@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from schemas import BeltLevels, User
+from schemas import BeltLevels, BJJUser
 
 
 app = FastAPI()
@@ -12,7 +12,14 @@ USERS = [
 ]
 
 @app.get("/users")
-async def users() -> list[User]:
+async def users() -> list[BJJUser]:
     return [
-        User(**u) for u in USERS
+        BJJUser(**user) for user in USERS
     ]
+
+@app.get("/users/{user_id}")
+async def user(user_id: int) -> BJJUser:
+    user = next((BJJUser(**user) for user in USERS if user['id'] == user_id), None)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found.")
+    return user

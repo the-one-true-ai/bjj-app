@@ -9,7 +9,7 @@ class BeltLevels(Enum):
     BLACK = 'black'
     RED = 'red'
 
-class User(BaseModel):
+class BJJUser(BaseModel):
     id: int
     name: str
     belt: str
