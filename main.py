@@ -1,59 +1,67 @@
-from fastapi import FastAPI, HTTPException, Path, Query
-from models import Belts, UserBase, UserCreate, UserWithID, GymBase, Gym
-from typing import Annotated, get_type_hints
+from typing import Optional
+from fastapi import Depends, FastAPI, HTTPException
+from sqlmodel import SQLModel, create_engine, Session, Field, Column, Integer, String, select
 
+class User(SQLModel, table=True):
+    id: Optional[int] = Field(primary_key=True, index=True)
+    name: str
+
+# FastAPI app
 app = FastAPI()
 
-USERS = [
-    {"id": 1, "name": "Adam", "belt": "Black", "gym": {"head_coach": "Adam Ellis"}, "stripes": 4},
-    {"id": 2, "name": "Achal", "belt": "Blue", "gym": {"head_coach": "Dan G"}, "stripes": 2},
-    {"id": 3, "name": "DanVP", "belt": "Blue", "gym": {"head_coach": "Dan G"}, "stripes": 1},
-    {"id": 4, "name": "Chris", "belt": "White", "gym": {"head_coach": "Dan G"}, "stripes": 0}
-]
+# Database
+DATABASE_URL = "sqlite:///./database.db"
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False}, echo=True)
+SQLModel.metadata.create_all(engine)
+
+# Deps
+def get_session():
+    with Session(engine) as session:
+        yield session
 
 
-
-
-# Method to create a user
-@app.post("/users")
-async def create_user(user_data: UserCreate) -> UserWithID:
-    print(user_data)  # Log the incoming data for debugging
-    new_id = USERS[-1]['id'] + 1
-    new_user = UserWithID(id=new_id, **user_data.model_dump()).model_dump()
-    USERS.append(new_user)
-    return new_user
-
-
-# Method to get all users, optional query parameter of belt added
-@app.get("/users")
-async def users(
-    belt: Belts | None = None,
-    q: Annotated[str | None, Query(max_length=10)] = None
-    ) -> list[UserWithID]:
-    
-    user_list = [UserWithID(**user) for user in USERS]
-
-    # Filtering by belt
-    if belt:
-        user_list = [
-            user for user in user_list if user.belt.value.lower() == belt.value
-        ]
-
-    if q:
-        user_list = [
-            user for user in user_list if q.lower() in user.name.lower()
-        ]
-    
-
-    # Return
-    return user_list
-
-# Method to get a user by user_id
-@app.get("/user/{user_id}")
-async def user(user_id: Annotated[int, Path(title="The ID of the user.")]) -> UserWithID:
-    user = next((UserWithID(**user) for user in USERS if user['id'] == user_id), None)
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found.")
+# Create a User
+@app.post("/users/", response_model=User)
+def create_user(user: User, session: Session = Depends(get_session)):
+    session.add(user)
+    session.commit()
+    session.refresh(user)
     return user
 
+# Get all users
+@app.get("/users/", response_model=list[User])
+def get_all_users(skip: int = 0, limit: int = 10, session: Session = Depends(get_session)):
+    users = session.exec(select(User).offset(skip).limit(limit)).all()
+    return users
 
+# Get user by ID
+@app.get("/users/{user_id}", response_model=User)
+def get_user_by_id(user_id: int, session: Session = Depends(get_session)):
+    user = session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail=f"There is no user with ID: {user_id}")
+    
+# Update a user
+@app.post("/users/{user_id}", response_model=User)
+def update_user(user_id: int, user_data: User, session: Session = Depends(get_session)):
+    user = session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail=f"There is no user with ID: {user_id}")
+
+    for field, value in user_data.model_dump().items():
+        setattr(user, field, value)   
+
+    session.commit()
+    session.refresh(user)
+    return user
+
+# Delete a user
+@app.delete("/users/{user_id}", response_model=User)
+def delete_user(user_id: int, session: Session = Depends(get_session)):
+    user = session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail=f"There is no user with ID: {user_id}")
+
+    session.delete(user)
+    session.commit()
+    return user    
