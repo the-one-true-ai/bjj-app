@@ -5,7 +5,7 @@ from schemas import BeltLevels, BJJUser
 app = FastAPI()
 
 USERS = [
-    {"id": 1, "name": "Adam Ellis", "belt": "black", "gym": "DPG", "strengths": [
+    {"id": 1, "name": "Adam", "belt": "black", "gym": "DPG", "strengths": [
         {"area": "leg locks"},
         {"area": "mobility"},
         {"area": "inversion"},
@@ -19,7 +19,7 @@ USERS = [
         {"area": "wrestling"},
         {"area": "butterfly guard"},
     ]},
-    {"id": 4, "name": "ArmyChris", "belt": "white", "gym": "Maven", "strengths": []}
+    {"id": 4, "name": "Chris", "belt": "white", "gym": "Maven", "strengths": []}
 ]
 
 
