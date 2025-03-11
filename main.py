@@ -11,7 +11,6 @@ USERS = [
         {"area": "inversion"},
     ]},
     {"id": 2, "name": "Achal", "belt": "blue", "gym": "Maven", "strengths": [
-        {"area": "pressure"},
         {"area": "DLR"},
         {"area": "halfguard"},
     ]},

@@ -1,7 +1,7 @@
 from enum import Enum
 from pydantic import BaseModel
 
-class BeltLevels(Enum):
+class BeltLevels(Enum): # '_' denotes a helper class, might be moved to a different file later.
     white = 'white'
     blue = 'blue'
     purple = 'purple'
@@ -10,7 +10,7 @@ class BeltLevels(Enum):
     red = 'red'
 
 
-class Strengths(BaseModel):
+class Strengths(BaseModel): # Again, this a helped class but for adding complex fields to the user
     area: str
 
 class BJJUser(BaseModel):
