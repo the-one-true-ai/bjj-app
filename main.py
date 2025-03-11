@@ -1,22 +1,14 @@
 from fastapi import FastAPI, HTTPException, Path, Query
-from schemas import Belts, UserBase, UserCreate, UserWithID
+from models import Belts, UserBase, UserCreate, UserWithID, GymBase, Gym
 from typing import Annotated, get_type_hints
-
 
 app = FastAPI()
 
 USERS = [
-    {"id": 1, "name": "Adam", "belt": "Black", "gym": "DPG", "stripes": 4, "strengths": [
-        {"area": "leg locks"},
-        {"area": "mobility"},
-        {"area": "inversion"},
-    ]},
-    {"id": 2, "name": "Achal", "belt": "Blue", "gym": "Maven", "stripes": 2, "strengths": [
-        {"area": "DLR"},
-        {"area": "halfguard"},
-    ]},
-    {"id": 3, "name": "DanVP", "belt": "Blue", "gym": "Maven", "stripes": 1, "strengths": []},
-    {"id": 4, "name": "Chris", "belt": "White", "gym": "Maven", "stripes": 0, "strengths": []}
+    {"id": 1, "name": "Adam", "belt": "Black", "gym": {"head_coach": "Adam Ellis"}, "stripes": 4},
+    {"id": 2, "name": "Achal", "belt": "Blue", "gym": {"head_coach": "Dan G"}, "stripes": 2},
+    {"id": 3, "name": "DanVP", "belt": "Blue", "gym": {"head_coach": "Dan G"}, "stripes": 1},
+    {"id": 4, "name": "Chris", "belt": "White", "gym": {"head_coach": "Dan G"}, "stripes": 0}
 ]
 
 

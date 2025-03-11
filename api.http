@@ -4,9 +4,8 @@ Content-Type: application/json
 {
   "name": "Andy",
   "belt": "Red",
-  "gym": "Andy Roberts",
-  "stripes": 0,
-  "strengths": []
+  "gym": {"head_coach": "Andy Roberts"},
+  "stripes": 0
 }
 
 
