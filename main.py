@@ -23,12 +23,15 @@ USERS = [
 ]
 
 
+# Method to get all users
 @app.get("/users")
 async def users() -> list[BJJUser]:
+    # Add handling if no results returned
     return [
         BJJUser(**user) for user in USERS
     ]
 
+# Method to get a user by user_id
 @app.get("/users/{user_id}")
 async def user(user_id: int) -> BJJUser:
     user = next((BJJUser(**user) for user in USERS if user['id'] == user_id), None)
@@ -36,8 +39,13 @@ async def user(user_id: int) -> BJJUser:
         raise HTTPException(status_code=404, detail="User not found.")
     return user
 
+# Method to get all users by belt level
 @app.get("/users/belt/{belt_level}")
 async def user_belt(belt_level: BeltLevels) -> list[BJJUser]:
-
+    # Add handling if no results returned
     return [BJJUser(**user) for user in USERS if user['belt'] == belt_level.value]
+
     
+# Method to get user by user name
+# Method to get user by strengths
+# Method to get user by gym
