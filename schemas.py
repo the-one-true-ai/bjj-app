@@ -4,14 +4,6 @@ from typing import List  # Add this import for List typing
 
 # Validators
 class Belts(Enum): # '_' denotes a helper class, might be moved to a different file later.
-    WHITE = 'white'
-    BLUE = 'blue'
-    PURPLE = 'purple'
-    BROWN = 'brown'
-    BLACK = 'black'
-    RED = 'red'
-
-class BeltsChoices(Enum): # '_' denotes a helper class, might be moved to a different file later.
     WHITE = 'White'
     BLUE = 'Blue'
     PURPLE = 'Purple'
@@ -25,7 +17,7 @@ class Strengths(BaseModel): # Again, this a helper class but for adding complex 
 
 class UserBase(BaseModel):
     name: str
-    belt: BeltsChoices
+    belt: Belts
     gym: str
     strengths: List[Strengths] = []  # Change list[Strengths] to List[Strengths]
 

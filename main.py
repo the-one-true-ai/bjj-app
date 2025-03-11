@@ -1,5 +1,6 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Path, Query
 from schemas import Belts, UserBase, UserCreate, UserWithID
+from typing import Annotated
 
 
 app = FastAPI()
@@ -34,7 +35,7 @@ async def create_user(user_data: UserCreate) -> UserWithID:
 @app.get("/users")
 async def users(
     belt: Belts | None = None,
-    has_strengths: bool | None = None
+    q: Annotated[str | None, Query(max_length=10)] = None
     ) -> list[UserWithID]:
     
     user_list = [UserWithID(**user) for user in USERS]
@@ -44,25 +45,19 @@ async def users(
         user_list = [
             user for user in user_list if user.belt.value.lower() == belt.value
         ]
+
+    if q:
+        user_list = [
+            user for user in user_list if q.lower() in user.name.lower()
+        ]
     
-    # Filtering by strengths
-    if has_strengths == True:
-        user_list = [
-            user for user in user_list if len(user.strengths) > 0
-        ]
-    elif has_strengths == False:
-        user_list = [
-            user for user in user_list if len(user.strengths) <= 0
-        ]
-    else:
-        user_list = user_list
 
     # Return
     return user_list
 
 # Method to get a user by user_id
 @app.get("/user/{user_id}")
-async def user(user_id: int) -> UserWithID:
+async def user(user_id: Annotated[int, Path(title="The ID of the user.")]) -> UserWithID:
     user = next((UserWithID(**user) for user in USERS if user['id'] == user_id), None)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found.")
