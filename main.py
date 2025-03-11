@@ -14,8 +14,7 @@ USERS = [
         {"area": "DLR"},
         {"area": "halfguard"},
     ]},
-    {"id": 3, "name": "DanVP", "belt": "blue", "gym": "Maven", "strengths": [
-    ]},
+    {"id": 3, "name": "DanVP", "belt": "blue", "gym": "Maven", "strengths": []},
     {"id": 4, "name": "Chris", "belt": "white", "gym": "Maven", "strengths": []}
 ]
 
@@ -24,22 +23,26 @@ USERS = [
 @app.get("/users")
 async def users(
     belt: Belts | None = None,
-    strengths: bool = False
+    has_strengths: bool = False
     ) -> list[BJJUser]:
     
-    result_list = [BJJUser(**user) for user in USERS]
+    user_list = [BJJUser(**user) for user in USERS]
 
     if belt:
-        result_list = [
-            user for user in result_list if user.belt == belt.value
+        user_list = [
+            user for user in user_list if user.belt == belt.value
         ]
     
-    if strengths:
-        result_list = [
-            user for user in result_list if len(user.strengths) > 0
+    if has_strengths == True:
+        user_list = [
+            user for user in user_list if len(user.strengths) > 0
+        ]
+    else:
+        user_list = [
+            user for user in user_list if len(user.strengths) <= 0
         ]
 
-    return result_list
+    return user_list
     
     
 
