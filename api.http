@@ -3,10 +3,12 @@ Content-Type: application/json
 
 {
   "name": "Andy",
-  "belt": "red",
+  "belt": "Red",
   "gym": "Andy Roberts",
+  "stripes": 0,
   "strengths": []
 }
+
 
 ###
 GET http://localhost:8000/users/

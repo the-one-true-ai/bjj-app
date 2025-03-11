@@ -6,18 +6,19 @@ from typing import Annotated, get_type_hints
 app = FastAPI()
 
 USERS = [
-    {"id": 1, "name": "Adam", "belt": "Black", "gym": "DPG", "strengths": [
+    {"id": 1, "name": "Adam", "belt": "Black", "gym": "DPG", "stripes": 4, "strengths": [
         {"area": "leg locks"},
         {"area": "mobility"},
         {"area": "inversion"},
     ]},
-    {"id": 2, "name": "Achal", "belt": "Blue", "gym": "Maven", "strengths": [
+    {"id": 2, "name": "Achal", "belt": "Blue", "gym": "Maven", "stripes": 2, "strengths": [
         {"area": "DLR"},
         {"area": "halfguard"},
     ]},
-    {"id": 3, "name": "DanVP", "belt": "Blue", "gym": "Maven", "strengths": []},
-    {"id": 4, "name": "Chris", "belt": "White", "gym": "Maven", "strengths": []}
+    {"id": 3, "name": "DanVP", "belt": "Blue", "gym": "Maven", "stripes": 1, "strengths": []},
+    {"id": 4, "name": "Chris", "belt": "White", "gym": "Maven", "stripes": 0, "strengths": []}
 ]
+
 
 
 

@@ -1,6 +1,7 @@
 from enum import Enum
 from pydantic import BaseModel, validator
 from typing import List  # Add this import for List typing
+from validators import check_value_range
 
 # Validators
 class Belts(Enum): # '_' denotes a helper class, might be moved to a different file later.
@@ -18,6 +19,7 @@ class Strengths(BaseModel): # Again, this a helper class but for adding complex 
 class UserBase(BaseModel):
     name: str
     belt: Belts
+    stripes: int = 0
     gym: str
     strengths: List[Strengths] = []  # Change list[Strengths] to List[Strengths]
 
