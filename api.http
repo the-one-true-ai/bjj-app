@@ -3,7 +3,14 @@ Content-Type: application/json
 
 {
   "name": "Andy",
-  "belt": "black",
+  "belt": "Red",
   "gym": "Andy Roberts",
-  "strengths": []
+  "strengths": [
+    {"area" : "darce"},
+    {"area" : "side-control"},
+    {"area" : "mount"}
+  ]
 }
+
+###
+GET http://localhost:8000/users/

@@ -5,17 +5,17 @@ from schemas import Belts, UserBase, UserCreate, UserWithID
 app = FastAPI()
 
 USERS = [
-    {"id": 1, "name": "Adam", "belt": "black", "gym": "DPG", "strengths": [
+    {"id": 1, "name": "Adam", "belt": "Black", "gym": "DPG", "strengths": [
         {"area": "leg locks"},
         {"area": "mobility"},
         {"area": "inversion"},
     ]},
-    {"id": 2, "name": "Achal", "belt": "blue", "gym": "Maven", "strengths": [
+    {"id": 2, "name": "Achal", "belt": "Blue", "gym": "Maven", "strengths": [
         {"area": "DLR"},
         {"area": "halfguard"},
     ]},
-    {"id": 3, "name": "DanVP", "belt": "blue", "gym": "Maven", "strengths": []},
-    {"id": 4, "name": "Chris", "belt": "white", "gym": "Maven", "strengths": []}
+    {"id": 3, "name": "DanVP", "belt": "Blue", "gym": "Maven", "strengths": []},
+    {"id": 4, "name": "Chris", "belt": "White", "gym": "Maven", "strengths": []}
 ]
 
 
@@ -42,7 +42,7 @@ async def users(
     # Filtering by belt
     if belt:
         user_list = [
-            user for user in user_list if user.belt == belt.value
+            user for user in user_list if user.belt.value.lower() == belt.value
         ]
     
     # Filtering by strengths
