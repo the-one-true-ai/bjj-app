@@ -17,7 +17,8 @@ class User(SQLModel, table=True):
 
     name: str
     belt: str
-    
+    started_at: datetime 
+
     created_at: datetime = Field(
         sa_column=Column(
             pg.TIMESTAMP,
@@ -39,3 +40,4 @@ class User(SQLModel, table=True):
 class UserUpdateModel(User):
     name: str
     belt: str
+    started_at: str
