@@ -1,16 +1,29 @@
-POST http://localhost:8000/users/
+
+###
+GET  http://localhost:8000/api/v1/users
+
+
+###
+POST http://localhost:8000/api/v1/users
+
+{
+    "name": "John Doe",
+    "belt": "Blue",
+    "started_at": "2021-06-15"
+}
+
+###
+GET http://localhost:8000/api/v1/users/2e6a3a57-6799-4166-8fa1-45c304cd8629
+
+
+###
+PATCH http://localhost:8000/api/v1/users/2e6a3a57-6799-4166-8fa1-45c304cd8629
 Content-Type: application/json
 
 {
-  "name": "Andy",
-  "belt": "Red",
-  "gym": {"head_coach": "Andy Roberts"},
-  "stripes": 0
+    "name": "Adam Ellis",
+    "belt": "Black"
 }
 
-
 ###
-GET http://localhost:8000/users/
-
-###
-GET http://localhost:8000/users?q=chalwewewew
+DELETE http://localhost:8000/api/v1/users/04d8ef90-a6cf-430e-96c6-f62aa8999bd7
