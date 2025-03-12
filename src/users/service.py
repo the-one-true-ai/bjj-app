@@ -34,7 +34,7 @@ class UserService:
         return new_user
 
     async def update_a_user(self, user_uid: str, update_data: UserUpdateModel, session:AsyncSession):
-        user_to_update = self.get_a_user(user_uid, session)
+        user_to_update = await self.get_a_user(user_uid, session)
         if user_to_update is not None:
             update_data_dict = update_data.model_dump()
 
@@ -50,7 +50,7 @@ class UserService:
         
 
     async def delete_a_user(self, user_uid:str, session:AsyncSession):
-        user_to_delete = self.get_a_user(user_uid, session)
+        user_to_delete = await self.get_a_user(user_uid, session)
         if user_to_delete is not None:
             await session.delete(user_to_delete)
             await session.commit()
