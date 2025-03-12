@@ -2,21 +2,24 @@ POST http://localhost:8000/users/
 Content-Type: application/json
 
 {
-  "name": "Achal"
+    "id":1,
+    "name":"Achal Inamdar"
 }
 
 ###
-
 GET http://localhost:8000/users/
 
 ###
-GET http://localhost:8000/users/1
+GET http://localhost:8000/users/3
 
 ###
-PUT http://localhost:8000/users/1
-Content-Type: application/json
+PATCH http://localhost:8000/users/3
 
 {
-    "id": 1,
-    "name": "New Name"
+    "id":3,
+    "name":"Adam Hightower Ellis"
 }
+
+
+###
+DELETE http://localhost:8000/users/3

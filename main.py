@@ -1,80 +1,61 @@
-from typing import Optional
-from fastapi import Depends, FastAPI, HTTPException
-from sqlmodel import Relationship, SQLModel, create_engine, Session, Field, Column, Integer, String, select
-
-
-class Gym(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    name: str
-    members: list["User"] = Relationship(back_populates="gym")
-
-
-class User(SQLModel, table=True):
-    id: Optional[int] = Field(primary_key=True, index=True)
-    name: str
-    gym_id: Optional[int] = Field(default=None, foreign_key="gym.id")
-    gym: Optional[Gym] = Relationship(back_populates="users")
-
+from typing import Optional, List
+from fastapi import FastAPI, status
+from fastapi.exceptions import HTTPException
+from pydantic import BaseModel
 
 # FastAPI app
 app = FastAPI()
 
+class User(BaseModel):
+    id: int
+    name: str
+
+class UserUpdateModel(User):
+    name: str
+
+
 # Database
-DATABASE_URL = "sqlite:///./database.db"
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False}, echo=True)
-SQLModel.metadata.create_all(engine)
+USERS_DATA = [
+    {"id":1, "name":"Achal Inamdar"},
+    {"id":2, "name":"Dan Van Pelt"},
+    {"id":3, "name":"Adam Ellis"},
+    {"id":4, "name":"Dan Geoghagen"},
+    {"id":5, "name":"Gordon Ryan"}
+]
 
-# Deps
-def get_session():
-    with Session(engine) as session:
-        yield session
+@app.get("/users", response_model=List[User], status_code=status.HTTP_200_OK)
+async def get_all_users():
+    return USERS_DATA
 
-
-# Create a User
-@app.post("/users/", response_model=User)
-def create_user(user: User, session: Session = Depends(get_session)):
-    session.add(user)
-    session.commit()
-    session.refresh(user)
-    return user
-
-# Get all users
-@app.get("/users/", response_model=list[User])
-def get_all_users(skip: int = 0, limit: int = 10, session: Session = Depends(get_session)):
-    users = session.exec(select(User).offset(skip).limit(limit)).all()
-    return users
-
-# Get user by ID
-@app.get("/users/{user_id}", response_model=User)
-def get_user_by_id(user_id: int, session: Session = Depends(get_session)):
-    user = session.get(User, user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail=f"There is no user with ID: {user_id}")
-    return user
+@app.get("/users/{user_id}", response_model=User, status_code=status.HTTP_200_OK)
+async def get_a_user(user_id:int):
+    for user in USERS_DATA:
+        if user_id == user['id']:
+            return user        
     
-# Update a user
-@app.put("/users/{user_id}", response_model=User)
-def update_user(user_id: int, user_data: User, session: Session = Depends(get_session)):
-    user = session.get(User, user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail=f"There is no user with ID: {user_id}")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Unable to find a user with ID:{user_id}.")
 
-    user_data_dict = user_data.model_dump(exclude_unset=True)  # Only update provided fields
-    for field, value in user_data_dict.items():
-        setattr(user, field, value)   
-
-    session.commit()
-    session.refresh(user)
-    return user
+@app.post("/users", response_model=User, status_code=status.HTTP_201_CREATED)
+async def create_a_user(user_data:User):
+    new_user = user_data.model_dump()
+    USERS_DATA.append(new_user)
+    return new_user
 
 
-# Delete a user
-@app.delete("/users/{user_id}", response_model=User)
-def delete_user(user_id: int, session: Session = Depends(get_session)):
-    user = session.get(User, user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail=f"There is no user with ID: {user_id}")
+@app.patch("/users/{user_id}", response_model=User, status_code=status.HTTP_200_OK)
+async def update_a_user(user_id:int, user_update_data: UserUpdateModel) -> dict:
+    for user in USERS_DATA:
+        if user_id == user['id']:
+            user['name'] = user_update_data.name
+            return user
+        
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Unable to find a user with ID:{user_id} to update.")        
 
-    session.delete(user)
-    session.commit()
-    return user    
+@app.delete("/users/{user_id}", status_code=status.HTTP_200_OK)
+async def delete_a_user(user_id:int):
+    for user in USERS_DATA:
+        if user_id == user['id']:
+            USERS_DATA.remove(user)
+            return {}
+        
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Unable to find a user with ID:{user_id} to delete.")            
