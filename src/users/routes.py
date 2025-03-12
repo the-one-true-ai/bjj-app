@@ -20,6 +20,7 @@ async def get_all_users(session:AsyncSession = Depends(get_session)):
 @user_router.post("/", response_model=User, status_code=status.HTTP_201_CREATED)
 async def create_a_user(user_data: UserCreateModel, session:AsyncSession = Depends(get_session)) -> dict:
     new_user = await user_service.create_a_user(user_data, session=session)
+    return new_user
 
 @user_router.get("/{user_uid}", response_model=User, status_code=status.HTTP_200_OK)
 async def get_a_user(user_uid:str, session:AsyncSession = Depends(get_session)):

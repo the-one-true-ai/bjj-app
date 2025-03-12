@@ -12,6 +12,5 @@ POST http://localhost:8000/api/v1/users
     "started_at": "2021-06-15"
 }
 
-
 ###
 GET http://localhost:8000/api/v1/users/2e6a3a57-6799-4166-8fa1-45c304cd8629
