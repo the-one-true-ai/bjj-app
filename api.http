@@ -24,3 +24,6 @@ Content-Type: application/json
     "name": "Adam Ellis",
     "belt": "Black"
 }
+
+###
+DELETE http://localhost:8000/api/v1/users/04d8ef90-a6cf-430e-96c6-f62aa8999bd7
