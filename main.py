@@ -1,10 +1,20 @@
 from typing import Optional
 from fastapi import Depends, FastAPI, HTTPException
-from sqlmodel import SQLModel, create_engine, Session, Field, Column, Integer, String, select
+from sqlmodel import Relationship, SQLModel, create_engine, Session, Field, Column, Integer, String, select
+
+
+class Gym(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str
+    members: list["User"] = Relationship(back_populates="gym")
+
 
 class User(SQLModel, table=True):
     id: Optional[int] = Field(primary_key=True, index=True)
     name: str
+    gym_id: Optional[int] = Field(default=None, foreign_key="gym.id")
+    gym: Optional[Gym] = Relationship(back_populates="users")
+
 
 # FastAPI app
 app = FastAPI()
@@ -40,20 +50,23 @@ def get_user_by_id(user_id: int, session: Session = Depends(get_session)):
     user = session.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail=f"There is no user with ID: {user_id}")
+    return user
     
 # Update a user
-@app.post("/users/{user_id}", response_model=User)
+@app.put("/users/{user_id}", response_model=User)
 def update_user(user_id: int, user_data: User, session: Session = Depends(get_session)):
     user = session.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail=f"There is no user with ID: {user_id}")
 
-    for field, value in user_data.model_dump().items():
+    user_data_dict = user_data.model_dump(exclude_unset=True)  # Only update provided fields
+    for field, value in user_data_dict.items():
         setattr(user, field, value)   
 
     session.commit()
     session.refresh(user)
     return user
+
 
 # Delete a user
 @app.delete("/users/{user_id}", response_model=User)
