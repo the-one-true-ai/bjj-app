@@ -13,20 +13,21 @@ class FactUser(SQLModel, table=True):
 
     name: str
     belt: str
-    started_at: datetime
+    started_at: Optional[datetime] = None
     preferred_ruleset: Optional[str] = Field(default="Both", sa_column=Column(String, nullable=False))  # Gi, No-Gi, or Both
     bio: Optional[str] = None
     social_links: Optional[str] = None
     competition_history: Optional[str] = None
     associations: Optional[List[str]] = Field(sa_column=Column(pg.ARRAY(String), nullable=True))  
-    role: str = Field(default="student", sa_column=Column(String, nullable=False))  # Use String from sqlalchemy
-    verified: bool = False
-    created_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
-    updated_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
+    role: str = Field(default="Student", sa_column=Column(String, nullable=False))  # Use String from sqlalchemy
     height: Optional[float] = None
     weight: Optional[float] = None
-    age: Optional[int] = None
+    birthdate: Optional[int] = None
     profile_picture: Optional[str] = Field(default="some_default_picture.jpeg", sa_column=Column(String, nullable=False))
+    created_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
+    updated_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))  
+    status: Optional[str] = Field(default="Active", sa_column=Column(String, nullable=False))    
+    date_deactivated: Optional[datetime] = None    
 
 
     # Relationships
@@ -41,10 +42,8 @@ class FactUser(SQLModel, table=True):
 class FactCoach(SQLModel, table=True):
     __tablename__ = "fact_coach"
 
-    coach_id: uuid.UUID = Field(
-        sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid.uuid4)
-    )
-    uid: uuid.UUID = Field(foreign_key="fact_user.uid", ondelete="CASCADE", sa_column=Column(nullable=False))
+    coach_id: uuid.UUID = Field(sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid.uuid4))
+    uid: uuid.UUID = Field(foreign_key="fact_user.uid", ondelete="CASCADE")
 
     expertise: Optional[List[str]] = Field(sa_column=Column(pg.ARRAY(String), nullable=True))    # Leglocks, Pins, Escapes, etc.
     affiliations: Optional[List[str]] = Field(sa_column=Column(pg.ARRAY(String), nullable=True))    # List of gyms
@@ -60,9 +59,7 @@ class FactCoach(SQLModel, table=True):
 class FactStudent(SQLModel, table=True):
     __tablename__ = "fact_student"
 
-    student_id: uuid.UUID = Field(
-        sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid.uuid4)
-    )
+    student_id: uuid.UUID = Field(sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid.uuid4))
     uid: uuid.UUID = Field(foreign_key="fact_user.uid", ondelete="CASCADE")
 
     areas_working_on: Optional[List[str]] = Field(sa_column=Column(pg.ARRAY(String), nullable=True))    # Techniques being focused on

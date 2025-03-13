@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 import uuid
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional, List, Dict
 
 # Base schema for common fields (used for both creation and update)
@@ -10,27 +10,28 @@ class UserBaseSchema(BaseModel):
     started_at: Optional[datetime] = None
     preferred_ruleset: Optional[str] = "Both"  # Gi, No-Gi, or Both
     bio: Optional[str] = None
-    social_links: Optional[str] = None
+    social_links: Optional[str] = None  # Enforce valid URLs
     competition_history: Optional[str] = None
     associations: Optional[List[str]] = None
-    role: str = "student"  # Defaults to student, can be coach, student, or both
-    verified: bool = False
+    role: str = "Student"  # Defaults to student, can be "coach", "student", or "both"
     height: Optional[float] = None
     weight: Optional[float] = None
-    age: Optional[int] = None
+    birthdate: Optional[date] = None
     profile_picture: Optional[str] = "some_default_picture.jpeg"
 
-
-# User schema for creation (only required fields for sign-up)
-class UserCreateSchema(UserBaseSchema):
-    pass
-
+class FullUserSchema(UserBaseSchema):
+    uid: uuid.UUID
+    created_at: datetime
+    updated_at: datetime
+    status: str = "Active"
+    date_deactivated: Optional[datetime] = None    
 
 # User schema for updating (only fields that can be updated)
 class UserUpdateSchema(UserBaseSchema):
     # Fields that can be updated after sign-up (belt, bio, etc.)
     name: Optional[str] = None
     belt: Optional[str] = None
+    preferred_ruleset: Optional[str] = None
     bio: Optional[str] = None
     social_links: Optional[str] = None
     competition_history: Optional[str] = None
@@ -38,15 +39,8 @@ class UserUpdateSchema(UserBaseSchema):
     profile_picture: Optional[str] = None
     height: Optional[float] = None
     weight: Optional[float] = None
-    age: Optional[int] = None
+    birthdate: Optional[int] = None
     role: Optional[str] = None  # Allow updating of role if necessary
-
-
-# Full user schema (for internal use, e.g., returning a complete profile)
-class UserSchema(UserBaseSchema):
-    uid: uuid.UUID
-    created_at: datetime
-    updated_at: datetime
 
 
 
@@ -62,7 +56,6 @@ class CoachSchema(BaseModel):
     active_flag: bool = True  # If coaches want to turn off from getting more requests
 
 
-
 # FactStudent schema (for students only)
 class StudentSchema(BaseModel):
     student_id: uuid.UUID
@@ -71,9 +64,8 @@ class StudentSchema(BaseModel):
     preferred_coach_style: Optional[List[str]] = None
 
 
-
 # User schema with full details (including relationships to coach and student info)
-class UserDetailSchema(UserSchema):
+class UserDetailSchema(UserBaseSchema):
     coach_info: Optional[CoachSchema] = None
     student_info: Optional[StudentSchema] = None
 

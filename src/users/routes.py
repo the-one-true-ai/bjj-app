@@ -2,7 +2,7 @@ from fastapi import APIRouter, status, Depends, HTTPException
 from typing import List
 from sqlmodel.ext.asyncio.session import AsyncSession
 from src.db.main import get_session
-from src.users.schemas import UserCreateSchema, UserUpdateSchema, UserBaseSchema
+from src.users.schemas import UserBaseSchema, UserUpdateSchema, UserBaseSchema
 from src.users.service import UserService
 
 user_router = APIRouter()
@@ -14,7 +14,7 @@ async def get_all_users(session: AsyncSession = Depends(get_session)):
     return users
 
 @user_router.post("/", response_model=UserBaseSchema, status_code=status.HTTP_201_CREATED)
-async def create_a_user(user_data: UserCreateSchema, session: AsyncSession = Depends(get_session)):
+async def create_a_user(user_data: UserBaseSchema, session: AsyncSession = Depends(get_session)):
     new_user = await user_service.create_a_user(user_data, session=session)
     return new_user
 

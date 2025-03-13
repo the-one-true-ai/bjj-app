@@ -1,5 +1,5 @@
 from sqlmodel.ext.asyncio.session import AsyncSession
-from .schemas import UserCreateSchema, UserUpdateSchema
+from .schemas import UserBaseSchema, UserUpdateSchema
 from .models import FactUser, FactCoach, FactStudent
 from sqlmodel import select, desc
 from datetime import datetime
@@ -17,7 +17,7 @@ class UserService:
 
         return user if user is not None else None
 
-    async def create_a_user(self, user_data: UserCreateSchema, session: AsyncSession):
+    async def create_a_user(self, user_data: UserBaseSchema, session: AsyncSession):
         user_data_dict = user_data.model_dump()
 
         # You no longer need to parse 'started_at' as it is already a datetime object
@@ -41,6 +41,14 @@ class UserService:
             new_student = FactStudent(uid=new_user.uid)
             session.add(new_student)
             await session.commit()
+
+        if user_data.role == "both":
+            new_student = FactStudent(uid=new_user.uid)
+            new_coach = FactCoach(uid=new_user.uid)
+            session.add(new_student)
+            session.add(new_coach)
+            await session.commit()
+
 
         return new_user
 
