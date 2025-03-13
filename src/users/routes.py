@@ -4,6 +4,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from src.db.main import get_session
 from src.users.schemas import UserBaseSchema, UserUpdateSchema, UserBaseSchema
 from src.users.service import UserService
+from datetime import datetime
 
 user_router = APIRouter()
 user_service = UserService()
@@ -37,10 +38,16 @@ async def update_a_user(user_uid: str, user_update_data: UserUpdateSchema, sessi
         return updated_user
 
 @user_router.delete("/{user_uid}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_a_user(user_uid: str, session: AsyncSession = Depends(get_session)):
-    user_to_delete = await user_service.delete_a_user(user_uid, session)
+async def deactivate_a_user(user_uid: str, session: AsyncSession = Depends(get_session)):
+    user_to_deactivate = await user_service.get_a_user(user_uid, session)
 
-    if user_to_delete is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Unable to find a user with ID:{user_uid} to delete.")            
-    else:
-        return {}
+    if user_to_deactivate is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Unable to find a user with ID:{user_uid} to deactivate.")
+    
+    user_to_deactivate.status = "Inactive"
+    user_to_deactivate.date_deactivated = datetime.now()
+    
+    session.add(user_to_deactivate)
+    await session.commit()
+    
+    return {}
