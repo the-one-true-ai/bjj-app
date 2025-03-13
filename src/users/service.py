@@ -71,11 +71,16 @@ class UserService:
 
        
     async def deactivate_a_user(self, user_uid: str, session: AsyncSession):
-        user_to_deactivate = await self.get_user_by_id(user_uid, session)        
-        user_to_deactivate.status = "Inactive"
-        user_to_deactivate.date_deactivated = datetime.now()
-        
-        session.add(user_to_deactivate)
-        await session.commit()
-        
-        return {}        
+        user_to_deactivate = await self.get_a_user(user_uid, session)
+        if user_to_deactivate is not None:
+            # Set status to "Inactive" and record the deactivation time
+            user_to_deactivate.status = "Inactive"
+            user_to_deactivate.date_deactivated = datetime.now()
+
+            # Ensure updated_at is always updated (optional)
+            user_to_deactivate.updated_at = datetime.now()
+
+            await session.commit()
+            return user_to_deactivate
+        else:
+            return None

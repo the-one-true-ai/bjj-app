@@ -37,17 +37,12 @@ async def update_a_user(user_uid: str, user_update_data: UserUpdateSchema, sessi
     else:        
         return updated_user
 
-@user_router.delete("/{user_uid}", status_code=status.HTTP_204_NO_CONTENT)
+@user_router.delete("/{user_uid}", response_model=UserBaseSchema, status_code=status.HTTP_200_OK)
 async def deactivate_a_user(user_uid: str, session: AsyncSession = Depends(get_session)):
-    user_to_deactivate = await user_service.get_a_user(user_uid, session)
+    deactivated_user = await user_service.deactivate_a_user(user_uid, session)
 
-    if user_to_deactivate is None:
+    if deactivated_user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Unable to find a user with ID:{user_uid} to deactivate.")
-    
-    user_to_deactivate.status = "Inactive"
-    user_to_deactivate.date_deactivated = datetime.now()
-    
-    session.add(user_to_deactivate)
-    await session.commit()
-    
-    return {}
+    else:
+        return deactivated_user
+
