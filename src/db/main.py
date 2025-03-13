@@ -13,11 +13,11 @@ async_engine = AsyncEngine(
 
 async def init_db():
     async with async_engine.begin() as conn:
-        from src.users.models import User
+        from src.users.models import FactUser
 
         await conn.run_sync(SQLModel.metadata.create_all)
 
-async def get_session() -> AsyncSession:
+async def get_session() -> AsyncSession: # type: ignore
     Session = sessionmaker(
         bind = async_engine,
         class_ = AsyncSession,
