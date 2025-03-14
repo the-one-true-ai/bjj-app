@@ -12,6 +12,11 @@ class FactUser(SQLModel, table=True):
     uid: uuid.UUID = Field(sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid.uuid4))
 
     name: str
+    email: str
+    password: str
+    first_name: str
+    last_name: str
+    is_verified: bool = False
     belt: str
     started_at: Optional[datetime] = None
     preferred_ruleset: Optional[str] = Field(default="Both", sa_column=Column(String, nullable=False))  # Gi, No-Gi, or Both
