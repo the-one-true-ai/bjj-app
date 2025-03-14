@@ -12,10 +12,10 @@ class FactUser(SQLModel, table=True):
     uid: uuid.UUID = Field(sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid.uuid4))
 
     name: str
-    email: str
+    email: str = Field(default="unknown@example.com", sa_column=Column(String, nullable=False))  # Default placeholder email
     password: str
-    first_name: str
-    last_name: str
+    first_name: str = Field(default="Unknown", sa_column=Column(String, nullable=False))  # Default placeholder first name
+    last_name: str = Field(default="User", sa_column=Column(String, nullable=False))  # Default placeholder last name
     is_verified: bool = False
     belt: str
     started_at: Optional[datetime] = None

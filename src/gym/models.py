@@ -7,7 +7,8 @@ import uuid
 class Gym(SQLModel, table=True):
     __tablename__ = "DimGym"
 
-    gym_id = uuid.UUID = Field(sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid.uuid4))
+    # Need to add Optional to these
+    gym_id: uuid.UUID = Field(sa_column=Column(pg.UUID, primary_key=True, nullable=False, default=uuid.uuid4))
     gym_name: str
     address: str
     website: str
