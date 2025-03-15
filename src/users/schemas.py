@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import uuid
 from datetime import datetime, date
 from typing import Optional, List, Dict
@@ -6,6 +6,11 @@ from typing import Optional, List, Dict
 # Base schema for common fields (used for both creation and update)
 class UserBaseSchema(BaseModel):
     name: str
+    email: str
+    password: str = Field(min_length=10, max_length=30)
+    first_name: str
+    last_name: str 
+    is_verified: bool = "False"
     belt: str
     started_at: Optional[datetime] = None
     preferred_ruleset: Optional[str] = "Both"  # Gi, No-Gi, or Both
