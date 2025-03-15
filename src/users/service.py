@@ -1,9 +1,9 @@
 from sqlmodel.ext.asyncio.session import AsyncSession
-from .schemas import UserBaseSchema, UserUpdateSchema
+from .schemas import UserUpdateSchema
 from .models import FactUser
 from sqlmodel import select, desc
 from datetime import datetime
-from src.auth.utils import generate_passwd_hash
+
 
 class UserService:
     async def get_all_users(self, session: AsyncSession):
@@ -24,19 +24,6 @@ class UserService:
         user = result.first()
 
         return user if user is not None else None
-
-    async def create_a_user(self, user_data: UserBaseSchema, session: AsyncSession):
-        user_data_dict = user_data.model_dump()
-
-        new_user = FactUser(
-            **user_data_dict
-        )
-
-        new_user.password_hash = generate_passwd_hash(user_data_dict['password'])
-
-        session.add(new_user)
-        await session.commit()
-        return new_user
 
     async def update_a_user(self, user_uid: str, update_data: UserUpdateSchema, session: AsyncSession):
         user_to_update = await self.get_user_by_id(user_uid, session)
