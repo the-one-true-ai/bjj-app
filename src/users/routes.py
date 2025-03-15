@@ -23,7 +23,7 @@ async def create_a_user(user_data: UserBaseSchema, session: AsyncSession = Depen
 
 @user_router.get("/{user_uid}", response_model=UserResponseSchema, status_code=status.HTTP_200_OK)
 async def get_a_user(user_uid: str, session: AsyncSession = Depends(get_session)):
-    user = await user_service.get_a_user(user_uid, session)
+    user = await user_service.get_user_by_id(user_uid, session)
     
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Unable to find a user with ID:{user_uid}.")

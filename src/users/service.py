@@ -3,6 +3,7 @@ from .schemas import UserBaseSchema, UserUpdateSchema
 from .models import FactUser
 from sqlmodel import select, desc
 from datetime import datetime
+from src.auth.utils import generate_passwd_hash
 
 class UserService:
     async def get_all_users(self, session: AsyncSession):
@@ -10,8 +11,15 @@ class UserService:
         result = await session.exec(statement)
         return result.all()
 
-    async def get_a_user(self, user_uid: str, session: AsyncSession):
+    async def get_user_by_id(self, user_uid: str, session: AsyncSession):
         statement = select(FactUser).where(FactUser.uid == user_uid)
+        result = await session.exec(statement)
+        user = result.first()
+
+        return user if user is not None else None
+    
+    async def get_user_by_email(self, email: str, session: AsyncSession):
+        statement = select(FactUser).where(FactUser.email == email)
         result = await session.exec(statement)
         user = result.first()
 
@@ -20,16 +28,18 @@ class UserService:
     async def create_a_user(self, user_data: UserBaseSchema, session: AsyncSession):
         user_data_dict = user_data.model_dump()
 
-        # You no longer need to parse 'started_at' as it is already a datetime object
         new_user = FactUser(
             **user_data_dict
         )
+
+        new_user.password_hash = generate_passwd_hash(user_data_dict['password'])
+
         session.add(new_user)
         await session.commit()
         return new_user
 
     async def update_a_user(self, user_uid: str, update_data: UserUpdateSchema, session: AsyncSession):
-        user_to_update = await self.get_a_user(user_uid, session)
+        user_to_update = await self.get_user_by_id(user_uid, session)
         if user_to_update is not None:
             update_data_dict = update_data.model_dump()
 

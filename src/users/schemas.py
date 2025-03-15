@@ -13,7 +13,7 @@ class FullUserSchema(UserBaseSchema):
     updated_at: datetime
 
 # User schema for updating (only fields that can be updated)
-class UserUpdateSchema(UserBaseSchema):
+class UserUpdateSchema(BaseModel):
     email: str
 
 # User schemas to be returned
