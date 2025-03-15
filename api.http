@@ -40,3 +40,25 @@ Content-Type: application/json
 
 ###
 DELETE http://localhost:8000/api/v1/users/8e6470e6-cc09-425e-9082-ec7b4273a4df
+
+
+
+###
+POST http://localhost:8000/api/v1/users/login
+{
+  "name": "Chris",
+  "belt": "Blue",
+  "started_at": "2020-05-01",
+  "preferred_ruleset": "Gi",
+  "bio": "Passionate BJJ practitioner.",
+  "social_links": "https://facebook.com/johndoe",
+  "competition_history": "Won several local tournaments.",
+  "associations": ["Maven BJJ", "DPG BJJ"],
+  "role": "both",
+  "verified": false,
+  "last_active": "2025-03-13T14:00:00Z",
+  "height": 180.5,
+  "weight": 75,
+  "age": 25,
+  "profile_picture": "https://example.com/profile_picture.jpeg"
+}
