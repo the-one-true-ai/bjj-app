@@ -23,8 +23,6 @@ def create_access_token(user_data: dict, expires_delta: timedelta = None, refres
     payload['exp'] = datetime.now() + expires_delta if expires_delta is not None else timedelta(seconds=ACCESS_TOKEN_EXPIRY) # If expiry not given it defaults to 1hr (3600 seconds)
     payload['jti'] = str(uuid.uuid4())
     payload['refresh'] = refresh
-
-
     
     token = jwt.encode(
         payload=payload,

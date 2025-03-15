@@ -1,6 +1,6 @@
 from sqlmodel.ext.asyncio.session import AsyncSession
 from .schemas import UserBaseSchema, UserUpdateSchema
-from .models import FactUser, FactCoach, FactStudent
+from .models import FactUser
 from sqlmodel import select, desc
 from datetime import datetime
 
@@ -24,32 +24,8 @@ class UserService:
         new_user = FactUser(
             **user_data_dict
         )
-
-        # Remove the line that tries to parse started_at
-        # new_user.started_at = datetime.strptime(user_data_dict['started_at'], "%Y-%m-%d")  # This is not needed.
-
         session.add(new_user)
         await session.commit()
-        
-        # Optionally create a student or coach record (if applicable)
-        if user_data.role == "coach":
-            new_coach = FactCoach(uid=new_user.uid)
-            session.add(new_coach)
-            await session.commit()
-        
-        if user_data.role == "student":
-            new_student = FactStudent(uid=new_user.uid)
-            session.add(new_student)
-            await session.commit()
-
-        if user_data.role == "both":
-            new_student = FactStudent(uid=new_user.uid)
-            new_coach = FactCoach(uid=new_user.uid)
-            session.add(new_student)
-            session.add(new_coach)
-            await session.commit()
-
-
         return new_user
 
     async def update_a_user(self, user_uid: str, update_data: UserUpdateSchema, session: AsyncSession):
@@ -66,21 +42,5 @@ class UserService:
 
             await session.commit()
             return user_to_update
-        else:
-            return None
-
-       
-    async def deactivate_a_user(self, user_uid: str, session: AsyncSession):
-        user_to_deactivate = await self.get_a_user(user_uid, session)
-        if user_to_deactivate is not None:
-            # Set status to "Inactive" and record the deactivation time
-            user_to_deactivate.status = "Inactive"
-            user_to_deactivate.date_deactivated = datetime.now()
-
-            # Ensure updated_at is always updated (optional)
-            user_to_deactivate.updated_at = datetime.now()
-
-            await session.commit()
-            return user_to_deactivate
         else:
             return None

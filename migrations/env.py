@@ -7,8 +7,6 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 
-from src.users.models import FactUser, FactCoach, FactStudent
-from src.gym.models import Gym
 from sqlmodel import SQLModel
 from src.config import Config
 
