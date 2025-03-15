@@ -13,7 +13,7 @@ class FactUser(SQLModel, table=True):
 
     name: str
     email: str = Field(default="unknown@example.com", sa_column=Column(String, nullable=False))  # Default placeholder email
-    password: str
+    password_hash: str = Field(exclude=True)
     first_name: str = Field(default="Unknown", sa_column=Column(String, nullable=False))  # Default placeholder first name
     last_name: str = Field(default="User", sa_column=Column(String, nullable=False))  # Default placeholder last name
     is_verified: bool = False
