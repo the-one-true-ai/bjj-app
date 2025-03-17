@@ -13,7 +13,6 @@ access_token_bearer = AccessTokenBearer()
 
 @user_router.get("/", response_model=List[UserResponseSchema], status_code=status.HTTP_200_OK)
 async def get_all_users(session: AsyncSession = Depends(get_session), auth_user_details: dict = Depends(access_token_bearer)):
-    print(auth_user_details)
     users = await user_service.get_all_users(session)
     return users
 

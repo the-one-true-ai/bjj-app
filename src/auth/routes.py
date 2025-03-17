@@ -87,7 +87,3 @@ async def get_new_access_token(token_details: dict = Depends(RefreshTokenBearer(
         
 
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or expired token.")
-
-
-
-    user_data = token_details['user_data']
