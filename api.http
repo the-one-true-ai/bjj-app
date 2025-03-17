@@ -1,7 +1,8 @@
 
 ###
 GET  http://localhost:8000/api/v1/users
-Authorization: Bearer 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYXJteWNocmlzQGJqai5jb20iLCJ1aWQiOiI2MzVlZGUyNi0zYzA1LTQ0MWYtOTBkMS00Mjc5Zjk0OWRkNjkifSwiZXhwIjoiMTowMDowMCIsImp0aSI6ImRlNTRlNTc3LTg3ZGEtNDVmZC1hYzg5LTg4MzA4MTAwOTI5NyIsInJlZnJlc2giOmZhbHNlfQ.RkqZRTZEye_arPBYgXIXwWmJDhpfOE1GsCgyX6lucUc
+
 
 ###
 POST http://localhost:8000/api/v1/auth/signup

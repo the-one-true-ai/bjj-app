@@ -12,20 +12,21 @@ access_token_bearer = AccessTokenBearer()
 
 
 @user_router.get("/", response_model=List[UserResponseSchema], status_code=status.HTTP_200_OK)
-async def get_all_users(session: AsyncSession = Depends(get_session), credentials: dict = Depends(access_token_bearer)):
+async def get_all_users(session: AsyncSession = Depends(get_session), auth_user_details: dict = Depends(access_token_bearer)):
+    print(auth_user_details)
     users = await user_service.get_all_users(session)
     return users
 
 
 
 @user_router.post("/", response_model=UserResponseSchema, status_code=status.HTTP_201_CREATED)
-async def create_a_user(user_data: UserBaseSchema, session: AsyncSession = Depends(get_session), credentials: dict = Depends(access_token_bearer)):
+async def create_a_user(user_data: UserBaseSchema, session: AsyncSession = Depends(get_session), auth_user_details: dict = Depends(access_token_bearer)):
     new_user = await user_service.create_a_user(user_data, session=session)
     return new_user
 
 
 @user_router.get("/{user_uid}", response_model=UserResponseSchema, status_code=status.HTTP_200_OK)
-async def get_a_user(user_uid: str, session: AsyncSession = Depends(get_session), credentials: dict = Depends(access_token_bearer)):
+async def get_a_user(user_uid: str, session: AsyncSession = Depends(get_session), auth_user_details: dict = Depends(access_token_bearer)):
     user = await user_service.get_user_by_id(user_uid, session)
     
     if user is None:
@@ -34,7 +35,7 @@ async def get_a_user(user_uid: str, session: AsyncSession = Depends(get_session)
         return user
 
 @user_router.patch("/{user_uid}", response_model=UserResponseSchema, status_code=status.HTTP_200_OK)
-async def update_a_user(user_uid: str, user_update_data: UserUpdateSchema, session: AsyncSession = Depends(get_session), credentials: dict = Depends(access_token_bearer)):
+async def update_a_user(user_uid: str, user_update_data: UserUpdateSchema, session: AsyncSession = Depends(get_session), auth_user_details: dict = Depends(access_token_bearer)):
     updated_user = await user_service.update_a_user(user_uid, user_update_data, session)
 
     if updated_user is None:

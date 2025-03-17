@@ -5,8 +5,9 @@ from src.users.schemas import UserBaseSchema, UserResponseSchema
 from src.users.models import FactUser
 from .utils import generate_passwd_hash, verify_passwd, create_access_token, decode_access_token
 from src.users.service import UserService
+from src.auth.dependencies import RefreshTokenBearer, AccessTokenBearer, TokenBearer
 from src.db.main import get_session
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 auth_router = APIRouter()
 UserService = UserService()
@@ -70,3 +71,23 @@ async def login_user(user_login_data: UserBaseSchema, session: AsyncSession = De
                     })      
         else:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials.")
+
+@auth_router.get("/refresh_token")
+async def get_new_access_token(token_details: dict = Depends(RefreshTokenBearer())):
+    expiry_timestamp = token_details['exp']
+
+    if datetime.fromtimestamp(expiry_timestamp) > datetime.now():
+        new_access_token = create_access_token(
+            user_data={
+                "user": token_details['user']})
+        
+        return JSONResponse(content={
+            "access_token": new_access_token
+            })
+        
+
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or expired token.")
+
+
+
+    user_data = token_details['user_data']
