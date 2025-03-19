@@ -1,34 +1,13 @@
+GET  http://localhost:8000/api/v1/users/get_all_users
 
 ###
-GET  http://localhost:8000/api/v1/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYXJteWNocmlzQGJqai5jb20iLCJ1aWQiOiI2MzVlZGUyNi0zYzA1LTQ0MWYtOTBkMS00Mjc5Zjk0OWRkNjkifSwiZXhwIjoiMTowMDowMCIsImp0aSI6ImRlNTRlNTc3LTg3ZGEtNDVmZC1hYzg5LTg4MzA4MTAwOTI5NyIsInJlZnJlc2giOmZhbHNlfQ.RkqZRTZEye_arPBYgXIXwWmJDhpfOE1GsCgyX6lucUc
 
-
-###
-POST http://localhost:8000/api/v1/auth/signup
-
-{
-  "email":"armychris2@bjj.com",
-  "password":"password"
-}
-
-
-###
-GET http://localhost:8000/api/v1/users/46fc3171-30c1-49b9-8c2a-0f328a973f82
-
-
-###
-PATCH http://localhost:8000/api/v1/users/46fc3171-30c1-49b9-8c2a-0f328a973f82
+POST http://localhost:8000/api/v1/users/create_user
 Content-Type: application/json
 
 {
-    "email": "adam_newemail@bjj.com"
-}
-
-###
-POST http://localhost:8000/api/v1/auth/login
-
-{
-  "email":"armychris@bjj.com",
-  "password":"password"
+  "email": "Both@example.com",
+  "password": "securepassword",
+  "role": "Both",
+  "username": "Both"
 }

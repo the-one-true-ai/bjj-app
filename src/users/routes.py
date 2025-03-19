@@ -1,43 +1,60 @@
-from fastapi import APIRouter, status, Depends, HTTPException
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from uuid import UUID
 from typing import List
-from sqlmodel.ext.asyncio.session import AsyncSession
+from src.db.models import User, Coaches, Students
+from src.users.schemas import UserModel, CoachModel, StudentModel, UserCreateModel, CoachCreateModel, StudentCreateModel
+from src.users.service import UserService, CoachService, StudentService
 from src.db.main import get_session
-from src.users.schemas import UserBaseSchema, UserUpdateSchema,  UserResponseSchema
-from src.users.service import UserService
-from src.auth.dependencies import AccessTokenBearer
+from sqlmodel import select
+
 
 user_router = APIRouter()
+
+# Instantiate services
 user_service = UserService()
-access_token_bearer = AccessTokenBearer()
+coach_service = CoachService()
+student_service = StudentService()
 
-
-@user_router.get("/", response_model=List[UserResponseSchema], status_code=status.HTTP_200_OK)
-async def get_all_users(session: AsyncSession = Depends(get_session), auth_user_details: dict = Depends(access_token_bearer)):
-    users = await user_service.get_all_users(session)
+# Route to get all users
+@user_router.get("/get_all_users", response_model=List[UserModel])
+async def get_all_users(session: AsyncSession = Depends(get_session)):
+    statement = select(User)
+    result = await session.exec(statement)
+    users = result.all()
     return users
 
+# Route to get all coaches
+@user_router.get("/get_all_coaches", response_model=List[CoachModel])
+async def get_all_coaches(session: AsyncSession = Depends(get_session)):
+    statement = select(Coaches)
+    result = await session.exec(statement)
+    coaches = result.all()
+    return coaches
 
+# Route to get all students
+@user_router.get("/get_all_students", response_model=List[StudentModel])
+async def get_all_students(session: AsyncSession = Depends(get_session)):
+    statement = select(Students)
+    result = await session.exec(statement)
+    students = result.all()
+    return students
 
-@user_router.post("/", response_model=UserResponseSchema, status_code=status.HTTP_201_CREATED)
-async def create_a_user(user_data: UserBaseSchema, session: AsyncSession = Depends(get_session), auth_user_details: dict = Depends(access_token_bearer)):
-    new_user = await user_service.create_a_user(user_data, session=session)
+# Route to create a new user
+@user_router.post("/create_user", response_model=UserModel)
+async def create_user(user_data: UserCreateModel, session: AsyncSession = Depends(get_session)):
+    new_user = await user_service.create_a_user(user_data, session)
+    if new_user.role == "Coach":
+        coach_data = CoachCreateModel(**user_data.model_dump())
+        await coach_service.create_coach(new_user.user_id, coach_data, session)
+    if new_user.role == "Student":
+        student_data = StudentCreateModel(**user_data.model_dump())
+        await student_service.create_student(new_user.user_id, student_data, session)
+    if new_user.role == "Both":
+        student_data = StudentCreateModel(**user_data.model_dump())
+        await student_service.create_student(new_user.user_id, student_data, session)
+
+        coach_data = CoachCreateModel(**user_data.model_dump())
+        await coach_service.create_coach(new_user.user_id, coach_data, session)
+
     return new_user
-
-
-@user_router.get("/{user_uid}", response_model=UserResponseSchema, status_code=status.HTTP_200_OK)
-async def get_a_user(user_uid: str, session: AsyncSession = Depends(get_session), auth_user_details: dict = Depends(access_token_bearer)):
-    user = await user_service.get_user_by_id(user_uid, session)
-    
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Unable to find a user with ID:{user_uid}.")
-    else:
-        return user
-
-@user_router.patch("/{user_uid}", response_model=UserResponseSchema, status_code=status.HTTP_200_OK)
-async def update_a_user(user_uid: str, user_update_data: UserUpdateSchema, session: AsyncSession = Depends(get_session), auth_user_details: dict = Depends(access_token_bearer)):
-    updated_user = await user_service.update_a_user(user_uid, user_update_data, session)
-
-    if updated_user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Unable to find a user with ID:{user_uid} to update.")        
-    else:        
-        return updated_user
