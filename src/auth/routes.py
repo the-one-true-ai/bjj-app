@@ -30,7 +30,7 @@ from .utils import (
     create_url_safe_token,
     decode_url_safe_token,
 )
-from src.errors import UserAlreadyExists, UserNotFound, InvalidCredentials, InvalidToken
+from src.errors import InvalidCredentials, InvalidToken
 from src.config import Config
 from src.db.main import get_session
 from src.celery_tasks import send_email
