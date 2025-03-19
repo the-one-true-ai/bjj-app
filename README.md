@@ -78,3 +78,7 @@ pytest
 
 ## Contributing
 I welcome contributions to improve the documentation! You can contribute [here](https://github.com/jod35/fastapi-beyond-crud-docs).
+
+
+##
+Also dont forget to install redis.. (https://github.com/tporadowski/redis/releases)
