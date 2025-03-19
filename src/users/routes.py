@@ -1,48 +1,167 @@
-from fastapi import APIRouter, status, Depends, HTTPException
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from uuid import UUID
 from typing import List
-from sqlmodel.ext.asyncio.session import AsyncSession
+from src.db.models import User, Coaches, Students
+from src.users.schemas import UserModel, CoachModel, StudentModel, UserCreateModel, CoachCreateModel, StudentCreateModel
+from src.users.service import UserService, CoachService, StudentService
 from src.db.main import get_session
-from src.users.schemas import UserBaseSchema, UserUpdateSchema, UserBaseSchema
-from src.users.service import UserService
-from datetime import datetime
+from sqlmodel import select
+
 
 user_router = APIRouter()
+
+# Instantiate services
 user_service = UserService()
+coach_service = CoachService()
+student_service = StudentService()
 
-@user_router.get("/", response_model=List[UserBaseSchema], status_code=status.HTTP_200_OK)
-async def get_all_users(session: AsyncSession = Depends(get_session)):
-    users = await user_service.get_all_users(session)
-    return users
+#
+# Routes for Users
+#
 
-@user_router.post("/", response_model=UserBaseSchema, status_code=status.HTTP_201_CREATED)
-async def create_a_user(user_data: UserBaseSchema, session: AsyncSession = Depends(get_session)):
-    new_user = await user_service.create_a_user(user_data, session=session)
+# Route to get all users
+@user_router.get("/get_all_users", response_model=List[UserModel])
+async def get_all_users(session: AsyncSession = Depends(get_session)) -> List[UserModel]:
+    result = await user_service.get_all_users(session)
+    return result
+
+# Route to get user by id
+@user_router.get("/get_user_by_id/{user_id}", response_model=UserModel)
+async def get_user_by_id(user_id: UUID, session: AsyncSession = Depends(get_session)) -> UserModel:
+    result = await user_service.get_user_by_id(user_id, session)
+    return result
+
+# Route to get user by email
+@user_router.get("/get_user_by_email/{email}", response_model=UserModel)
+async def get_user_by_email(email: str, session: AsyncSession = Depends(get_session)) -> UserModel:
+    result = await user_service.get_user_by_email(email, session)
+    return result
+
+# Route to create a user
+@user_router.post("/create_user", response_model=UserModel)
+async def create_user(user_data: UserCreateModel, session: AsyncSession = Depends(get_session)) -> UserModel:
+    new_user = await user_service.create_a_user(user_data, session)
+    print(new_user.role)
+    print(new_user)
+    if new_user.role == "Coach":
+        coach_data = CoachCreateModel(**user_data.model_dump())
+        await coach_service.create_coach(new_user.user_id, coach_data, session)
+    
+    if new_user.role == "Student":
+        student_data = StudentCreateModel(**user_data.model_dump())
+        await student_service.create_student(new_user.user_id, student_data, session)
+    
+    if new_user.role == "Both":
+        student_data = StudentCreateModel(**user_data.model_dump())
+        await student_service.create_student(new_user.user_id, student_data, session)
+
+        coach_data = CoachCreateModel(**user_data.model_dump())
+        await coach_service.create_coach(new_user.user_id, coach_data, session)
+
     return new_user
 
-@user_router.get("/{user_uid}", response_model=UserBaseSchema, status_code=status.HTTP_200_OK)
-async def get_a_user(user_uid: str, session: AsyncSession = Depends(get_session)):
-    user = await user_service.get_a_user(user_uid, session)
-    
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Unable to find a user with ID:{user_uid}.")
+# Route to update a user
+@user_router.patch("/update_user/{user_id}", response_model=UserModel)
+async def update_user(user_id: UUID, user_data: UserCreateModel, session: AsyncSession = Depends(get_session)) -> UserModel:
+    updated_user = await user_service.update_user(user_id, user_data, session)
+    return updated_user
+
+
+# Route to delete a user
+@user_router.delete("/delete_user/{user_id}", response_model=UserModel)
+async def delete_user(user_id: UUID, session: AsyncSession = Depends(get_session)):
+    deleted_user = await user_service.delete_user(user_id, session)
+    return deleted_user
+
+
+#
+# Routes for Coaches
+#
+
+
+# Route to get all coaches
+@user_router.get("/get_all_coaches", response_model=List[CoachModel])
+async def get_all_coaches(session: AsyncSession = Depends(get_session)) -> List[CoachModel]:
+    result = await coach_service.get_all_coaches(session)
+    return result
+
+
+# Route to get coach by user id
+@user_router.get("/get_coach_by_user_id/{user_id}", response_model=CoachModel)
+async def get_coach_by_user_id(user_id: UUID, session: AsyncSession = Depends(get_session)) -> CoachModel:
+    result = await coach_service.get_coach_by_user_id(user_id, session)
+    return result
+
+# Route to get coach by coach id
+@user_router.get("/get_coach_by_coach_id/{coach_id}", response_model=CoachModel)
+async def get_coach_by_coach_id(coach_id: UUID, session: AsyncSession = Depends(get_session)) -> CoachModel:
+    result = await coach_service.get_coach_by_coach_id(coach_id, session)
+    return result
+
+
+# Route to create a coach
+@user_router.post("/create_coach/{user_id}", response_model=CoachModel)
+async def create_coach(user_id: UUID, coach_data: CoachCreateModel, session: AsyncSession = Depends(get_session)) -> CoachModel:
+
+    if await coach_service.get_coach_by_user_id(user_id, session):
+        new_coach = await coach_service.create_coach(user_id, coach_data, session)
     else:
-        return user
+        print('UserID does not exist.')
+        return None
 
-@user_router.patch("/{user_uid}", response_model=UserBaseSchema, status_code=status.HTTP_200_OK)
-async def update_a_user(user_uid: str, user_update_data: UserUpdateSchema, session: AsyncSession = Depends(get_session)):
-    updated_user = await user_service.update_a_user(user_uid, user_update_data, session)
 
-    if updated_user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Unable to find a user with ID:{user_uid} to update.")        
-    else:        
-        return updated_user
 
-@user_router.delete("/{user_uid}", response_model=UserBaseSchema, status_code=status.HTTP_200_OK)
-async def deactivate_a_user(user_uid: str, session: AsyncSession = Depends(get_session)):
-    deactivated_user = await user_service.deactivate_a_user(user_uid, session)
+#
+# Routes for Students
+#
 
-    if deactivated_user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Unable to find a user with ID:{user_uid} to deactivate.")
+
+# Route to get all students
+@user_router.get("/get_all_students", response_model=List[CoachModel])
+async def get_all_students(session: AsyncSession = Depends(get_session)) -> List[StudentModel]:
+    result = await student_service.get_all_students(session)
+    return result
+
+
+# Route to get student by user id
+@user_router.get("/get_student_by_user_id/{user_id}", response_model=StudentModel)
+async def get_student_by_user_id(user_id: UUID, session: AsyncSession = Depends(get_session)) -> StudentModel:
+    result = await student_service.get_student_by_user_id(user_id, session)
+    return result
+
+# Route to get student by coach id
+@user_router.get("/get_student_by_student_id/{student_id}", response_model=StudentModel)
+async def get_coach_by_coach_id(student_id: UUID, session: AsyncSession = Depends(get_session)) -> StudentModel:
+    result = await student_service.get_student_by_student_id(student_id, session)
+    return result
+
+
+# Route to create a student
+@user_router.post("/create_student/{user_id}", response_model=StudentModel)
+async def create_coach(user_id: UUID, student_data: StudentCreateModel, session: AsyncSession = Depends(get_session)) -> StudentModel:
+
+    if await student_service.get_student_by_user_id(user_id, session):
+        new_coach = await student_service.create_coach(user_id, student_data, session)
     else:
-        return deactivated_user
+        print('UserID does not exist.')
+        return None
 
+
+
+
+
+
+
+
+
+
+
+
+# Route to get all students
+@user_router.get("/get_all_students", response_model=List[StudentModel])
+async def get_all_students(session: AsyncSession = Depends(get_session)):
+    statement = select(Students)
+    result = await session.exec(statement)
+    students = result.all()
+    return students

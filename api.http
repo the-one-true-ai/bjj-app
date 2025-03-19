@@ -1,42 +1,27 @@
+GET  http://localhost:8000/api/v1/users/get_all_users
 
 ###
-GET  http://localhost:8000/api/v1/users
 
-
-###
-POST http://localhost:8000/api/v1/users
-
-{
-  "name": "Chris",
-  "belt": "Blue",
-  "started_at": "2020-05-01",
-  "preferred_ruleset": "Gi",
-  "bio": "Passionate BJJ practitioner.",
-  "social_links": "https://facebook.com/johndoe",
-  "competition_history": "Won several local tournaments.",
-  "associations": ["Maven BJJ", "DPG BJJ"],
-  "role": "both",
-  "verified": false,
-  "last_active": "2025-03-13T14:00:00Z",
-  "height": 180.5,
-  "weight": 75,
-  "age": 25,
-  "profile_picture": "https://example.com/profile_picture.jpeg"
-}
-
-
-###
-GET http://localhost:8000/api/v1/users/ca04db6f-6213-4acb-b6af-efbbb4126dd5
-
-
-###
-PATCH http://localhost:8000/api/v1/users/ca04db6f-6213-4acb-b6af-efbbb4126dd5
+POST http://localhost:8000/api/v1/users/create_user
 Content-Type: application/json
 
 {
-    "name": "Adam Ellis",
-    "belt": "Brown"
+  "email": "User4@example.com",
+  "password": "securepassword",
+  "role": "asdasd",
+  "username": "User4"
+}
+
+
+
+###
+POST http://localhost:8000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "User1@example.com",
+  "password": "securepassword"
 }
 
 ###
-DELETE http://localhost:8000/api/v1/users/8e6470e6-cc09-425e-9082-ec7b4273a4df
+GET  http://localhost:8000/api/v1/auth/me

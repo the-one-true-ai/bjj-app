@@ -1,76 +1,82 @@
-from pydantic import BaseModel, Field
 import uuid
-from datetime import datetime, date
-from typing import Optional, List, Dict
+from datetime import datetime
+from pydantic import BaseModel, Field
+from typing import Optional
+from src.users.validators import Role
 
-# Base schema for common fields (used for both creation and update)
-class UserBaseSchema(BaseModel):
-    name: str
+
+class UserCreateModel(BaseModel):
+    username: str = Field(max_length=8)
+    email: str = Field(max_length=40)
+    password: str = Field(min_length=6)
+    role: Role = Role.Student  # Default to 'Student' role
+
+    
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "username": "johndoe",
+                "email": "johndoe123@co.com",
+                "password": "testpass123",
+                "role": "Student",
+            }
+        }
+    }
+
+
+class UserModel(BaseModel):
+    user_id: uuid.UUID
+    username: str
     email: str
-    password: str = Field(min_length=10, max_length=30)
-    first_name: str
-    last_name: str 
-    is_verified: bool = "False"
-    belt: str
-    started_at: Optional[datetime] = None
-    preferred_ruleset: Optional[str] = "Both"  # Gi, No-Gi, or Both
-    bio: Optional[str] = None
-    social_links: Optional[str] = None  # Enforce valid URLs
-    competition_history: Optional[str] = None
-    associations: Optional[List[str]] = None
-    role: str = "Student"  # Defaults to student, can be "coach", "student", or "both"
-    height: Optional[float] = None
-    weight: Optional[float] = None
-    birthdate: Optional[date] = None
-    profile_picture: Optional[str] = "some_default_picture.jpeg"
-
-class FullUserSchema(UserBaseSchema):
-    uid: uuid.UUID
+    role: str
     created_at: datetime
     updated_at: datetime
-    status: str = "Active"
-    date_deactivated: Optional[datetime] = None    
 
-# User schema for updating (only fields that can be updated)
-class UserUpdateSchema(UserBaseSchema):
-    # Fields that can be updated after sign-up (belt, bio, etc.)
-    name: Optional[str] = None
-    belt: Optional[str] = None
-    preferred_ruleset: Optional[str] = None
-    bio: Optional[str] = None
-    social_links: Optional[str] = None
-    competition_history: Optional[str] = None
-    associations: Optional[List[str]] = None
-    profile_picture: Optional[str] = None
-    height: Optional[float] = None
-    weight: Optional[float] = None
-    birthdate: Optional[int] = None
-    role: Optional[str] = None  # Allow updating of role if necessary
+    class Config:
+        orm_mode = True
+        use_enum_values = True  # Automatically convert Enum to string values
 
+class CoachCreateModel(BaseModel):
+    expertise: Optional[str] = None  # Optional field for coach's expertise
+    affiliations: Optional[str] = None  # Optional field for gym or team affiliations
+    coach_bio: Optional[str] = None  # Optional field for a short bio about the coach
 
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "expertise": "Leglocks, Escapes, Takedowns",
+                "affiliations": "Brazilian Jiu-Jitsu Gym",
+                "coach_bio": "Experienced BJJ coach with 10 years of teaching."
+            }
+        }
 
-# FactCoach schema (for coaches only)
-class CoachSchema(BaseModel):
+class CoachModel(BaseModel):
     coach_id: uuid.UUID
-    uid: uuid.UUID
-    expertise: Optional[List[str]] = None  # Leglocks, Pins, Escapes, etc.
-    affiliations: Optional[List[str]] = None  # List of gyms
-    coach_bio: Optional[str] = None
-    languages: Optional[List[str]] = None
-    reviews_given: int = 0
-    active_flag: bool = True  # If coaches want to turn off from getting more requests
+    user_id: uuid.UUID  # Foreign key to User
+    expertise: Optional[str]  # E.g., 'Leglocks, Escapes, Takedowns'
+    affiliations: Optional[str]  # E.g., Gym name
+    coach_bio: Optional[str]  # Bio specific to their coaching experience
+
+    class Config:
+        orm_mode = True
 
 
-# FactStudent schema (for students only)
-class StudentSchema(BaseModel):
+class StudentCreateModel(BaseModel):
+    areas_working_on: Optional[str] = None  # Optional field to describe areas the student is working on
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "areas_working_on": "Guard Passing, Sweeps"
+            }
+        }
+
+
+class StudentModel(BaseModel):
     student_id: uuid.UUID
-    uid: uuid.UUID
-    areas_working_on: Optional[List[str]] = None  # Techniques being focused on
-    preferred_coach_style: Optional[List[str]] = None
+    user_id: uuid.UUID  # Foreign key to User
+    areas_working_on: Optional[str]  # E.g., 'Guard Passing, Sweeps'
 
-
-# User schema with full details (including relationships to coach and student info)
-class UserDetailSchema(UserBaseSchema):
-    coach_info: Optional[CoachSchema] = None
-    student_info: Optional[StudentSchema] = None
-
+    class Config:
+        orm_mode = True
