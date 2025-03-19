@@ -11,3 +11,17 @@ Content-Type: application/json
   "role": "asdasd",
   "username": "User4"
 }
+
+
+
+###
+POST http://localhost:8000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "User1@example.com",
+  "password": "securepassword"
+}
+
+###
+GET  http://localhost:8000/api/v1/auth/me
