@@ -6,8 +6,8 @@ POST http://localhost:8000/api/v1/users/create_user
 Content-Type: application/json
 
 {
-  "email": "Both@example.com",
+  "email": "User6@example.com",
   "password": "securepassword",
-  "role": "Both",
-  "username": "Both"
+  "role": "Student",
+  "username": "User6"
 }
