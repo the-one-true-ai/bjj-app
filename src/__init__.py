@@ -14,7 +14,7 @@ A REST API for the BJJ app
 version_prefix =f"/api/{version}"
 
 app = FastAPI(
-    title="Bookly",
+    title="BJJ app",
     description=description,
     version=version,
     license_info={"name": "MIT License", "url": "https://opensource.org/license/mit"},
