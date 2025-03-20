@@ -74,9 +74,11 @@ class UserService:
             raise HTTPException(status_code=500, detail="Internal Server Error")
 
     async def update_user_by_id(self, user_id: UUID, user_data: dict, session: AsyncSession):
+        # Need to add logic to add/delete rows from dim_student and dim_coach if the role changes.
         try:
             # Use get_user_by_id to fetch the user
             user = await self.get_user_by_id(user_id, session)
+            user_data = user_data.model_dump()
 
             if not user:
                 return None  # Return None if the user doesn't exist

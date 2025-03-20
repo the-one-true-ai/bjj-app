@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
 from typing import List
 from src.db.models import User, Coaches, Students
-from src.users.schemas import UserModel, CoachModel, StudentModel, UserCreateModel, CoachCreateModel, StudentCreateModel
+from src.users.schemas import UserModel, CoachModel, StudentModel, UserCreateModel, CoachCreateModel, StudentCreateModel, UserUpdateModel
 from src.users.service import UserService, CoachService, StudentService
 from src.db.main import get_session
 from sqlmodel import select
@@ -63,8 +63,8 @@ async def create_user(user_data: UserCreateModel, session: AsyncSession = Depend
 
 # Route to update a user
 @user_router.patch("/update_user/{user_id}", response_model=UserModel)
-async def update_user(user_id: UUID, user_data: UserCreateModel, session: AsyncSession = Depends(get_session)) -> UserModel:
-    updated_user = await user_service.update_user(user_id, user_data, session)
+async def update_user(user_id: UUID, user_data: UserUpdateModel, session: AsyncSession = Depends(get_session)) -> UserModel:
+    updated_user = await user_service.update_user_by_id(user_id, user_data, session)
     return updated_user
 
 

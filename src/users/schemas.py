@@ -24,6 +24,10 @@ class UserCreateModel(BaseModel):
         }
     }
 
+class UserUpdateModel(BaseModel):
+    username: Optional[str] = None
+    role: Optional[Role] = None
+
 
 class UserModel(BaseModel):
     user_id: uuid.UUID
