@@ -6,7 +6,7 @@ from src.users.validators import Role
 
 
 class UserCreateModel(BaseModel):
-    username: str = Field(max_length=8)
+    username: str = Field(max_length=30)
     email: str = Field(max_length=40)
     password: str = Field(min_length=6)
     role: Role = Role.Student  # Default to 'Student' role
