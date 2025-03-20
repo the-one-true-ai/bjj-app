@@ -3,7 +3,7 @@ import random
 import time
 
 # API Endpoint
-url = "https://sick-bjj-app.onrender.com//api/v1/users/create_user"
+url = "http://127.0.0.1:8000//api/v1/users/create_user"
 
 # List of famous BJJ practitioners and additional usernames
 bjj_names = [
@@ -38,12 +38,12 @@ roles = ["Student", "Coach", "Both"]
 def generate_email(username):
     return f"{username.lower()}@example.com"
 
-for i in range(2):
+for i in range(100):
     if not bjj_names:
         break  # Stop if we run out of unique names
     
     username = bjj_names.pop()
-    username = username[0:7]  # Limit to 7 characters and remove spaces
+    username = username  # Limit to 7 characters and remove spaces
     email = generate_email(username)
     role = random.choice(roles)
     
