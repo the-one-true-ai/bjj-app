@@ -17,8 +17,6 @@ user_service = UserService()
 coach_service = CoachService()
 student_service = StudentService()
 
-role_checker = RoleChecker(["admin"])
-
 #
 # Routes for Users
 #
