@@ -81,4 +81,8 @@ class RoleChecker:
         self.allowed_roles = allowed_roles
 
     def __call__(self, current_user: User = Depends(get_current_user)) -> Any:
-        pass
+        if current_user.role in self.allowed_roles:
+            return True
+        else:           
+            print(f"User: {current_user.username} does not have permission to access this resource.")
+            raise InsufficientPermission()

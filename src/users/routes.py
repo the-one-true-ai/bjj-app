@@ -7,6 +7,7 @@ from src.users.schemas import UserModel, CoachModel, StudentModel, UserCreateMod
 from src.users.service import UserService, CoachService, StudentService
 from src.db.main import get_session
 from sqlmodel import select
+from src.auth.dependencies import RoleChecker
 
 
 user_router = APIRouter()
@@ -16,13 +17,18 @@ user_service = UserService()
 coach_service = CoachService()
 student_service = StudentService()
 
+role_checker = RoleChecker(["admin"])
+
 #
 # Routes for Users
 #
 
 # Route to get all users
 @user_router.get("/get_all_users", response_model=List[UserModel])
-async def get_all_users(session: AsyncSession = Depends(get_session)) -> List[UserModel]:
+async def get_all_users(
+        session: AsyncSession = Depends(get_session),
+        role_access: bool = Depends(RoleChecker(["Admin"])) # Only admins can access this endpoint.
+        ) -> List[UserModel]:
     result = await user_service.get_all_users(session)
     return result
 
