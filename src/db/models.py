@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Optional
 from uuid import uuid4, UUID
 
+from sqlalchemy.dialects.postgresql import ARRAY
 import sqlalchemy.dialects.postgresql as pg
 from sqlalchemy import Enum, String
 from sqlmodel import Column, Field, Relationship, SQLModel
@@ -40,7 +41,9 @@ class Coaches(SQLModel, TimestampMixin, table=True):
         sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid4)
     )
     user_id: UUID = Field(foreign_key="dim_users.user_id")  # Foreign key to User table
-    expertise: Optional[str]  # E.g., 'Leglocks, Escapes, Takedowns'
+    expertise: Optional[list[str]] = Field(
+        sa_column=Column(ARRAY(String), nullable=True)
+    )  # E.g., ['Leglocks', 'Escapes', 'Takedowns']
     affiliations: Optional[str]  # E.g., Gym name
     coach_bio: Optional[str]  # Bio specific to their coaching experience
 
@@ -55,7 +58,8 @@ class Students(SQLModel, TimestampMixin, table=True):
         sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid4)
     )
     user_id: UUID = Field(foreign_key="dim_users.user_id")  # Foreign key to User table
-    areas_working_on: Optional[str]  # E.g., 'Guard Passing, Sweeps'
-
+    areas_working_on: Optional[list[str]] = Field(
+        sa_column=Column(ARRAY(String), nullable=True)
+    )  # E.g., ['Guard Passing', 'Sweeps', 'Takedowns']  
     # Relationship with User
     user: "User" = Relationship(back_populates="student")
