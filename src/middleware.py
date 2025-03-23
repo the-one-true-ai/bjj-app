@@ -26,7 +26,7 @@ def register_middleware(app: FastAPI):
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["sick-bjj-app.onrender.com/","localhost", "127.0.0.1", "localhost:5173", "localhost:8000"],
+        allow_origins=["sick-bjj-app.onrender.com/","localhost", "127.0.0.1", "localhost:5173", "localhost:8000", "bjj-app-frontend.vercel.app"],
         allow_methods=["*"],
         allow_headers=["*"],
         allow_credentials=True,
