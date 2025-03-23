@@ -32,13 +32,15 @@ async def get_all_users(
 
 # Route to get user by id
 @user_router.get("/get_user_by_id/{user_id}", response_model=UserModel)
-async def get_user_by_id(user_id: UUID, session: AsyncSession = Depends(get_session)) -> UserModel:
+async def get_user_by_id(user_id: UUID, session: AsyncSession = Depends(get_session),
+        role_access: bool = Depends(RoleChecker(["Admin"]))) -> UserModel:
     result = await user_service.get_user_by_id(user_id, session)
     return result
 
 # Route to get user by email
 @user_router.get("/get_user_by_email/{email}", response_model=UserModel)
-async def get_user_by_email(email: str, session: AsyncSession = Depends(get_session)) -> UserModel:
+async def get_user_by_email(email: str, session: AsyncSession = Depends(get_session),
+        role_access: bool = Depends(RoleChecker(["Admin"])))  -> UserModel:
     result = await user_service.get_user_by_email(email, session)
     return result
 
@@ -67,14 +69,16 @@ async def create_user(user_data: UserCreateModel, session: AsyncSession = Depend
 
 # Route to update a user
 @user_router.patch("/update_user/{user_id}", response_model=UserModel)
-async def update_user(user_id: UUID, user_data: UserUpdateModel, session: AsyncSession = Depends(get_session)) -> UserModel:
+async def update_user(user_id: UUID, user_data: UserUpdateModel, session: AsyncSession = Depends(get_session),
+        role_access: bool = Depends(RoleChecker(["Admin"])))  -> UserModel:
     updated_user = await user_service.update_user_by_id(user_id, user_data, session)
     return updated_user
 
 
 # Route to delete a user
 @user_router.delete("/delete_user/{user_id}", response_model=UserModel)
-async def delete_user(user_id: UUID, session: AsyncSession = Depends(get_session)):
+async def delete_user(user_id: UUID, session: AsyncSession = Depends(get_session),
+        role_access: bool = Depends(RoleChecker(["Admin"]))) :
     deleted_user = await user_service.delete_user(user_id, session)
     return deleted_user
 
@@ -123,20 +127,23 @@ async def create_coach(user_id: UUID, coach_data: CoachCreateModel, session: Asy
 
 # Route to get all students
 @user_router.get("/get_all_students", response_model=List[CoachModel])
-async def get_all_students(session: AsyncSession = Depends(get_session)) -> List[StudentModel]:
+async def get_all_students(session: AsyncSession = Depends(get_session),
+        role_access: bool = Depends(RoleChecker(["Admin"])))  -> List[StudentModel]:
     result = await student_service.get_all_students(session)
     return result
 
 
 # Route to get student by user id
 @user_router.get("/get_student_by_user_id/{user_id}", response_model=StudentModel)
-async def get_student_by_user_id(user_id: UUID, session: AsyncSession = Depends(get_session)) -> StudentModel:
+async def get_student_by_user_id(user_id: UUID, session: AsyncSession = Depends(get_session),
+        role_access: bool = Depends(RoleChecker(["Admin"])))  -> StudentModel:
     result = await student_service.get_student_by_user_id(user_id, session)
     return result
 
 # Route to get student by coach id
 @user_router.get("/get_student_by_student_id/{student_id}", response_model=StudentModel)
-async def get_coach_by_coach_id(student_id: UUID, session: AsyncSession = Depends(get_session)) -> StudentModel:
+async def get_coach_by_coach_id(student_id: UUID, session: AsyncSession = Depends(get_session),
+        role_access: bool = Depends(RoleChecker(["Admin", "Coach"])))  -> StudentModel:
     result = await student_service.get_student_by_student_id(student_id, session)
     return result
 
@@ -155,16 +162,10 @@ async def create_coach(user_id: UUID, student_data: StudentCreateModel, session:
 
 
 
-
-
-
-
-
-
-
 # Route to get all students
 @user_router.get("/get_all_students", response_model=List[StudentModel])
-async def get_all_students(session: AsyncSession = Depends(get_session)):
+async def get_all_students(session: AsyncSession = Depends(get_session),
+        role_access: bool = Depends(RoleChecker(["Admin"]))) -> List[StudentModel]:
     statement = select(Students)
     result = await session.exec(statement)
     students = result.all()
