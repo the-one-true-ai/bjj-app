@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     JWT_SECRET: str
     JWT_ALGORITHM: str
-    REDIS_URL: str = "redis://localhost:6379/0"
+    REDIS_URL: str = "redis-18921.c338.eu-west-2-1.ec2.redns.redis-cloud.com:18921"
     MAIL_USERNAME: str
     MAIL_PASSWORD: str
     MAIL_FROM: str
