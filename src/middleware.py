@@ -26,7 +26,11 @@ def register_middleware(app: FastAPI):
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["localhost:5173","bjj-app-frontend.vercel.app", "localhost:8000"],
+        allow_origins=[
+            "https://bjj-app-frontend.vercel.app",
+            "http://localhost:8000",
+            "http://localhost:5173"
+        ], 
         allow_methods=["*"],
         allow_headers=["*"],
         allow_credentials=True,
