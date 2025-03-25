@@ -7,7 +7,7 @@ from src.users.schemas import UserModel, CoachModel, StudentModel, UserCreateMod
 from src.users.service import UserService, CoachService, StudentService
 from src.db.main import get_session
 from sqlmodel import select
-from src.auth.dependencies import RoleChecker
+from src.auth.dependencies import RoleChecker, AccessTokenBearer, RefreshTokenBearer
 
 
 user_router = APIRouter()
@@ -17,32 +17,10 @@ user_service = UserService()
 coach_service = CoachService()
 student_service = StudentService()
 
-#
+
 # Routes for Users
-#
 
 # Route to get all users
-@user_router.get("/get_all_users", response_model=List[UserModel])
-async def get_all_users(
-        session: AsyncSession = Depends(get_session),
-        role_access: bool = Depends(RoleChecker(["Admin"])) # Only admins can access this endpoint.
-        ) -> List[UserModel]:
-    result = await user_service.get_all_users(session)
-    return result
-
-# Route to get user by id
-@user_router.get("/get_user_by_id/{user_id}", response_model=UserModel)
-async def get_user_by_id(user_id: UUID, session: AsyncSession = Depends(get_session),
-        role_access: bool = Depends(RoleChecker(["Admin"]))) -> UserModel:
-    result = await user_service._get_user_by_id(user_id, session)
-    return result
-
-# Route to get user by email
-@user_router.get("/get_user_by_email/{email}", response_model=UserModel)
-async def get_user_by_email(email: str, session: AsyncSession = Depends(get_session),
-        role_access: bool = Depends(RoleChecker(["Admin"])))  -> UserModel:
-    result = await user_service.get_user_by_email(email, session)
-    return result
 
 # Route to create a user
 @user_router.post("/create_user", response_model=UserModel)
@@ -67,25 +45,8 @@ async def create_user(user_data: UserCreateModel, session: AsyncSession = Depend
 
     return new_user
 
-# Route to update a user
-@user_router.patch("/update_user/{user_id}", response_model=UserModel)
-async def update_user(user_id: UUID, user_data: UserUpdateModel, session: AsyncSession = Depends(get_session),
-        role_access: bool = Depends(RoleChecker(["Admin"])))  -> UserModel:
-    updated_user = await user_service.update_user_by_id(user_id, user_data, session)
-    return updated_user
 
-
-# Route to delete a user
-@user_router.delete("/delete_user/{user_id}", response_model=UserModel)
-async def delete_user(user_id: UUID, session: AsyncSession = Depends(get_session),
-        role_access: bool = Depends(RoleChecker(["Admin"]))) :
-    deleted_user = await user_service.delete_user(user_id, session)
-    return deleted_user
-
-
-#
 # Routes for Coaches
-#
 
 
 # Route to get all coaches
@@ -95,78 +56,26 @@ async def get_all_coaches(session: AsyncSession = Depends(get_session)) -> List[
     return result
 
 
-# Route to get coach by user id
-@user_router.get("/get_coach_by_user_id/{user_id}", response_model=CoachModel)
-async def get_coach_by_user_id(user_id: UUID, session: AsyncSession = Depends(get_session)) -> CoachModel:
-    result = await coach_service.get_coach_by_user_id(user_id, session)
+@user_router.get("/authorised/coach/{coach_username}", response_model=CoachModel)
+async def get_coach_by_username(
+        coach_username: str,
+        session: AsyncSession = Depends(get_session),
+        token_data: dict = Depends(AccessTokenBearer()) # To make sure only logged-in users can access this.
+        ):
+    # This is to allow account holders to see more details about the coach. This can include a longer bio, more showcase videos, social media links, competition history etc.
+    # This should only be done via a click-through from the Coach's chat channels with the student to prevent coaches from just browsing students and any PII issues.
+    result = await coach_service.get_coach_by_username(username=coach_username)
     return result
 
-# Route to get coach by coach id
-@user_router.get("/get_coach_by_coach_id/{coach_id}", response_model=CoachModel)
-async def get_coach_by_coach_id(coach_id: UUID, session: AsyncSession = Depends(get_session)) -> CoachModel:
-    result = await coach_service.get_coach_by_coach_id(coach_id, session)
+@user_router.get("/public/coach/{coach_username}", response_model=CoachModel)
+async def get_coach_by_username(
+        coach_username: str,
+        session: AsyncSession = Depends(get_session)):
+    # This is to allow account holders to see more details about the coach. This can include a longer bio, more showcase videos, social media links, competition history etc.
+    # This should only be done via a click-through from the Coach's chat channels with the student to prevent coaches from just browsing students and any PII issues.
+    result = await coach_service.get_coach_by_username(username=coach_username)
     return result
 
 
-# Route to create a coach
-@user_router.post("/create_coach/{user_id}", response_model=CoachModel)
-async def create_coach(user_id: UUID, coach_data: Input_forSelf_CoachCreateModel, session: AsyncSession = Depends(get_session)) -> CoachModel:
-
-    if await coach_service.get_coach_by_user_id(user_id, session):
-        new_coach = await coach_service.add_coach_record(user_id, coach_data, session)
-    else:
-        print('UserID does not exist.')
-        return None
-
-
-
-#
 # Routes for Students
-#
 
-
-# Route to get all students
-@user_router.get("/get_all_students", response_model=List[CoachModel])
-async def get_all_students(session: AsyncSession = Depends(get_session),
-        role_access: bool = Depends(RoleChecker(["Admin"])))  -> List[StudentModel]:
-    result = await student_service.get_all_students(session)
-    return result
-
-
-# Route to get student by user id
-@user_router.get("/get_student_by_user_id/{user_id}", response_model=StudentModel)
-async def get_student_by_user_id(user_id: UUID, session: AsyncSession = Depends(get_session),
-        role_access: bool = Depends(RoleChecker(["Admin"])))  -> StudentModel:
-    result = await student_service.get_student_by_user_id(user_id, session)
-    return result
-
-# Route to get student by coach id
-@user_router.get("/get_student_by_student_id/{student_id}", response_model=StudentModel)
-async def get_coach_by_coach_id(student_id: UUID, session: AsyncSession = Depends(get_session),
-        role_access: bool = Depends(RoleChecker(["Admin", "Coach"])))  -> StudentModel:
-    result = await student_service.get_student_by_student_id(student_id, session)
-    return result
-
-
-# Route to create a student
-@user_router.post("/create_student/{user_id}", response_model=StudentModel)
-async def create_student(user_id: UUID, student_data: StudentCreateModel, session: AsyncSession = Depends(get_session)) -> StudentModel:
-
-    if await student_service.get_student_by_user_id(user_id, session):
-        new_student = await student_service.create_student(user_id, student_data, session)
-    else:
-        print('UserID does not exist.')
-        return None
-
-
-
-
-
-# Route to get all students
-@user_router.get("/get_all_students", response_model=List[StudentModel])
-async def get_all_students(session: AsyncSession = Depends(get_session),
-        role_access: bool = Depends(RoleChecker(["Admin"]))) -> List[StudentModel]:
-    statement = select(Students)
-    result = await session.exec(statement)
-    students = result.all()
-    return students
