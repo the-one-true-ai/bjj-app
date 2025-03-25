@@ -80,14 +80,11 @@ async def get_coach_by_username(
         ) -> Response_forAccountHolder_CoachProfile:
 
     coach, user = await coach_service.get_coach_by_username(coach_username=coach_username, session=session)
-    return {
-        "username": user.username,  # Access user attributes
-        "expertise": coach.expertise,  # Access coach attributes
-        "affiliation": coach.affiliations,
-        "coach_bio": coach.coach_bio,
-        "price": coach.price,
-        "accepting_responses": coach.accepting_responses,
-    }
+    return Response_forAccountHolder_CoachProfile(
+        **coach.model_dump(),  # This will include coach fields
+        username=user.username  # Add the user field
+    )
+
 
 
 @user_router.get("/public/coach/{coach_username}", response_model=Response_forPublic_CoachProfile)
@@ -96,11 +93,8 @@ async def get_coach_by_username(
         session: AsyncSession = Depends(get_session)) -> Response_forPublic_CoachProfile:
 
     coach, user = await coach_service.get_coach_by_username(coach_username=coach_username, session=session)
-    return {
-        "username": user.username,  # Access user attributes
-        "expertise": coach.expertise,  # Access coach attributes
-        "affiliation": coach.affiliations,
-        "coach_bio": coach.coach_bio
-    }
-
+    return Response_forPublic_CoachProfile(
+        **coach.model_dump(),  # This will include coach fields
+        username=user.username  # Add the user field
+    )
 
