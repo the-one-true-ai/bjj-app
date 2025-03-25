@@ -100,32 +100,19 @@ class CoachService:
 
 
 class StudentService:
-    async def get_all_students(self, session: AsyncSession):
+    async def get_student_by_username(self, student_username: str, session: AsyncSession):
         try:
-            statement = select(Students)
+            statement = (
+                select(Students)
+                .join(Students.user)
+                .where(Students.user.has(username=student_username)) # TODO: Add fuzzy lookup. Limit to Students only
+            )
             result = await session.exec(statement)
-            return result.all()  # Returns a list of all students
+            return result.all()
         except SQLAlchemyError as e:
-            print(f"Database error trying to get all students: {e}")
-            return []  # Return an empty list if there's an error
-    
-    async def get_student_by_user_id(self, user_id: UUID, session: AsyncSession):
-        try:
-            statement = select(Students).where(Students.user_id == user_id)
-            result = await session.exec(statement)
-            return result.first()
-        except SQLAlchemyError as e:
-            print(f"Database error trying to get student by user id: {e}")
+            print(f"Database error trying to get student by username: {e}")
             return None
 
-    async def get_student_by_student_id(self, student_id: UUID, session: AsyncSession):
-        try:
-            statement = select(Students).where(Students.student_id == student_id)
-            result = await session.exec(statement)
-            return result.first()
-        except SQLAlchemyError as e:
-            print(f"Database error trying to get student by student id: {e}")
-            return None
     
     async def create_student(self,user_id: UUID, student_data: StudentCreateModel, session: AsyncSession):
         try:
