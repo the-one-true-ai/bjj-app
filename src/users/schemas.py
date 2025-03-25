@@ -1,15 +1,16 @@
 import uuid
 from datetime import datetime
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
 from src.users.validators import Role
 
 
-class UserCreateModel(BaseModel):
+
+class Input_forPublic_UserCreateSchema(BaseModel):
     username: str = Field(max_length=30)
     email: str = Field(max_length=40)
     password: str = Field(min_length=6)
-    role: Role = Role.Student  # Default to 'Student' role
+    role: Role = Role.Student
 
     model_config = {
         "json_schema_extra": {
@@ -22,22 +23,27 @@ class UserCreateModel(BaseModel):
         }
     }
 
-class UserUpdateModel(BaseModel):
+class UserUpdateModel(BaseModel): # ! Will be going soon. Split out each field for fact tables
     username: Optional[str] = None
     role: Optional[Role] = None
 
 
-class UserModel(BaseModel):
+
+class Response_forSelf_UserSchema(BaseModel):
     user_id: uuid.UUID
     username: str
     email: str
     role: str
     created_at: datetime
     updated_at: datetime
+    height: int
+    weight: int
+    birthdate: datetime
+    belt: str
 
     class Config:
-        orm_mode = True
-        use_enum_values = True  # Automatically convert Enum to string values
+        from_attributes = True
+        use_enum_values = True
 
 class Input_forSelf_CoachCreateModel(BaseModel):
     expertise: Optional[str] = None  # Optional field for coach's expertise
@@ -50,7 +56,6 @@ class Input_forSelf_CoachCreateModel(BaseModel):
         nullable=True
     )    
 
-
     class Config:
         json_schema_extra = {
             "example": {
@@ -60,16 +65,21 @@ class Input_forSelf_CoachCreateModel(BaseModel):
             }
         }
 
-class CoachModel(BaseModel):
-    coach_id: uuid.UUID
-    user_id: uuid.UUID  # Foreign key to User
+class Response_forPublic_CoachProfile(BaseModel):
+    username: str  
     expertise: Optional[str]  # E.g., 'Leglocks, Escapes, Takedowns'
-    affiliations: Optional[str]  # E.g., Gym name
+    affiliation: Optional[str]
     coach_bio: Optional[str]  # Bio specific to their coaching experience
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
+class Response_forAccountHolder_CoachProfile(Response_forPublic_CoachProfile):
+    price: int
+    accepting_responses: bool
+
+class Response_forSelf_CoachProfile(Response_forAccountHolder_CoachProfile):
+    settings: str = "<Some user specific settings e.g., settings>"
 
 class StudentCreateModel(BaseModel):
     areas_working_on: Optional[str] = None  # Optional field to describe areas the student is working on
@@ -88,4 +98,4 @@ class StudentModel(BaseModel):
     areas_working_on: Optional[str]  # E.g., 'Guard Passing, Sweeps'
 
     class Config:
-        orm_mode = True
+        from_attributes = True

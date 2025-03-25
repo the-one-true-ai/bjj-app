@@ -4,7 +4,7 @@ from typing import List
 
 from pydantic import BaseModel, Field
 
-from src.users.schemas import UserModel, UserCreateModel
+from src.users.schemas import Response_forSelf_UserSchema, Response_forSelf_UserSchema
 
 
 class UserLoginModel(BaseModel):

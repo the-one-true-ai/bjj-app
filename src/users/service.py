@@ -3,7 +3,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 from uuid import UUID
 from src.db.models import User, Coaches, Students
-from src.users.schemas import UserCreateModel, Input_forSelf_CoachCreateModel, StudentCreateModel
+from src.users.schemas import Input_forPublic_UserCreateSchema, Input_forSelf_CoachCreateModel, StudentCreateModel
 from src.auth.utils import generate_passwd_hash
 from fastapi import HTTPException
 
@@ -43,7 +43,7 @@ class UserService:
             print(f"Database error trying to get user by username: {e}")
             return None
 
-    async def create_a_user(self, user_data: UserCreateModel, session: AsyncSession):
+    async def create_a_user(self, user_data: Input_forPublic_UserCreateSchema, session: AsyncSession):
         try:
             # Check if the username already exists
             if await self._username_exists(user_data.username, session):
