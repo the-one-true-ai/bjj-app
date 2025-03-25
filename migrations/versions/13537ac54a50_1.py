@@ -1,8 +1,8 @@
-"""add optional cols in user
+"""1
 
-Revision ID: a088c4b8135f
+Revision ID: 13537ac54a50
 Revises: 
-Create Date: 2025-03-25 09:45:40.043768
+Create Date: 2025-03-25 13:06:46.647402
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ import sqlmodel
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = 'a088c4b8135f'
+revision: str = '13537ac54a50'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -30,6 +30,7 @@ def upgrade() -> None:
     sa.Column('height', sa.Integer(), nullable=True),
     sa.Column('weight', sa.Integer(), nullable=True),
     sa.Column('birthdate', sa.DateTime(), nullable=True),
+    sa.Column('belt', sa.Enum('White', 'Blue', 'Purple', 'Brown', 'Black', 'Coral', name='belt'), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), nullable=False),
     sa.PrimaryKeyConstraint('user_id')
@@ -40,6 +41,8 @@ def upgrade() -> None:
     sa.Column('expertise', postgresql.ARRAY(sa.String()), nullable=True),
     sa.Column('affiliations', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('coach_bio', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('price', sa.Integer(), nullable=True),
+    sa.Column('accepting_responses', sa.Boolean(), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['dim_users.user_id'], ),

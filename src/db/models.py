@@ -7,7 +7,7 @@ import sqlalchemy.dialects.postgresql as pg
 from sqlalchemy import Enum, String
 from sqlmodel import Column, Field, Relationship, SQLModel
 
-from src.users.validators import Role
+from src.users.validators import Role, Belt
 from src.db.model_mixins import TimestampMixin, PIIMixin
 
 class User(SQLModel, TimestampMixin, PIIMixin, table=True):
@@ -22,7 +22,7 @@ class User(SQLModel, TimestampMixin, PIIMixin, table=True):
     role: str = Column(Enum(Role), nullable=False)  # Use Enum directly
     email: str = Field(
         sa_column=Column(pg.VARCHAR, nullable=False, info={"is_pii": True})
-    )  # Mark as PII
+    )  # Mark as PII    
     password_hash: str = Field(
         sa_column=Column(pg.VARCHAR, nullable=False), exclude=True
     )
@@ -40,7 +40,9 @@ class User(SQLModel, TimestampMixin, PIIMixin, table=True):
         le=250,  # Maximum value for weight
         nullable=True
     )
-    birthdate: Optional[datetime] = Field(default=None, nullable=True)  
+    birthdate: Optional[datetime] = Field(default=None, nullable=True)
+    belt: Belt = Field(sa_column=Column(Enum(Belt), nullable=False, default=Belt.White))
+
     
 
     # Define relationships
@@ -69,7 +71,10 @@ class Coaches(SQLModel, TimestampMixin, table=True):
         ge=5,  # Minimum value for price
         le=99,  # Maximum value for price
         nullable=True
-    )    
+    )
+    accepting_responses: bool = Field(
+        default=True, nullable=False
+    )  # Determines if the coach is currently accepting requests    
 
     # Relationship with User
     user: "User" = Relationship(back_populates="coach")

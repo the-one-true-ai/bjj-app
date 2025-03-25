@@ -1,9 +1,10 @@
 import requests
 import random
 import time
+from datetime import datetime, timedelta
 
 # API Endpoint
-url = "https://sick-bjj-app.onrender.com/api/v1/users/create_user"
+url = "http://127.0.0.1:8000/api/v1/users/create_user"
 
 # List of famous BJJ practitioners and additional usernames
 bjj_names = [
@@ -27,11 +28,19 @@ bjj_names = [
 random.shuffle(bjj_names)
 created_users = set()
 
-# Available roles
+# Available roles and belts
 roles = ["Student", "Coach", "Both"]
+belts = ["White", "Blue", "Purple", "Brown", "Black", "Red/Black", "Red/White", "Red"]
 
 def generate_email(username):
     return f"{username.lower()}@example.com"
+
+def random_birthdate():
+    """Generate a random birthdate between 18 and 50 years old."""
+    today = datetime.today()
+    age = random.randint(18, 50)
+    birthdate = today - timedelta(days=age * 365)
+    return birthdate.strftime("%Y-%m-%d")  # Format as YYYY-MM-DD
 
 for i in range(100):
     try:
@@ -39,10 +48,13 @@ for i in range(100):
             break  # Stop if we run out of unique names
         
         username = bjj_names.pop()
-        username = username  # Limit to 7 characters and remove spaces
         email = generate_email(username)
         role = random.choice(roles)
-        
+        height = random.randint(150, 200)  # Random height between 150cm and 200cm
+        weight = random.randint(60, 120)  # Random weight between 60kg and 120kg
+        birthdate = random_birthdate()
+        belt = random.choice(belts)
+
         if username in created_users:
             continue
         
@@ -50,13 +62,17 @@ for i in range(100):
             "email": email,
             "password": "securepassword",
             "role": role,
-            "username": username
+            "username": username,
+            "height": height,
+            "weight": weight,
+            "birthdate": birthdate,
+            "belt": belt
         }
         
         response = requests.post(url, json=payload)
         
-        print(f"User created: {username} ({role})")
-        print(f"Response code is:{response.status_code}")
+        print(f"User created: {username} ({role}, {belt}) - {height}cm, {weight}kg, Birthdate: {birthdate}")
+        print(f"Response code: {response.status_code}")
         created_users.add(username)
 
         time.sleep(0.5)  # Prevent overwhelming the server
