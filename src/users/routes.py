@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
 from typing import List
 from src.db.models import User, Coaches, Students
-from src.users.schemas import UserModel, CoachModel, StudentModel, UserCreateModel, Input_forSelf_CoachCreateModel, StudentCreateModel, UserUpdateModel
+from src.users.schemas import Input_forPublic_UserCreateSchema, Input_forSelf_CoachCreateModel, StudentCreateModel, Response_forSelf_UserSchema, Response_forPublic_CoachProfile, Response_forAccountHolder_CoachProfile
 from src.users.service import UserService, CoachService, StudentService
 from src.db.main import get_session
 from sqlmodel import select
@@ -21,8 +21,8 @@ student_service = StudentService()
 # Routes for Users
 
 # Route to create a user
-@user_router.post("/create_user", response_model=UserModel)
-async def create_user(user_data: UserCreateModel, session: AsyncSession = Depends(get_session)) -> UserModel:
+@user_router.post("/create_user", response_model=Response_forSelf_UserSchema)
+async def create_user(user_data: Input_forPublic_UserCreateSchema, session: AsyncSession = Depends(get_session)) -> Response_forSelf_UserSchema:
     new_user = await user_service.create_a_user(user_data, session)
     print(new_user.role)
     print(new_user)
@@ -48,32 +48,53 @@ async def create_user(user_data: UserCreateModel, session: AsyncSession = Depend
 
 
 # Route to get all coaches
-@user_router.get("/get_all_coaches", response_model=List[CoachModel])
-async def get_all_coaches(session: AsyncSession = Depends(get_session)) -> List[CoachModel]:
+@user_router.get("/public/get_all_coaches", response_model=List[Response_forPublic_CoachProfile])
+async def get_all_coaches(session: AsyncSession = Depends(get_session)) -> List[Response_forPublic_CoachProfile]:
     result = await coach_service.get_all_coaches(session)
-    return result
+    return [
+        Response_forPublic_CoachProfile(
+            **coach.model_dump(),  # Dynamically extract all fields from the Coach object
+            username=user.username,  # Include the username from the User object
+            affiliation=coach.affiliations if coach.affiliations else None  # Handle optional affiliation
+        )
+        for coach, user in result  # Unpack each tuple into coach and user
+    ]
 
+@user_router.get("/authorised/get_all_coaches", response_model=List[Response_forAccountHolder_CoachProfile])
+async def get_all_coaches(session: AsyncSession = Depends(get_session), token_data: dict = Depends(AccessTokenBearer())) -> List[Response_forAccountHolder_CoachProfile]:
+    result = await coach_service.get_all_coaches(session)
+    return [
+        Response_forAccountHolder_CoachProfile(
+            **coach.model_dump(),  # Dynamically extract all fields from the Coach object
+            username=user.username,  # Include the username from the User object
+            affiliation=coach.affiliations if coach.affiliations else None  # Handle optional affiliation
+        )
+        for coach, user in result  # Unpack each tuple into coach and user
+    ]
 
-@user_router.get("/authorised/coach/{coach_username}", response_model=CoachModel) #TODO: Make this a Response_forAccountHolder_CoachProfile
+@user_router.get("/authorised/coach/{coach_username}", response_model=Response_forAccountHolder_CoachProfile)
 async def get_coach_by_username(
         coach_username: str,
         session: AsyncSession = Depends(get_session),
         token_data: dict = Depends(AccessTokenBearer()) # To make sure only logged-in users can access this.
-        ):
-    # This is to allow account holders to see more details about the coach. This can include a longer bio, more showcase videos, social media links, competition history etc.
-    # This should only be done via a click-through from the Coach's chat channels with the student to prevent coaches from just browsing students and any PII issues.
-    result = await coach_service.get_coach_by_username(coach_username=coach_username, session=session)
-    return result
+        ) -> Response_forAccountHolder_CoachProfile:
 
-@user_router.get("/public/coach/{coach_username}", response_model=CoachModel) #TODO: Make this a Response_forPublic_CoachProfile
+    coach, user = await coach_service.get_coach_by_username(coach_username=coach_username, session=session)
+    return Response_forAccountHolder_CoachProfile(
+        **coach.model_dump(),  # This will include coach fields
+        username=user.username  # Add the user field
+    )
+
+
+
+@user_router.get("/public/coach/{coach_username}", response_model=Response_forPublic_CoachProfile)
 async def get_coach_by_username(
         coach_username: str,
-        session: AsyncSession = Depends(get_session)):
-    # This is to allow account holders to see more details about the coach. This can include a longer bio, more showcase videos, social media links, competition history etc.
-    # This should only be done via a click-through from the Coach's chat channels with the student to prevent coaches from just browsing students and any PII issues.
-    result = await coach_service.get_coach_by_username(coach_username=coach_username, session=session)
-    return result
+        session: AsyncSession = Depends(get_session)) -> Response_forPublic_CoachProfile:
 
-
-# Routes for Students
+    coach, user = await coach_service.get_coach_by_username(coach_username=coach_username, session=session)
+    return Response_forPublic_CoachProfile(
+        **coach.model_dump(),  # This will include coach fields
+        username=user.username  # Add the user field
+    )
 
