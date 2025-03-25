@@ -64,6 +64,12 @@ class Coaches(SQLModel, TimestampMixin, table=True):
     )  # E.g., ['Leglocks', 'Escapes', 'Takedowns']
     affiliations: Optional[str]  # E.g., Gym name
     coach_bio: Optional[str]  # Bio specific to their coaching experience
+    price: Optional[int] = Field(
+        default=5,
+        ge=5,  # Minimum value for price
+        le=99,  # Maximum value for price
+        nullable=True
+    )    
 
     # Relationship with User
     user: "User" = Relationship(back_populates="coach")
