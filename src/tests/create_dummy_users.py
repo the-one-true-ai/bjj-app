@@ -4,7 +4,7 @@ import time
 from datetime import datetime, timedelta
 
 # API Endpoint
-url = "http://127.0.0.1:8000/api/v1/users/create_user"
+url = "https://sick-bjj-app.onrender.com/api/v1/users/create_user"
 
 # List of famous BJJ practitioners and additional usernames
 bjj_names = [
@@ -30,7 +30,7 @@ created_users = set()
 
 # Available roles and belts
 roles = ["Student", "Coach", "Both"]
-belts = ["White", "Blue", "Purple", "Brown", "Black", "Red/Black", "Red/White", "Red"]
+belts = ["White", "Blue", "Purple", "Brown", "Black", "Coral"]
 
 def generate_email(username):
     return f"{username.lower()}@example.com"
@@ -47,7 +47,7 @@ for i in range(100):
         if not bjj_names:
             break  # Stop if we run out of unique names
         
-        username = bjj_names.pop()
+        username = f"{bjj_names.pop()}_{random.randint(1000, 9999)}"
         email = generate_email(username)
         role = random.choice(roles)
         height = random.randint(150, 200)  # Random height between 150cm and 200cm

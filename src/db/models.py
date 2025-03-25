@@ -41,7 +41,7 @@ class User(SQLModel, TimestampMixin, PIIMixin, table=True):
         nullable=True
     )
     birthdate: Optional[datetime] = Field(default=None, nullable=True)
-    belt: Belt = Field(sa_column=Column(Enum(Belt), nullable=False, default=Belt.White))
+    belt: Belt = Field(sa_column=Column(Enum(Belt), nullable=False))
 
     
 

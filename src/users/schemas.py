@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import Optional, List
-from src.users.validators import Role
+from src.users.validators import Role, Belt
 
 
 class Input_forPublic_UserCreateSchema(BaseModel):
@@ -13,6 +13,7 @@ class Input_forPublic_UserCreateSchema(BaseModel):
     height: Optional[int] = None  # Optional height
     weight: Optional[int] = None  # Optional weight
     birthdate: Optional[datetime] = None  # Optional birthdate
+    belt: Belt
 
     model_config = {
         "json_schema_extra": {
@@ -27,6 +28,7 @@ class Input_forPublic_UserCreateSchema(BaseModel):
             }
         }
     }
+
 class UserUpdateModel(BaseModel): # ! Will be going soon. Split out each field for fact tables
     username: Optional[str] = None
     role: Optional[Role] = None

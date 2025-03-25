@@ -24,8 +24,6 @@ student_service = StudentService()
 @user_router.post("/create_user", response_model=Response_forSelf_UserSchema)
 async def create_user(user_data: Input_forPublic_UserCreateSchema, session: AsyncSession = Depends(get_session)) -> Response_forSelf_UserSchema:
     new_user = await user_service.create_a_user(user_data, session)
-    print(new_user.role)
-    print(new_user)
     if new_user.role == "Coach":
         coach_data = Input_forSelf_CoachCreateModel(**user_data.model_dump())
         await coach_service.add_coach_record(new_user.user_id, coach_data, session)
