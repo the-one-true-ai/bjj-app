@@ -3,7 +3,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 from uuid import UUID
 from src.db.models import User, Coaches, Students
-from src.users.schemas import UserCreateModel, CoachCreateModel, StudentCreateModel
+from src.users.schemas import UserCreateModel, Input_forSelf_CoachCreateModel, StudentCreateModel
 from src.auth.utils import generate_passwd_hash
 from fastapi import HTTPException
 
@@ -12,15 +12,6 @@ class UserService:
     def __init__(self):
         self.coach_service = CoachService()
         self.student_service = StudentService()
-
-    async def get_all_users(self, session: AsyncSession):
-        try:
-            statement = select(User)
-            result = await session.exec(statement)
-            return result.all()
-        except SQLAlchemyError as e:
-            print(f"Database error trying to get all users: {e}")
-            return []   
     
     async def get_user_by_id(self, user_id: UUID, session: AsyncSession):
         try:
@@ -30,16 +21,6 @@ class UserService:
             return user
         except SQLAlchemyError as e:
             print(f"Database error trying to get user by id: {e}")
-            return None
-    
-    async def get_user_by_email(self, email: str, session: AsyncSession):
-        try:
-            statement = select(User).where(User.email == email)
-            result = await session.exec(statement)
-            user = result.first()
-            return user
-        except SQLAlchemyError as e:
-            print(f"Database error trying to get user by email: {e}")
             return None
 
     async def _username_exists(self, username: str, session: AsyncSession):
@@ -73,33 +54,6 @@ class UserService:
             # Raise HTTPException with a 500 status code for any database error
             raise HTTPException(status_code=500, detail="Internal Server Error")
 
-    async def update_user_by_id(self, user_id: UUID, user_data: dict, session: AsyncSession):
-        # Need to add logic to add/delete rows from dim_student and dim_coach if the role changes.
-        try:
-            # Use get_user_by_id to fetch the user
-            user = await self.get_user_by_id(user_id, session)
-            user_data = user_data.model_dump()
-
-            if not user:
-                return None  # Return None if the user doesn't exist
-
-            # Only update fields that are not None
-            for key, value in user_data.items():
-                if value is not None:
-                    setattr(user, key, value)
-
-            # Commit changes to the database
-            await session.commit()
-            return user  # Return the updated user
-
-        except SQLAlchemyError as e:
-            print(f"Database error trying to update user: {e}")
-            return None
-
-        
-    async def delete_user_by_id():
-        pass
-
 
 class CoachService:
     async def get_all_coaches(self, session: AsyncSession):
@@ -111,28 +65,20 @@ class CoachService:
             print(f"Database error trying to get all coaches: {e}")
             return []  # Return an empty list if there's an error
 
-    async def get_coach_by_user_id(self, user_id: UUID, session: AsyncSession):
+    async def get_coach_by_username(self, coach_username: str, session: AsyncSession):
         try:
-            statement = select(Coaches).where(Coaches.user_id == user_id)
+            statement = (
+                select(Coaches)
+                .join(Coaches.user)
+                .where(Coaches.user.has(username=coach_username)) # TODO: Add fuzzy lookup. Limit to Coaches only
+            )
             result = await session.exec(statement)
-            return result.first()
+            return result.all()  # Returns a list of all coaches
         except SQLAlchemyError as e:
-            print(f"Database error trying to get coach by user id: {e}")
-            return None
+            print(f"Database error trying to get all coaches: {e}")
+            return []  # Return an empty list if there's an error        
 
-    async def get_coach_by_coach_id(self, coach_id: UUID, session: AsyncSession):
-        try:
-            statement = select(Coaches).where(Coaches.coach_id == coach_id)
-            result = await session.exec(statement)
-            return result.first()
-        except SQLAlchemyError as e:
-            print(f"Database error trying to get coach by coach id: {e}")
-            return None
-
-    async def get_coach_by_expertise():
-        pass
-
-    async def create_coach(self, user_id: UUID, coach_data: CoachCreateModel, session: AsyncSession):
+    async def create_coach(self, user_id: UUID, coach_data: Input_forSelf_CoachCreateModel, session: AsyncSession):
         try:
             # Prepare coach data
             coach_data_dict = coach_data.model_dump()

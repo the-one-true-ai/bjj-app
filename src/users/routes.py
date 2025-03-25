@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
 from typing import List
 from src.db.models import User, Coaches, Students
-from src.users.schemas import UserModel, CoachModel, StudentModel, UserCreateModel, CoachCreateModel, StudentCreateModel, UserUpdateModel
+from src.users.schemas import UserModel, CoachModel, StudentModel, UserCreateModel, Input_forSelf_CoachCreateModel, StudentCreateModel, UserUpdateModel
 from src.users.service import UserService, CoachService, StudentService
 from src.db.main import get_session
 from sqlmodel import select
@@ -51,7 +51,7 @@ async def create_user(user_data: UserCreateModel, session: AsyncSession = Depend
     print(new_user.role)
     print(new_user)
     if new_user.role == "Coach":
-        coach_data = CoachCreateModel(**user_data.model_dump())
+        coach_data = Input_forSelf_CoachCreateModel(**user_data.model_dump())
         await coach_service.create_coach(new_user.user_id, coach_data, session)
     
     if new_user.role == "Student":
@@ -62,7 +62,7 @@ async def create_user(user_data: UserCreateModel, session: AsyncSession = Depend
         student_data = StudentCreateModel(**user_data.model_dump())
         await student_service.create_student(new_user.user_id, student_data, session)
 
-        coach_data = CoachCreateModel(**user_data.model_dump())
+        coach_data = Input_forSelf_CoachCreateModel(**user_data.model_dump())
         await coach_service.create_coach(new_user.user_id, coach_data, session)
 
     return new_user
@@ -110,7 +110,7 @@ async def get_coach_by_coach_id(coach_id: UUID, session: AsyncSession = Depends(
 
 # Route to create a coach
 @user_router.post("/create_coach/{user_id}", response_model=CoachModel)
-async def create_coach(user_id: UUID, coach_data: CoachCreateModel, session: AsyncSession = Depends(get_session)) -> CoachModel:
+async def create_coach(user_id: UUID, coach_data: Input_forSelf_CoachCreateModel, session: AsyncSession = Depends(get_session)) -> CoachModel:
 
     if await coach_service.get_coach_by_user_id(user_id, session):
         new_coach = await coach_service.create_coach(user_id, coach_data, session)
