@@ -5,12 +5,14 @@ from typing import Optional, List
 from src.users.validators import Role
 
 
-
 class Input_forPublic_UserCreateSchema(BaseModel):
     username: str = Field(max_length=30)
     email: str = Field(max_length=40)
     password: str = Field(min_length=6)
     role: Role = Role.Student
+    height: Optional[int] = None  # Optional height
+    weight: Optional[int] = None  # Optional weight
+    birthdate: Optional[datetime] = None  # Optional birthdate
 
     model_config = {
         "json_schema_extra": {
@@ -19,14 +21,15 @@ class Input_forPublic_UserCreateSchema(BaseModel):
                 "email": "johndoe123@co.com",
                 "password": "testpass123",
                 "role": "Student",
+                "height": 180,
+                "weight": 75,
+                "birthdate": "1990-01-01T00:00:00",
             }
         }
     }
-
 class UserUpdateModel(BaseModel): # ! Will be going soon. Split out each field for fact tables
     username: Optional[str] = None
     role: Optional[Role] = None
-
 
 
 class Response_forSelf_UserSchema(BaseModel):
@@ -36,14 +39,15 @@ class Response_forSelf_UserSchema(BaseModel):
     role: str
     created_at: datetime
     updated_at: datetime
-    height: int
-    weight: int
-    birthdate: datetime
+    height: Optional[int] = None  # Allow None for height
+    weight: Optional[int] = None  # Allow None for weight
+    birthdate: Optional[datetime] = None  # Allow None for birthdate
     belt: str
 
     class Config:
         from_attributes = True
         use_enum_values = True
+
 
 class Input_forSelf_CoachCreateModel(BaseModel):
     expertise: Optional[str] = None  # Optional field for coach's expertise
@@ -66,9 +70,9 @@ class Input_forSelf_CoachCreateModel(BaseModel):
         }
 
 class Response_forPublic_CoachProfile(BaseModel):
-    username: str  
-    expertise: Optional[str]  # E.g., 'Leglocks, Escapes, Takedowns'
-    affiliation: Optional[str]
+    username: str
+    expertise: Optional[List[str]]  # E.g., 'Leglocks, Escapes, Takedowns'
+    affiliation: Optional[str] = None
     coach_bio: Optional[str]  # Bio specific to their coaching experience
 
     class Config:

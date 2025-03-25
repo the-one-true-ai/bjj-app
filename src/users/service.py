@@ -68,7 +68,10 @@ class UserService:
 class CoachService:
     async def get_all_coaches(self, session: AsyncSession):
         try:
-            statement = select(Coaches)
+            statement = (
+                select(Coaches, User)  # Select both Coaches and User models
+                .join(User, User.user_id == Coaches.user_id)  # Join on user_id
+            )
             result = await session.exec(statement)
             return result.all()  # Returns a list of all coaches
         except SQLAlchemyError as e:
@@ -77,16 +80,24 @@ class CoachService:
 
     async def get_coach_by_username(self, coach_username: str, session: AsyncSession):
         try:
+            # Query to get the coach and its related user data
             statement = (
-                select(Coaches)
-                .join(Coaches.user)
-                .where(Coaches.user.has(username=coach_username)) # TODO: Add fuzzy lookup. Limit to Coaches only
+                select(Coaches, User)
+                .join(User, User.user_id == Coaches.user_id)  # Ensure you join the related User model
+                .where(Coaches.user.has(username=coach_username))
             )
             result = await session.exec(statement)
-            return result.first()  # Returns a list of all coaches
+            coach = result.first()  # Get the first result
+            
+            if not coach:
+                raise HTTPException(status_code=404, detail="Coach not found")
+            
+            # Map the coach and user data into the response model
+            return coach  # This will be passed to the response model for serialization
+
         except SQLAlchemyError as e:
-            print(f"Database error trying to get all coaches: {e}")
-            return []  # Return an empty list if there's an error        
+            print(f"Database error trying to get coach: {e}")
+            raise HTTPException(status_code=500, detail="Internal Server Error")
 
     async def add_coach_record(self, user_id: UUID, coach_data: Input_forSelf_CoachCreateModel, session: AsyncSession):
         try:

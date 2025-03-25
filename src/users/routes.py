@@ -51,13 +51,26 @@ async def create_user(user_data: Input_forPublic_UserCreateSchema, session: Asyn
 @user_router.get("/public/get_all_coaches", response_model=List[Response_forPublic_CoachProfile])
 async def get_all_coaches(session: AsyncSession = Depends(get_session)) -> List[Response_forPublic_CoachProfile]:
     result = await coach_service.get_all_coaches(session)
-    return result
+    return [
+        Response_forPublic_CoachProfile(
+            username=coach.user.username,  # Extract the username from the User object
+            affiliation=coach.affiliations if coach.affiliations else None,  # Set None if affiliations is empty or None
+            **{field: getattr(coach, field) for field in coach.__table__.columns.keys()}  # Extract all other fields from Coach dynamically
+        )
+        for coach, user in result  # Unpack each tuple into coach and user
+    ]
 
 @user_router.get("/authorised/get_all_coaches", response_model=List[Response_forAccountHolder_CoachProfile])
 async def get_all_coaches(session: AsyncSession = Depends(get_session), token_data: dict = Depends(AccessTokenBearer())) -> List[Response_forAccountHolder_CoachProfile]:
     result = await coach_service.get_all_coaches(session)
-    return result
-
+    return [
+        Response_forAccountHolder_CoachProfile(
+            username=coach.user.username,  # Extract the username from the User object
+            affiliation=coach.affiliations if coach.affiliations else None,  # Set None if affiliations is empty or None
+            **{field: getattr(coach, field) for field in coach.__table__.columns.keys()}  # Extract all other fields from Coach dynamically
+        )
+        for coach, user in result  # Unpack each tuple into coach and user
+    ]
 
 @user_router.get("/authorised/coach/{coach_username}", response_model=Response_forAccountHolder_CoachProfile)
 async def get_coach_by_username(
@@ -65,18 +78,29 @@ async def get_coach_by_username(
         session: AsyncSession = Depends(get_session),
         token_data: dict = Depends(AccessTokenBearer()) # To make sure only logged-in users can access this.
         ) -> Response_forAccountHolder_CoachProfile:
-    # This is to allow account holders to see more details about the coach. This can include a longer bio, more showcase videos, social media links, competition history etc.
-    # This should only be done via a click-through from the Coach's chat channels with the student to prevent coaches from just browsing students and any PII issues.
-    result = await coach_service.get_coach_by_username(coach_username=coach_username, session=session)
-    return result
+
+    coach, user = await coach_service.get_coach_by_username(coach_username=coach_username, session=session)
+    return {
+        "username": user.username,  # Access user attributes
+        "expertise": coach.expertise,  # Access coach attributes
+        "affiliation": coach.affiliations,
+        "coach_bio": coach.coach_bio,
+        "price": coach.price,
+        "accepting_responses": coach.accepting_responses,
+    }
+
 
 @user_router.get("/public/coach/{coach_username}", response_model=Response_forPublic_CoachProfile)
 async def get_coach_by_username(
         coach_username: str,
         session: AsyncSession = Depends(get_session)) -> Response_forPublic_CoachProfile:
-    # This is to allow account holders to see more details about the coach. This can include a longer bio, more showcase videos, social media links, competition history etc.
-    # This should only be done via a click-through from the Coach's chat channels with the student to prevent coaches from just browsing students and any PII issues.
-    result = await coach_service.get_coach_by_username(coach_username=coach_username, session=session)
-    return result
+
+    coach, user = await coach_service.get_coach_by_username(coach_username=coach_username, session=session)
+    return {
+        "username": user.username,  # Access user attributes
+        "expertise": coach.expertise,  # Access coach attributes
+        "affiliation": coach.affiliations,
+        "coach_bio": coach.coach_bio
+    }
 
 

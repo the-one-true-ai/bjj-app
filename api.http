@@ -3,38 +3,32 @@ Content-Type: application/json
 
 
 {
-  "email": "dfadasdasd@example.com",
+  "email": "dfsdfsdf@example.com",
   "password": "securepassword",
   "role": "Coach",
-  "username": "asdasdasd"
+  "username": "sdfsdfsd"
 }
 
 ###
-GET http://127.0.0.1:8000/api/v1/users/get_all_coaches
+GET http://127.0.0.1:8000/api/v1/users/public/get_all_coaches
 
 ###
-GET http://127.0.0.1:8000/api/v1/users/authorised/coach/User4
+GET http://127.0.0.1:8000/api/v1/users/authorised/get_all_coaches
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYWNoYWwyQGV4YW1wbGUuY29tIiwidXNlcl9pZCI6IjU1Y2IwNWY4LWY2OWItNGE3Yi1hMzJjLTkxNjJkZjVjOGFlNyIsInJvbGUiOiJDb2FjaCJ9LCJleHAiOjE3NDI5MTgyMDIsImp0aSI6IjU4ODBkNjg1LTEwYWItNDcxZi1iYWEzLTI0NGJiYzdlNTRiYiIsInJlZnJlc2giOmZhbHNlfQ.eXwYRL6uKa94LwHIYHmIKfKTnNxL-Mit5inliADJpAw
+
+
+###
+GET http://127.0.0.1:8000/api/v1/users/authorised/coach/AdamHightowerEllis
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiVXNlcjRAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMDFjZWNiZGEtMGZkYy00NzJlLWE2NWYtZDA1MDQ2YmU2Y2NhIiwicm9sZSI6IkJvdGgifSwiZXhwIjoxNzQyOTA0NjY3LCJqdGkiOiJhMjMyM2VlNC1kZmVmLTQxMDYtYjFmOS00OGE5MzA3ZWI4MTgiLCJyZWZyZXNoIjpmYWxzZX0.o7wyFq56lRHWq-pAYAwYNM4ezKCP4geke-NCQubHGgg
 
 ###
-GET http://127.0.0.1:8000/api/v1/users/public/coach/User4
+GET http://127.0.0.1:8000/api/v1/users/public/coach/AdamHightowerEllis
 
 ###
 POST http://127.0.0.1:8000/api/v1/auth/login
 Content-Type: application/json
 
-
 {
-  "email": "User4@example.com",
+  "email": "achal2@example.com",
   "password": "securepassword"
 }
-
-###
-GET  http://127.0.0.1:8000/api/v1/auth/me
-Authorization: Bearer eyJhbGciOiJIUzI
-1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYWNoYWxAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiOWU5ZDJlOTktMzQ3MS00YjNlLWFjZGQtNGE5ZWY3MzRiMmYxIiwicm9sZSI6IkNvYWNoIn0sImV4cCI6MTc0MjQ4Mjk1NiwianRpIjoiNzA5YjFhY2EtMGFlMC00YzFjLThhOWYtNjY4MDk4YmY1NWRlIiwicmVmcmVzaCI6ZmFsc2V9.tw1seSB-k69mlT8tbzIuOGYvgShJWczv8C8d3C6ORe8
-
-###
-GET http://127.0.0.1:8000/api/v1/auth/logout
-Authorization: Bearer eyJhbGciOiJIUz
-I1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYW1lcmlkYW5AZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMTBhZGYyMDYtNDQ1OC00ZWNiLTkzMjAtZjg4MDExN2VmNThmIiwicm9sZSI6IkFkbWluIn0sImV4cCI6MTc0MjcyNDE1MiwianRpIjoiZjFjNGU2ZGQtZTc2NC00MjY1LWE0YmMtMDk5MDJkN2IzNGU3IiwicmVmcmVzaCI6ZmFsc2V9.EsGELR8hbIdO5UZB3f_UYbeg5l2diisSC1XS-EGJYkU
