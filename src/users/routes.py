@@ -53,9 +53,9 @@ async def get_all_coaches(session: AsyncSession = Depends(get_session)) -> List[
     result = await coach_service.get_all_coaches(session)
     return [
         Response_forPublic_CoachProfile(
-            username=coach.user.username,  # Extract the username from the User object
-            affiliation=coach.affiliations if coach.affiliations else None,  # Set None if affiliations is empty or None
-            **{field: getattr(coach, field) for field in coach.__table__.columns.keys()}  # Extract all other fields from Coach dynamically
+            **coach.model_dump(),  # Dynamically extract all fields from the Coach object
+            username=user.username,  # Include the username from the User object
+            affiliation=coach.affiliations if coach.affiliations else None  # Handle optional affiliation
         )
         for coach, user in result  # Unpack each tuple into coach and user
     ]
@@ -65,9 +65,9 @@ async def get_all_coaches(session: AsyncSession = Depends(get_session), token_da
     result = await coach_service.get_all_coaches(session)
     return [
         Response_forAccountHolder_CoachProfile(
-            username=coach.user.username,  # Extract the username from the User object
-            affiliation=coach.affiliations if coach.affiliations else None,  # Set None if affiliations is empty or None
-            **{field: getattr(coach, field) for field in coach.__table__.columns.keys()}  # Extract all other fields from Coach dynamically
+            **coach.model_dump(),  # Dynamically extract all fields from the Coach object
+            username=user.username,  # Include the username from the User object
+            affiliation=coach.affiliations if coach.affiliations else None  # Handle optional affiliation
         )
         for coach, user in result  # Unpack each tuple into coach and user
     ]
