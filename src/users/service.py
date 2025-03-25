@@ -73,7 +73,7 @@ class CoachService:
                 .where(Coaches.user.has(username=coach_username)) # TODO: Add fuzzy lookup. Limit to Coaches only
             )
             result = await session.exec(statement)
-            return result.all()  # Returns a list of all coaches
+            return result.first()  # Returns a list of all coaches
         except SQLAlchemyError as e:
             print(f"Database error trying to get all coaches: {e}")
             return []  # Return an empty list if there's an error        

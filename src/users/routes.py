@@ -64,7 +64,7 @@ async def get_coach_by_username(
         ):
     # This is to allow account holders to see more details about the coach. This can include a longer bio, more showcase videos, social media links, competition history etc.
     # This should only be done via a click-through from the Coach's chat channels with the student to prevent coaches from just browsing students and any PII issues.
-    result = await coach_service.get_coach_by_username(username=coach_username)
+    result = await coach_service.get_coach_by_username(username=coach_username, session=session)
     return result
 
 @user_router.get("/public/coach/{coach_username}", response_model=CoachModel)
@@ -73,7 +73,7 @@ async def get_coach_by_username(
         session: AsyncSession = Depends(get_session)):
     # This is to allow account holders to see more details about the coach. This can include a longer bio, more showcase videos, social media links, competition history etc.
     # This should only be done via a click-through from the Coach's chat channels with the student to prevent coaches from just browsing students and any PII issues.
-    result = await coach_service.get_coach_by_username(username=coach_username)
+    result = await coach_service.get_coach_by_username(coach_username=coach_username, session=session)
     return result
 
 
