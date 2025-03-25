@@ -13,7 +13,7 @@ class UserService:
         self.coach_service = CoachService()
         self.student_service = StudentService()
     
-    async def get_user_by_id(self, user_id: UUID, session: AsyncSession):
+    async def _get_user_by_id(self, user_id: UUID, session: AsyncSession):
         try:
             statement = select(User).where(User.user_id == user_id)
             result = await session.exec(statement)
@@ -78,12 +78,15 @@ class CoachService:
             print(f"Database error trying to get all coaches: {e}")
             return []  # Return an empty list if there's an error        
 
-    async def create_coach(self, user_id: UUID, coach_data: Input_forSelf_CoachCreateModel, session: AsyncSession):
+    async def add_coach_record(self, user_id: UUID, coach_data: Input_forSelf_CoachCreateModel, session: AsyncSession):
         try:
             # Prepare coach data
             coach_data_dict = coach_data.model_dump()
             new_coach = Coaches(**coach_data_dict)
             new_coach.user_id = user_id  # Assign the user_id to the new coach
+
+            # Ensure some columns in dim_user table are populated
+            # ? Does this need to be done in this way?
 
             # Save coach to database
             session.add(new_coach)

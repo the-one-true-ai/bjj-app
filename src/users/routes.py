@@ -34,7 +34,7 @@ async def get_all_users(
 @user_router.get("/get_user_by_id/{user_id}", response_model=UserModel)
 async def get_user_by_id(user_id: UUID, session: AsyncSession = Depends(get_session),
         role_access: bool = Depends(RoleChecker(["Admin"]))) -> UserModel:
-    result = await user_service.get_user_by_id(user_id, session)
+    result = await user_service._get_user_by_id(user_id, session)
     return result
 
 # Route to get user by email
@@ -113,7 +113,7 @@ async def get_coach_by_coach_id(coach_id: UUID, session: AsyncSession = Depends(
 async def create_coach(user_id: UUID, coach_data: Input_forSelf_CoachCreateModel, session: AsyncSession = Depends(get_session)) -> CoachModel:
 
     if await coach_service.get_coach_by_user_id(user_id, session):
-        new_coach = await coach_service.create_coach(user_id, coach_data, session)
+        new_coach = await coach_service.add_coach_record(user_id, coach_data, session)
     else:
         print('UserID does not exist.')
         return None
@@ -150,10 +150,10 @@ async def get_coach_by_coach_id(student_id: UUID, session: AsyncSession = Depend
 
 # Route to create a student
 @user_router.post("/create_student/{user_id}", response_model=StudentModel)
-async def create_coach(user_id: UUID, student_data: StudentCreateModel, session: AsyncSession = Depends(get_session)) -> StudentModel:
+async def create_student(user_id: UUID, student_data: StudentCreateModel, session: AsyncSession = Depends(get_session)) -> StudentModel:
 
     if await student_service.get_student_by_user_id(user_id, session):
-        new_coach = await student_service.create_coach(user_id, student_data, session)
+        new_student = await student_service.create_student(user_id, student_data, session)
     else:
         print('UserID does not exist.')
         return None
