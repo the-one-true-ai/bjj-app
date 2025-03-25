@@ -52,7 +52,7 @@ async def login_users(
     email = login_data.email
     password = login_data.password
 
-    user = await user_service.get_user_by_email(email, session)
+    user = await user_service._get_user_by_email(email, session)
 
     if user is not None:
         password_valid = verify_password(password, user.password_hash)

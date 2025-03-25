@@ -7,12 +7,14 @@ import sqlalchemy.dialects.postgresql as pg
 from sqlalchemy import Enum, String
 from sqlmodel import Column, Field, Relationship, SQLModel
 
-from src.users.validators import Role
+from src.users.validators import Role, Belt
 from src.db.model_mixins import TimestampMixin, PIIMixin
 
 class User(SQLModel, TimestampMixin, PIIMixin, table=True):
     __tablename__ = "dim_users"
     
+    # Mandatory fields
+
     user_id: UUID = Field(
         sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid4)
     )
@@ -20,10 +22,28 @@ class User(SQLModel, TimestampMixin, PIIMixin, table=True):
     role: str = Column(Enum(Role), nullable=False)  # Use Enum directly
     email: str = Field(
         sa_column=Column(pg.VARCHAR, nullable=False, info={"is_pii": True})
-    )  # Mark as PII
+    )  # Mark as PII    
     password_hash: str = Field(
         sa_column=Column(pg.VARCHAR, nullable=False), exclude=True
     )
+
+    # Optional fields  
+    height: Optional[int] = Field(
+        default=None,
+        ge=100,  # Minimum value for height
+        le=250,  # Maximum value for height
+        nullable=True
+    )
+    weight: Optional[int] = Field(
+        default=None,
+        ge=30,  # Minimum value for weight
+        le=250,  # Maximum value for weight
+        nullable=True
+    )
+    birthdate: Optional[datetime] = Field(default=None, nullable=True)
+    belt: Belt = Field(sa_column=Column(Enum(Belt), nullable=False, default=Belt.White))
+
+    
 
     # Define relationships
     coach: Optional["Coaches"] = Relationship(
@@ -46,6 +66,15 @@ class Coaches(SQLModel, TimestampMixin, table=True):
     )  # E.g., ['Leglocks', 'Escapes', 'Takedowns']
     affiliations: Optional[str]  # E.g., Gym name
     coach_bio: Optional[str]  # Bio specific to their coaching experience
+    price: Optional[int] = Field(
+        default=5,
+        ge=5,  # Minimum value for price
+        le=99,  # Maximum value for price
+        nullable=True
+    )
+    accepting_responses: bool = Field(
+        default=True, nullable=False
+    )  # Determines if the coach is currently accepting requests    
 
     # Relationship with User
     user: "User" = Relationship(back_populates="coach")

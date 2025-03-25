@@ -11,8 +11,6 @@ class UserCreateModel(BaseModel):
     password: str = Field(min_length=6)
     role: Role = Role.Student  # Default to 'Student' role
 
-    
-
     model_config = {
         "json_schema_extra": {
             "example": {
@@ -41,10 +39,17 @@ class UserModel(BaseModel):
         orm_mode = True
         use_enum_values = True  # Automatically convert Enum to string values
 
-class CoachCreateModel(BaseModel):
+class Input_forSelf_CoachCreateModel(BaseModel):
     expertise: Optional[str] = None  # Optional field for coach's expertise
     affiliations: Optional[str] = None  # Optional field for gym or team affiliations
     coach_bio: Optional[str] = None  # Optional field for a short bio about the coach
+    price: Optional[int] = Field(
+        default=None,
+        ge=5,  # Minimum value for price
+        le=99,  # Maximum value for price
+        nullable=True
+    )    
+
 
     class Config:
         json_schema_extra = {
