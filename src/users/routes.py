@@ -20,8 +20,6 @@ student_service = StudentService()
 
 # Routes for Users
 
-# Route to get all users
-
 # Route to create a user
 @user_router.post("/create_user", response_model=UserModel)
 async def create_user(user_data: UserCreateModel, session: AsyncSession = Depends(get_session)) -> UserModel:
@@ -30,7 +28,7 @@ async def create_user(user_data: UserCreateModel, session: AsyncSession = Depend
     print(new_user)
     if new_user.role == "Coach":
         coach_data = Input_forSelf_CoachCreateModel(**user_data.model_dump())
-        await coach_service.create_coach(new_user.user_id, coach_data, session)
+        await coach_service.add_coach_record(new_user.user_id, coach_data, session)
     
     if new_user.role == "Student":
         student_data = StudentCreateModel(**user_data.model_dump())
@@ -41,7 +39,7 @@ async def create_user(user_data: UserCreateModel, session: AsyncSession = Depend
         await student_service.create_student(new_user.user_id, student_data, session)
 
         coach_data = Input_forSelf_CoachCreateModel(**user_data.model_dump())
-        await coach_service.create_coach(new_user.user_id, coach_data, session)
+        await coach_service.add_coach_record(new_user.user_id, coach_data, session)
 
     return new_user
 
@@ -56,7 +54,7 @@ async def get_all_coaches(session: AsyncSession = Depends(get_session)) -> List[
     return result
 
 
-@user_router.get("/authorised/coach/{coach_username}", response_model=CoachModel)
+@user_router.get("/authorised/coach/{coach_username}", response_model=CoachModel) #TODO: Make this a Response_forAccountHolder_CoachProfile
 async def get_coach_by_username(
         coach_username: str,
         session: AsyncSession = Depends(get_session),
@@ -67,7 +65,7 @@ async def get_coach_by_username(
     result = await coach_service.get_coach_by_username(coach_username=coach_username, session=session)
     return result
 
-@user_router.get("/public/coach/{coach_username}", response_model=CoachModel)
+@user_router.get("/public/coach/{coach_username}", response_model=CoachModel) #TODO: Make this a Response_forPublic_CoachProfile
 async def get_coach_by_username(
         coach_username: str,
         session: AsyncSession = Depends(get_session)):
