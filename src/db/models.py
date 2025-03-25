@@ -13,6 +13,8 @@ from src.db.model_mixins import TimestampMixin, PIIMixin
 class User(SQLModel, TimestampMixin, PIIMixin, table=True):
     __tablename__ = "dim_users"
     
+    # Mandatory fields
+
     user_id: UUID = Field(
         sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid4)
     )
@@ -24,6 +26,22 @@ class User(SQLModel, TimestampMixin, PIIMixin, table=True):
     password_hash: str = Field(
         sa_column=Column(pg.VARCHAR, nullable=False), exclude=True
     )
+
+    # Optional fields  
+    height: Optional[int] = Field(
+        default=None,
+        ge=100,  # Minimum value for height
+        le=250,  # Maximum value for height
+        nullable=True
+    )
+    weight: Optional[int] = Field(
+        default=None,
+        ge=30,  # Minimum value for weight
+        le=250,  # Maximum value for weight
+        nullable=True
+    )
+    birthdate: Optional[datetime] = Field(default=None, nullable=True)  
+    
 
     # Define relationships
     coach: Optional["Coaches"] = Relationship(

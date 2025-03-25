@@ -1,8 +1,8 @@
-"""role
+"""add optional cols in user
 
-Revision ID: 4246f83c704b
+Revision ID: a088c4b8135f
 Revises: 
-Create Date: 2025-03-19 11:19:37.656624
+Create Date: 2025-03-25 09:45:40.043768
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ import sqlmodel
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '4246f83c704b'
+revision: str = 'a088c4b8135f'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -24,26 +24,33 @@ def upgrade() -> None:
     op.create_table('dim_users',
     sa.Column('user_id', sa.UUID(), nullable=False),
     sa.Column('username', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('role', sa.Enum('Student', 'Coach', 'Both', name='role'), nullable=False),
-    sa.Column('email', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('role', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('email', sa.VARCHAR(), nullable=False),
     sa.Column('password_hash', sa.VARCHAR(), nullable=False),
-    sa.Column('created_at', postgresql.TIMESTAMP(), nullable=True),
-    sa.Column('updated_at', postgresql.TIMESTAMP(), nullable=True),
+    sa.Column('height', sa.Integer(), nullable=True),
+    sa.Column('weight', sa.Integer(), nullable=True),
+    sa.Column('birthdate', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
+    sa.Column('updated_at', sa.DateTime(timezone=True), nullable=False),
     sa.PrimaryKeyConstraint('user_id')
     )
     op.create_table('dim_coaches',
     sa.Column('coach_id', sa.UUID(), nullable=False),
     sa.Column('user_id', sa.Uuid(), nullable=False),
-    sa.Column('expertise', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('expertise', postgresql.ARRAY(sa.String()), nullable=True),
     sa.Column('affiliations', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('coach_bio', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
+    sa.Column('updated_at', sa.DateTime(timezone=True), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['dim_users.user_id'], ),
     sa.PrimaryKeyConstraint('coach_id')
     )
     op.create_table('dim_students',
     sa.Column('student_id', sa.UUID(), nullable=False),
     sa.Column('user_id', sa.Uuid(), nullable=False),
-    sa.Column('areas_working_on', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('areas_working_on', postgresql.ARRAY(sa.String()), nullable=True),
+    sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
+    sa.Column('updated_at', sa.DateTime(timezone=True), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['dim_users.user_id'], ),
     sa.PrimaryKeyConstraint('student_id')
     )
