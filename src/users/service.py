@@ -12,7 +12,17 @@ class UserService:
     def __init__(self):
         self.coach_service = CoachService()
         self.student_service = StudentService()
-    
+
+    async def _get_user_by_email(self, email: str, session: AsyncSession):
+        try:
+            statement = select(User).where(User.email == email)
+            result = await session.exec(statement)
+            user = result.first()
+            return user
+        except SQLAlchemyError as e:
+            print(f"Database error trying to get user by email: {e}")
+            return None    
+
     async def _get_user_by_id(self, user_id: UUID, session: AsyncSession):
         try:
             statement = select(User).where(User.user_id == user_id)
