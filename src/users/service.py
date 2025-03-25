@@ -98,6 +98,7 @@ class CoachService:
         except SQLAlchemyError as e:
             print(f"Database error trying to get coach: {e}")
             raise HTTPException(status_code=500, detail="Internal Server Error")
+            
 
     async def add_coach_record(self, user_id: UUID, coach_data: Input_forSelf_CoachCreateModel, session: AsyncSession):
         try:
