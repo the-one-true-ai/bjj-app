@@ -35,7 +35,7 @@ class FeedbackSessionService:
             message_content = new_session_data.message if new_session_data.message else None
             initial_message = Messages(
                 feedback_session_id=feedback_session.feedback_session_id,
-                sender_user_id=user.user_id,
+                sender_user_id=user.user_id, #! This is currently giving the coach's user_id, it should be the students User_id.
                 message_type="TEXT",  # Assuming TEXT for now #TODO: Have a smarter way of determining type of message.
                 message_content=message_content
             )
