@@ -17,14 +17,14 @@ class FeedbackSessionService:
             # Fetch the coach and associated user
             coach, user = await coach_service.get_coach_by_username(new_session_data.coach_username, session)
             if not coach:
-                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Coach not found")
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Coach not found") #TODO: Improve warnings
 
             # Now you can safely access coach_id
             feedback_session = FeedbackSession(
                 student_id=student_id,
                 coach_id=coach.coach_id,  # This should now work!
                 title=new_session_data.title,
-                status=FeedbackStatus.AWAITING_FEEDBACK
+                status=FeedbackStatus.AWAITING_FEEDBACK #TODO: Add a more sensible status
             )
 
             session.add(feedback_session)

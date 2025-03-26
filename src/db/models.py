@@ -47,7 +47,7 @@ class User(SQLModel, TimestampMixin, PIIMixin, table=True):
 
     
 
-    # Define relationships
+    # Define relationships  #TODO: Fix the weird column at the end
     coach: Optional["Coaches"] = Relationship(
         back_populates="user", sa_relationship_kwargs={"uselist": False}
     )
@@ -79,7 +79,7 @@ class Coaches(SQLModel, TimestampMixin, table=True):
     )  # Determines if the coach is currently accepting requests    
 
     # Relationship with User
-    user: "User" = Relationship(back_populates="coach")
+    user: "User" = Relationship(back_populates="coach")  #TODO: Fix the weird column at the end
 
 
 class Students(SQLModel, TimestampMixin, table=True):
@@ -93,7 +93,7 @@ class Students(SQLModel, TimestampMixin, table=True):
         sa_column=Column(ARRAY(String), nullable=True)
     )  # E.g., ['Guard Passing', 'Sweeps', 'Takedowns']  
     # Relationship with User
-    user: "User" = Relationship(back_populates="student")
+    user: "User" = Relationship(back_populates="student")  #TODO: Fix the weird column at the end
 
 
 
@@ -116,7 +116,7 @@ class FeedbackSession(SQLModel, TimestampMixin, table=True):
     date_closed: Optional[datetime] = Field(default=None, nullable=True)
 
     # One-to-many relationship with messages
-    messages: List["Messages"] = Relationship(back_populates="feedback_session")
+    messages: List["Messages"] = Relationship(back_populates="feedback_session") #TODO: Fix the weird column at the end
 
 
 class Messages(SQLModel, TimestampMixin, table=True):

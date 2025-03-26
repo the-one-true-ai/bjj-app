@@ -5,3 +5,5 @@ class Input_forStudent_FeedbackSessionCreateSchema(BaseModel):
     video: HttpUrl
     message: str
     coach_username: str
+
+# TODO: Create a ResponseSchema    

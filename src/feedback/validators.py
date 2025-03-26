@@ -5,6 +5,6 @@ class MessageType(str, Enum):
     AUDIO = "Audio"
     VIDEO = "Video"
 
-class FeedbackStatus(str, Enum):
+class FeedbackStatus(str, Enum): #TODO: Review this, doesnt really make that much sense
     AWAITING_FEEDBACK = "Awaiting feedback"
     FEEDBACK_GIVEN = "Feedback given"
