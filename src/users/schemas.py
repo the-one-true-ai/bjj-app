@@ -16,6 +16,15 @@ class Input_forPublic_UserCreateSchema(BaseModel):
     birthdate: Optional[datetime] = None  # Optional birthdate
     belt: Belt
 
+    expertise: Optional[List[str]] = None  # Optional field for coach's expertise
+    coach_bio: Optional[str] = None  # Optional field for a short bio about the coach
+    price: Optional[int] = Field(
+        default=None,
+        ge=5,  # Minimum value for price
+        le=99,  # Maximum value for price
+        nullable=True
+    )    
+
     model_config = {
         "json_schema_extra": {
             "example": {
@@ -53,8 +62,8 @@ class Response_forSelf_ProfileSchema(Response_forSelf_UserSchema):
 
 
 class Input_forSelf_CoachCreateModel(BaseModel):
-    expertise: Optional[str] = None  # Optional field for coach's expertise
-    affiliations: Optional[str] = None  # Optional field for gym or team affiliations
+    expertise: Optional[List[str]] = None  # Optional field for coach's expertise
+    affiliations: Optional[List[str]] = None  # Optional field for gym or team affiliations
     coach_bio: Optional[str] = None  # Optional field for a short bio about the coach
     price: Optional[int] = Field(
         default=None,

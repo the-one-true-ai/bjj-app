@@ -26,6 +26,7 @@ async def create_user(user_data: Input_forPublic_UserCreateSchema, session: Asyn
     new_user = await user_service.create_a_user(user_data, session)
     if new_user.role == "Coach":
         coach_data = Input_forSelf_CoachCreateModel(**user_data.model_dump())
+        print("Raw user_data:", user_data.model_dump())
         await coach_service.add_coach_record(new_user.user_id, coach_data, session)
     
     if new_user.role == "Student":

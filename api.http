@@ -1,13 +1,17 @@
-POST http://sick-bjj-app.onrender.com/api/v1/users/create_user
+POST http://127.0.0.1:8000/api/v1/users/create_user
 Content-Type: application/json
 
 
 {
-  "email": "123@example.com",
+  "email": "heleeelere34oee@example.com",
   "password": "securepassword",
   "role": "Coach",
-  "username": "123",
-  "belt": "Brown"
+  "username": "erre",
+  "belt": "Black",
+  "coach_bio": "SomeeStupuid",
+  "price": 7,
+  "expertise": ["legloc","takedown"],
+  "affiliation": ["mave", "andy"]
 }
 
 ###
