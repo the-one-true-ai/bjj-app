@@ -29,10 +29,6 @@ class Input_forPublic_UserCreateSchema(BaseModel):
         }
     }
 
-class UserUpdateModel(BaseModel): # ! Will be going soon. Split out each field for fact tables
-    username: Optional[str] = None
-    role: Optional[Role] = None
-
 
 class Response_forSelf_UserSchema(BaseModel):
     user_id: uuid.UUID
@@ -49,6 +45,10 @@ class Response_forSelf_UserSchema(BaseModel):
     class Config:
         from_attributes = True
         use_enum_values = True
+
+class Response_forSelf_ProfileSchema(Response_forSelf_UserSchema):
+    pass
+
 
 
 class Input_forSelf_CoachCreateModel(BaseModel):
@@ -87,7 +87,21 @@ class Response_forAccountHolder_CoachProfile(Response_forPublic_CoachProfile):
 class Response_forSelf_CoachProfile(Response_forAccountHolder_CoachProfile):
     settings: str = "<Some user specific settings e.g., settings>"
 
-class StudentCreateModel(BaseModel):
+
+
+
+
+
+
+
+
+
+
+
+
+# Will be deprecated soon
+
+class StudentCreateModel(BaseModel): # ! This will change soon
     areas_working_on: Optional[str] = None  # Optional field to describe areas the student is working on
 
     class Config:
@@ -98,10 +112,15 @@ class StudentCreateModel(BaseModel):
         }
 
 
-class StudentModel(BaseModel):
+class StudentModel(BaseModel): # ! This will change soon
     student_id: uuid.UUID
     user_id: uuid.UUID  # Foreign key to User
     areas_working_on: Optional[str]  # E.g., 'Guard Passing, Sweeps'
 
     class Config:
         from_attributes = True
+
+
+class UserUpdateModel(BaseModel): # ! Will be going soon. Split out each field for fact tables
+    username: Optional[str] = None
+    role: Optional[Role] = None        

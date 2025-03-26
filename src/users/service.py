@@ -1,6 +1,7 @@
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import selectinload
 from uuid import UUID
 from src.db.models import User, Coaches, Students
 from src.users.schemas import Input_forPublic_UserCreateSchema, Input_forSelf_CoachCreateModel, StudentCreateModel
@@ -12,6 +13,46 @@ class UserService:
     def __init__(self):
         self.coach_service = CoachService()
         self.student_service = StudentService()
+
+    async def get_full_user_profile(self, user_id: UUID, session: AsyncSession):
+        try:
+            # Query user with related Coach and Student profiles
+            statement = (
+                select(User)
+                .options(selectinload(User.coach))  # Load the related Coach if it exists
+                .options(selectinload(User.student))  # Load the related Student if it exists
+                .where(User.user_id == user_id)
+            )
+            result = await session.exec(statement)
+            user = result.first()
+
+            if not user:
+                raise HTTPException(status_code=404, detail="User not found")
+
+            # Extract user profile data
+            user_profile = {field: getattr(user, field) for field in user.__table__.columns.keys()}
+
+            # Extract coach profile data if it exists
+            coach_profile = (
+                {field: getattr(user.coach, field) for field in user.coach.__table__.columns.keys()} 
+                if user.coach else None
+            )
+
+            # Extract student profile data if it exists
+            student_profile = (
+                {field: getattr(user.student, field) for field in user.student.__table__.columns.keys()} 
+                if user.student else None
+            )
+
+            return {
+                "user_profile": user_profile,
+                "coach_profile": coach_profile,
+                "student_profile": student_profile
+            }
+
+        except SQLAlchemyError as e:
+            print(f"Database error trying to get full user profile: {e}")
+            raise HTTPException(status_code=500, detail="Internal Server Error")
 
     async def _get_user_by_email(self, email: str, session: AsyncSession):
         try:
