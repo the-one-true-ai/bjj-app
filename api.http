@@ -30,6 +30,10 @@ POST http://127.0.0.1:8000/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "achal2@example.com",
+  "email": "xanderibeiro@example.com",
   "password": "securepassword"
 }
+
+###
+GET http://127.0.0.1:8000/api/v1/users/my_profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoieGFuZGVyaWJlaXJvQGV4YW1wbGUuY29tIiwidXNlcl9pZCI6IjM1Yzg4OWI3LTQ0OTgtNDliZS04YjExLTI4ZDQwMjFiYWUxZiIsInJvbGUiOiJCb3RoIn0sImV4cCI6MTc0Mjk4NTk5MywianRpIjoiOWUxY2IwZjUtZjJkMi00YzgxLTg1OGItNzUwMjE0OWNiNDNmIiwicmVmcmVzaCI6ZmFsc2V9.X1625hEI1nyCn7dKgtqcan5qke6Wfm2AAgdvLRTrD7k

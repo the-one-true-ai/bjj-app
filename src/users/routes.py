@@ -7,7 +7,7 @@ from src.users.schemas import Input_forPublic_UserCreateSchema, Input_forSelf_Co
 from src.users.service import UserService, CoachService, StudentService
 from src.db.main import get_session
 from sqlmodel import select
-from src.auth.dependencies import RoleChecker, AccessTokenBearer, RefreshTokenBearer
+from src.auth.dependencies import RoleChecker, AccessTokenBearer, RefreshTokenBearer, get_current_user
 
 
 user_router = APIRouter()
@@ -41,6 +41,10 @@ async def create_user(user_data: Input_forPublic_UserCreateSchema, session: Asyn
 
     return new_user
 
+@user_router.get("/my_profile") # TODO: This should be a new Response_forSelf_ProfileSchema
+async def my_profile(user = Depends(get_current_user), session: AsyncSession = Depends(get_session), token_data: dict = Depends(AccessTokenBearer())):# -> Response_forSelf_UserSchema: # TODO: This should be a new Response_forSelf_ProfileSchema
+    result = await user_service.get_full_user_profile(user_id=user.user_id,session=session)
+    return result
 
 # Routes for Coaches
 
