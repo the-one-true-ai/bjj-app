@@ -3,10 +3,11 @@ Content-Type: application/json
 
 
 {
-  "email": "dfsdfsdf@example.com",
+  "email": "123@example.com",
   "password": "securepassword",
   "role": "Coach",
-  "username": "sdfsdfsd"
+  "username": "123",
+  "belt": "Brown"
 }
 
 ###

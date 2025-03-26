@@ -47,7 +47,7 @@ for i in range(100):
         if not bjj_names:
             break  # Stop if we run out of unique names
         
-        username = f"{bjj_names.pop()}_{random.randint(1000, 9999)}"
+        username = f"{bjj_names.pop()}_{random.randint(10, 100)}"
         email = generate_email(username)
         role = random.choice(roles)
         height = random.randint(150, 200)  # Random height between 150cm and 200cm
