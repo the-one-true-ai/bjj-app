@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 from uuid import uuid4, UUID
 
 from sqlalchemy.dialects.postgresql import ARRAY
@@ -8,7 +8,9 @@ from sqlalchemy import Enum, String
 from sqlmodel import Column, Field, Relationship, SQLModel
 
 from src.users.validators import Role, Belt
+from src.feedback.validators import MessageType, FeedbackStatus
 from src.db.model_mixins import TimestampMixin, PIIMixin
+
 
 class User(SQLModel, TimestampMixin, PIIMixin, table=True):
     __tablename__ = "dim_users"
@@ -45,7 +47,7 @@ class User(SQLModel, TimestampMixin, PIIMixin, table=True):
 
     
 
-    # Define relationships
+    # Define relationships  #TODO: Fix the weird column at the end
     coach: Optional["Coaches"] = Relationship(
         back_populates="user", sa_relationship_kwargs={"uselist": False}
     )
@@ -77,7 +79,7 @@ class Coaches(SQLModel, TimestampMixin, table=True):
     )  # Determines if the coach is currently accepting requests    
 
     # Relationship with User
-    user: "User" = Relationship(back_populates="coach")
+    user: "User" = Relationship(back_populates="coach")  #TODO: Fix the weird column at the end
 
 
 class Students(SQLModel, TimestampMixin, table=True):
@@ -91,4 +93,42 @@ class Students(SQLModel, TimestampMixin, table=True):
         sa_column=Column(ARRAY(String), nullable=True)
     )  # E.g., ['Guard Passing', 'Sweeps', 'Takedowns']  
     # Relationship with User
-    user: "User" = Relationship(back_populates="student")
+    user: "User" = Relationship(back_populates="student")  #TODO: Fix the weird column at the end
+
+
+
+
+class FeedbackSession(SQLModel, TimestampMixin, table=True):
+    __tablename__ = "fact_feedbacksessions"
+
+    feedback_session_id: UUID = Field(
+        sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid4)
+    )
+    student_id: UUID = Field(foreign_key="dim_students.student_id", nullable=False)
+    coach_id: UUID = Field(foreign_key="dim_coaches.coach_id", nullable=False)
+    title: str = Field(..., min_length=10, max_length=50, nullable=True)
+    status: FeedbackStatus = Field(nullable=False)
+    is_closed: bool = Field(default=False, nullable=False)
+    closed_by_coach: bool = Field(default=False, nullable=False)
+    closed_by_student: bool = Field(default=False, nullable=False)
+    review_by_student: str = Field(..., min_length=30, max_length=200, nullable=True)
+    review_by_coach: str = Field(..., min_length=30, max_length=200, nullable=True)
+    date_closed: Optional[datetime] = Field(default=None, nullable=True)
+
+    # One-to-many relationship with messages
+    messages: List["Messages"] = Relationship(back_populates="feedback_session") #TODO: Fix the weird column at the end
+
+
+class Messages(SQLModel, TimestampMixin, table=True):
+    __tablename__ = "fact_messages"
+
+    message_id: UUID = Field(
+        sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid4)
+    )
+    feedback_session_id: UUID = Field(foreign_key="fact_feedbacksessions.feedback_session_id", nullable=False)
+    sender_user_id: UUID = Field(foreign_key="dim_users.user_id", nullable=False)
+    message_type: MessageType = Field(nullable=False)
+    message_content: str = Field(nullable=False)  # Text or link to audio file
+
+    # Back-populating the feedback session relationship
+    feedback_session: FeedbackSession = Relationship(back_populates="messages")

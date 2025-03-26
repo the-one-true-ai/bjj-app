@@ -27,7 +27,7 @@ class UserService:
             user = result.first()
 
             if not user:
-                raise HTTPException(status_code=404, detail="User not found")
+                raise HTTPException(status_code=404, detail="User not found")# TODO: better errors
 
             # Extract user profile data
             user_profile = {field: getattr(user, field) for field in user.__table__.columns.keys()}
@@ -52,7 +52,7 @@ class UserService:
 
         except SQLAlchemyError as e:
             print(f"Database error trying to get full user profile: {e}")
-            raise HTTPException(status_code=500, detail="Internal Server Error")
+            raise HTTPException(status_code=500, detail="Internal Server Error") # TODO: better errors
 
     async def _get_user_by_email(self, email: str, session: AsyncSession):
         try:

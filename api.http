@@ -30,10 +30,22 @@ POST http://127.0.0.1:8000/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "xanderibeiro@example.com",
+  "email": "robertdrysdale_48@example.com",
   "password": "securepassword"
 }
 
 ###
 GET http://127.0.0.1:8000/api/v1/users/my_profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoieGFuZGVyaWJlaXJvQGV4YW1wbGUuY29tIiwidXNlcl9pZCI6IjM1Yzg4OWI3LTQ0OTgtNDliZS04YjExLTI4ZDQwMjFiYWUxZiIsInJvbGUiOiJCb3RoIn0sImV4cCI6MTc0Mjk4NTk5MywianRpIjoiOWUxY2IwZjUtZjJkMi00YzgxLTg1OGItNzUwMjE0OWNiNDNmIiwicmVmcmVzaCI6ZmFsc2V9.X1625hEI1nyCn7dKgtqcan5qke6Wfm2AAgdvLRTrD7k
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoicm9iZXJ0ZHJ5c2RhbGVfNDhAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMDk4NjhkNzAtY2FiYi00YWEwLTg2MDUtNzE3YTE5NWI4ZjI0Iiwicm9sZSI6IkJvdGgifSwiZXhwIjoxNzQzMDA0MjI1LCJqdGkiOiJkY2Q0MGNmMS01ZWJiLTRkNjEtODU0Yi0zNjRhMzZkNDE0NzMiLCJyZWZyZXNoIjpmYWxzZX0.80tp6q04VndeEjztSIhUUL793Qvuv3z4qS3R_UQpnPM
+
+###
+POST http://127.0.0.1:8000/api/v1/sessions/create_feedback_session
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoicm9iZXJ0ZHJ5c2RhbGVfNDhAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMDk4NjhkNzAtY2FiYi00YWEwLTg2MDUtNzE3YTE5NWI4ZjI0Iiwicm9sZSI6IkJvdGgifSwiZXhwIjoxNzQzMDA0MjI1LCJqdGkiOiJkY2Q0MGNmMS01ZWJiLTRkNjEtODU0Yi0zNjRhMzZkNDE0NzMiLCJyZWZyZXNoIjpmYWxzZX0.80tp6q04VndeEjztSIhUUL793Qvuv3z4qS3R_UQpnPM
+
+{
+  "title": "Improve My Armbar",
+  "video": "https://example.com/video.mp4",
+  "message": "Hey coach, I need help refining my armbar technique.",
+  "coach_username": "DanGeoghagen_33"
+}

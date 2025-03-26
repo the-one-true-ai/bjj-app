@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, List
 from src.users.validators import Role, Belt
 
+#TODO: Add model_config for each
 
 class Input_forPublic_UserCreateSchema(BaseModel):
     username: str = Field(max_length=30)

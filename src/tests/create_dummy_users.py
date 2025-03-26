@@ -4,7 +4,7 @@ import time
 from datetime import datetime, timedelta
 
 # API Endpoint
-url = "https://sick-bjj-app.onrender.com/api/v1/users/create_user"
+url = "http://127.0.0.1:8000/api/v1/users/create_user"
 
 # List of famous BJJ practitioners and additional usernames
 bjj_names = [
@@ -42,7 +42,7 @@ def random_birthdate():
     birthdate = today - timedelta(days=age * 365)
     return birthdate.strftime("%Y-%m-%d")  # Format as YYYY-MM-DD
 
-for i in range(100):
+for i in range(50):
     try:
         if not bjj_names:
             break  # Stop if we run out of unique names
