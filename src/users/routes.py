@@ -89,8 +89,6 @@ async def get_coach_by_username(
         username=user.username  # Add the user field
     )
 
-
-
 @user_router.get("/public/coach/{coach_username}", response_model=Response_forPublic_CoachProfile)
 async def get_coach_by_username(
         coach_username: str,
