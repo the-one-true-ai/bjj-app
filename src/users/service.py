@@ -18,7 +18,7 @@ class UserService:
         try:
             # Query the dim_students table to get the user_id by student_id
             statement = select(Students.user_id).where(Students.student_id == student_id)
-            result = await session.execute(statement)
+            result = await session.exec(statement)
             user_id = result.scalar_one_or_none()  # Get the user_id or None if not found
 
             if not user_id:
