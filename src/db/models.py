@@ -95,7 +95,7 @@ class FeedbackSession(SQLModel, TimestampMixin, table=True):
     closed_by_student: bool = Field(default=False, nullable=False)
     review_by_student: str = Field(nullable=True)
     review_by_coach: str = Field(nullable=True)
-    datetime_closed: Optional[datetime] = Field(default=None, nullable=True)
+    date_closed: Optional[date] = Field(default=None, nullable=True)
 
     # One-to-many relationship with messages
     messages: List["Messages"] = Relationship(back_populates="feedback_session") 

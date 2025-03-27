@@ -14,6 +14,23 @@ class UserService:
         self.coach_service = CoachService()
         self.student_service = StudentService()
 
+    async def _get_userID_from_studentID(self, student_id: UUID, session: AsyncSession):
+        try:
+            # Query the dim_students table to get the user_id by student_id
+            statement = select(Students.user_id).where(Students.student_id == student_id)
+            result = await session.execute(statement)
+            user_id = result.scalar_one_or_none()  # Get the user_id or None if not found
+
+            if not user_id:
+                raise HTTPException(status_code=404, detail="Student not found")  # Handle the case if no user found
+
+            return user_id  # Return the user_id directly
+
+        except SQLAlchemyError as e:
+            print(f"Database error trying to get user ID from student ID: {e}")
+            raise HTTPException(status_code=500, detail="Internal Server Error")
+
+
     async def get_full_user_profile(self, user_id: UUID, session: AsyncSession):
         try:
             # Query user with related Coach and Student profiles

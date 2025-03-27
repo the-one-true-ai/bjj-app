@@ -3,19 +3,19 @@ Content-Type: application/json
 
 
 {
-  "email": "user1@example.com",
+  "email": "Coach1@example.com",
   "password": "securepassword",
-  "role": "Both",
-  "username": "user1",
+  "role": "Coach",
+  "username": "Coach1",
   "belt": "Black",
-  "coach_bio": "SomeeStupuid",
-  "price": 7,
+  "coach_bio": "I am  a coach",
+  "price": 69,
   "height": 175,
   "weight": 200,
-  "expertise": ["leglocks", "dlr", "takedowns"],
-  "affiliations": ["maven bjj", "andy roberts"],
-  "areas_working_on": ["escapes", "holding mount"],
-  "birthdate": "2004-01-01"
+  "expertise": ["everything", "im", "awesome"],
+  "affiliations": ["maven", "dpg"],
+  "areas_working_on": ["none", "should exist"],
+  "birthdate": "1975-01-01"
 }
 
 ###
@@ -38,22 +38,22 @@ POST http://127.0.0.1:8000/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "user1@example.com",
+  "email": "student1@example.com",
   "password": "securepassword"
 }
 
 ###
 GET http://127.0.0.1:8000/api/v1/users/my_profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlcjFAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiNDI4M2M0NTEtYTM4My00ZDcyLWFiNzQtMDE4YWRlZWUxN2ZmIiwicm9sZSI6IkJvdGgifSwiZXhwIjoxNzQzMDg4MjUxLCJqdGkiOiI3NWM2YWRmNC0wYWYwLTQxYjItYmYxYS1hYzRmODhkMTUwNTgiLCJyZWZyZXNoIjpmYWxzZX0.yw9OJ0ofYnJ_iHBStlz_xj5GAOpr-5zoaTgGOldlHtQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoic3R1ZGVudDFAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMGYxMjMyYTMtMmIxMS00M2JiLWI1ZjAtOWFhN2JhOTgxZmRlIiwicm9sZSI6IlN0dWRlbnQifSwiZXhwIjoxNzQzMDg5NzY4LCJqdGkiOiI4YWRjNDQyNi1hOWI0LTQ2ZTAtYTg5Zi1jMTVhMzQ3OGI1YWEiLCJyZWZyZXNoIjpmYWxzZX0.pC_fDiB_GNkN5Mz_yhgF5MVMC2Kd2ipH0NAy-akGuVU
 
 ###
 POST http://127.0.0.1:8000/api/v1/sessions/create_feedback_session
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlcjFAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiNDI4M2M0NTEtYTM4My00ZDcyLWFiNzQtMDE4YWRlZWUxN2ZmIiwicm9sZSI6IkJvdGgifSwiZXhwIjoxNzQzMDg4MjUxLCJqdGkiOiI3NWM2YWRmNC0wYWYwLTQxYjItYmYxYS1hYzRmODhkMTUwNTgiLCJyZWZyZXNoIjpmYWxzZX0.yw9OJ0ofYnJ_iHBStlz_xj5GAOpr-5zoaTgGOldlHtQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoic3R1ZGVudDFAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMGYxMjMyYTMtMmIxMS00M2JiLWI1ZjAtOWFhN2JhOTgxZmRlIiwicm9sZSI6IlN0dWRlbnQifSwiZXhwIjoxNzQzMDg5NzY4LCJqdGkiOiI4YWRjNDQyNi1hOWI0LTQ2ZTAtYTg5Zi1jMTVhMzQ3OGI1YWEiLCJyZWZyZXNoIjpmYWxzZX0.pC_fDiB_GNkN5Mz_yhgF5MVMC2Kd2ipH0NAy-akGuVU
 
 {
-  "title": "Armbar help please",
+  "title": "I am a spaz please help me bro",
   "video": "https://example.com/video.mp4",
-  "message": "Hey coach, I need help refining my armbar technique.",
-  "coach_username": "user10"
+  "message": "Help me i suck at BJJ!",
+  "coach_username": "Coach1"
 }
