@@ -3,18 +3,19 @@ Content-Type: application/json
 
 
 {
-  "email": "user8@example.com",
+  "email": "user10@example.com",
   "password": "securepassword",
   "role": "Both",
-  "username": "user8",
+  "username": "user10",
   "belt": "Black",
   "coach_bio": "SomeeStupuid",
   "price": 7,
   "height": 175,
   "weight": 200,
-  "expertise": ["leglocks","takedowns"],
+  "expertise": ["leglocks", "dlr", "takedowns"],
   "affiliations": ["maven bjj", "andy roberts"],
-  "areas_working_on": ["escapes", "holding mount"]
+  "areas_working_on": ["escapes", "holding mount"],
+  "birthdate": "1951-01-01"
 }
 
 ###

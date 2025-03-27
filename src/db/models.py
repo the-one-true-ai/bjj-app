@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from typing import List, Optional
 from uuid import uuid4, UUID
 
@@ -38,12 +38,12 @@ class User(SQLModel, TimestampMixin, PIIMixin, table=True):
         default=None,
         sa_column=Column(pg.INTEGER, nullable=True)
     )
-    birthdate: Optional[datetime] = Field(default=None, sa_column=Column(pg.DATE, nullable=True)
+    birthdate: Optional[date] = Field(default=None, sa_column=Column(pg.DATE, nullable=True))
     belt: Belt = Field(sa_column=Column(Enum(Belt), nullable=False))
 
     
 
-    # Define relationships  #TODO: Fix the weird column at the end
+    # Define relationships  
     coach: Optional["Coaches"] = Relationship(
         back_populates="user", sa_relationship_kwargs={"uselist": False}
     )
@@ -66,7 +66,7 @@ class Coaches(SQLModel, TimestampMixin, table=True):
     accepting_responses: bool = Field(default=True, nullable=False)
 
     # Relationship with User
-    user: "User" = Relationship(back_populates="coach")  #TODO: Fix the weird column at the end
+    user: "User" = Relationship(back_populates="coach")  
 
 
 class Students(SQLModel, TimestampMixin, table=True):
@@ -77,9 +77,7 @@ class Students(SQLModel, TimestampMixin, table=True):
     areas_working_on: Optional[list[str]] = Field(sa_column=Column(ARRAY(String), nullable=True))
 
     # Relationship with User
-    user: "User" = Relationship(back_populates="student")  #TODO: Fix the weird column at the end
-
-
+    user: "User" = Relationship(back_populates="student")  
 
 
 class FeedbackSession(SQLModel, TimestampMixin, table=True):
@@ -100,7 +98,7 @@ class FeedbackSession(SQLModel, TimestampMixin, table=True):
     date_closed: Optional[datetime] = Field(default=None, nullable=True)
 
     # One-to-many relationship with messages
-    messages: List["Messages"] = Relationship(back_populates="feedback_session") #TODO: Fix the weird column at the end
+    messages: List["Messages"] = Relationship(back_populates="feedback_session") 
 
 
 class Messages(SQLModel, TimestampMixin, table=True):

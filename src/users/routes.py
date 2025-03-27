@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
 from typing import List
 from src.db.models import User, Coaches, Students
-from src.users.schemas import Input_forPublic_UserCreateSchema, Input_forSelf_CoachCreateModel, StudentCreateModel, Response_forSelf_UserSchema, Response_forPublic_CoachProfile, Response_forAccountHolder_CoachProfile
+from src.users.schemas import Input_forPublic_UserCreateSchema, Input_forSelf_CoachCreateModel, Input_forSelf_StudentCreateModel, Response_forSelf_UserSchema, Response_forPublic_CoachProfile, Response_forAccountHolder_CoachProfile
 from src.users.service import UserService, CoachService, StudentService
 from src.db.main import get_session
 from sqlmodel import select
@@ -30,11 +30,11 @@ async def create_user(user_data: Input_forPublic_UserCreateSchema, session: Asyn
         await coach_service.add_coach_record(new_user.user_id, coach_data, session)
     
     if new_user.role == "Student":
-        student_data = StudentCreateModel(**user_data.model_dump())
+        student_data = Input_forSelf_StudentCreateModel(**user_data.model_dump())
         await student_service.create_student(new_user.user_id, student_data, session)
     
     if new_user.role == "Both":
-        student_data = StudentCreateModel(**user_data.model_dump())
+        student_data = Input_forSelf_StudentCreateModel(**user_data.model_dump())
         await student_service.create_student(new_user.user_id, student_data, session)
 
         coach_data = Input_forSelf_CoachCreateModel(**user_data.model_dump())

@@ -4,7 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import selectinload
 from uuid import UUID
 from src.db.models import User, Coaches, Students
-from src.users.schemas import Input_forPublic_UserCreateSchema, Input_forSelf_CoachCreateModel, StudentCreateModel
+from src.users.schemas import Input_forPublic_UserCreateSchema, Input_forSelf_CoachCreateModel, Input_forSelf_StudentCreateModel
 from src.auth.utils import generate_passwd_hash
 from fastapi import HTTPException
 
@@ -177,7 +177,7 @@ class StudentService:
             return None
 
     
-    async def create_student(self,user_id: UUID, student_data: StudentCreateModel, session: AsyncSession):
+    async def create_student(self,user_id: UUID, student_data: Input_forSelf_StudentCreateModel, session: AsyncSession):
         try:
             # Prepare student data
             student_data_dict = student_data.model_dump()

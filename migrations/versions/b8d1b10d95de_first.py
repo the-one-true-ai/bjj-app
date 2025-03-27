@@ -1,8 +1,8 @@
-"""affil
+"""first
 
-Revision ID: 95425b8612cc
+Revision ID: b8d1b10d95de
 Revises: 
-Create Date: 2025-03-27 11:08:32.363630
+Create Date: 2025-03-27 13:39:09.472478
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ import sqlmodel
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '95425b8612cc'
+revision: str = 'b8d1b10d95de'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -27,9 +27,9 @@ def upgrade() -> None:
     sa.Column('role', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('email', sa.VARCHAR(), nullable=False),
     sa.Column('password_hash', sa.VARCHAR(), nullable=False),
-    sa.Column('height', sa.Integer(), nullable=True),
-    sa.Column('weight', sa.Integer(), nullable=True),
-    sa.Column('birthdate', sa.DateTime(), nullable=True),
+    sa.Column('height', sa.INTEGER(), nullable=True),
+    sa.Column('weight', sa.INTEGER(), nullable=True),
+    sa.Column('birthdate', sa.DATE(), nullable=True),
     sa.Column('belt', sa.Enum('White', 'Blue', 'Purple', 'Brown', 'Black', 'Coral', name='belt'), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), nullable=False),
@@ -61,13 +61,13 @@ def upgrade() -> None:
     sa.Column('feedback_session_id', sa.UUID(), nullable=False),
     sa.Column('student_id', sa.Uuid(), nullable=False),
     sa.Column('coach_id', sa.Uuid(), nullable=False),
-    sa.Column('title', sqlmodel.sql.sqltypes.AutoString(length=50), nullable=True),
+    sa.Column('title', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('status', sa.Enum('AWAITING_FEEDBACK', 'FEEDBACK_GIVEN', name='feedbackstatus'), nullable=False),
     sa.Column('is_closed', sa.Boolean(), nullable=False),
     sa.Column('closed_by_coach', sa.Boolean(), nullable=False),
     sa.Column('closed_by_student', sa.Boolean(), nullable=False),
-    sa.Column('review_by_student', sqlmodel.sql.sqltypes.AutoString(length=200), nullable=True),
-    sa.Column('review_by_coach', sqlmodel.sql.sqltypes.AutoString(length=200), nullable=True),
+    sa.Column('review_by_student', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('review_by_coach', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('date_closed', sa.DateTime(), nullable=True),
     sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), nullable=False),

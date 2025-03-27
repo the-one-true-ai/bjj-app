@@ -1,35 +1,48 @@
 import uuid
-from datetime import datetime
-from pydantic import BaseModel, Field
+from datetime import datetime, date
+from dateutil.relativedelta import relativedelta
+from pydantic import BaseModel, Field, field_validator, ValidationError
 from typing import Optional, List
-from src.users.validators import Role, Belt
+from src.users.validators import Role, Belt, validate_birthdate
 
 #TODO: Add model_config for each
 
-class Input_forPublic_UserCreateSchema(BaseModel):
-    # Mandatory user fields
+# Inputs
+
+class Input_forSelf_CoachCreateModel(BaseModel):
+    # Mandatory Coach fields
+
+    # Optional Coach fields
+    expertise: Optional[List[str]] = Field(default= lambda: [""], description="An array of strings of expertise areas of the coach.")
+    affiliations: Optional[List[str]] = Field(default= lambda: [""], description="An array of strings of the coaches affiliations.")
+    coach_bio: Optional[str] = Field(default=None, description="The coaches bio.") 
+    price: Optional[int] = Field(default=None, ge=5, le=99, description="Coach price per session (5-99).") 
+
+class Input_forSelf_StudentCreateModel(BaseModel):
+    # Mandatory Coach fields
+
+    # Optional Student fields
+    areas_working_on: Optional[List[str]] = Field(default= lambda: [""], description="An array of strings of the areas that the student is working on.")
+
+class Input_forPublic_UserCreateSchema(Input_forSelf_CoachCreateModel, Input_forSelf_StudentCreateModel):
+    # Mandatory User fields
     username: str = Field(min_length=5, max_length=30, description="The username of the user.")
     email: str = Field(min_length=10, max_length=40, description="The email address of the user.")
     password: str = Field(min_length=6, max_length=50, description="The user's password.")
     role: Role = Role.Student
 
-    # Optional user fields
+    # Optional User fields
     height: Optional[int] = Field(default=None, ge=75, le=300, description="User's height in cm (75-300cm).")
     weight: Optional[int] = Field(default=None, ge=50, le=300, description="User's weight in kg (50-300kg).")
-    birthdate: Optional[datetime] = None
-    belt: Belt = Belt.White
+    birthdate: Optional[date] = Field(default=None, description="The users birthday (must be 18+).") #TODO Add validation to make them 18+
+    belt: Belt = Field(default=Belt.White, description="The users current belt.")
 
-    # Optional coach fields
-    expertise: Optional[List[str]] = Field(default= lambda: [""])
-    affiliations: Optional[List[str]] = Field(default= lambda: [""])
-    coach_bio: Optional[str] = None
-    price: Optional[int] = Field(default=None, ge=5, le=99, description="Coach price per session (5-99).")
+    @field_validator("birthdate")
+    @classmethod
+    def validate_birthdate_field(cls, value: Optional[date]) -> Optional[date]:
+        return validate_birthdate(value)
 
-    # Optional student fields
-    areas_working_on: Optional[List[str]] = Field(default= lambda: [""])
-
-    #TODO: Add a model_config
-
+# Responses
 
 class Response_forSelf_UserSchema(BaseModel):
     user_id: uuid.UUID
@@ -50,19 +63,6 @@ class Response_forSelf_UserSchema(BaseModel):
 class Response_forSelf_ProfileSchema(Response_forSelf_UserSchema):
     pass
 
-
-class Input_forSelf_CoachCreateModel(BaseModel):
-    expertise: Optional[List[str]] = None
-    affiliations: Optional[List[str]] = None
-    coach_bio: Optional[str] = None
-    price: Optional[int] = Field(
-        default=None,
-        ge=5,
-        le=99,
-        nullable=True
-    )    
-
-    #TODO: Add a model_config
 
 class Response_forPublic_CoachProfile(BaseModel):
     username: str
@@ -85,18 +85,7 @@ class Response_forSelf_CoachProfile(Response_forAccountHolder_CoachProfile):
 
 # Will be deprecated soon
 
-class StudentCreateModel(BaseModel): # ! This will change soon
-    areas_working_on: Optional[List[str]] = None  # Optional field to describe areas the student is working on
-
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "areas_working_on": "Guard Passing, Sweeps"
-            }
-        }
-
-
-class StudentModel(BaseModel): # ! This will change soon
+class SudentModel(BaseModel): # ! This will change soon
     student_id: uuid.UUID
     user_id: uuid.UUID  # Foreign key to User
     areas_working_on: Optional[List[str]]  # E.g., 'Guard Passing, Sweeps'
