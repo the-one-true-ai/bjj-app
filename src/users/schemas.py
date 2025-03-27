@@ -20,13 +20,13 @@ class Input_forPublic_UserCreateSchema(BaseModel):
     belt: Belt = Belt.White
 
     # Optional coach fields
-    expertise: Optional[List[str]] = Field(default_factory=lambda: [""])
-    affiliations: Optional[List[str]] = Field(default_factory=lambda: [""])
+    expertise: Optional[List[str]] = Field(default= lambda: [""])
+    affiliations: Optional[List[str]] = Field(default= lambda: [""])
     coach_bio: Optional[str] = None
     price: Optional[int] = Field(default=None, ge=5, le=99, description="Coach price per session (5-99).")
 
     # Optional student fields
-    areas_working_on: Optional[List[str]] = Field(default_factory=lambda: [""])
+    areas_working_on: Optional[List[str]] = Field(default= lambda: [""])
 
     #TODO: Add a model_config
 
@@ -79,15 +79,6 @@ class Response_forAccountHolder_CoachProfile(Response_forPublic_CoachProfile):
 
 class Response_forSelf_CoachProfile(Response_forAccountHolder_CoachProfile):
     settings: str = "<Some user specific settings e.g., settings>"
-
-
-
-
-
-
-
-
-
 
 
 
