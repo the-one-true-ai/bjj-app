@@ -38,6 +38,7 @@ async def create_user(user_data: Input_forPublic_UserCreateSchema, session: Asyn
         await student_service.create_student(new_user.user_id, student_data, session)
 
         coach_data = Input_forSelf_CoachCreateModel(**user_data.model_dump())
+        print(user_data)
         await coach_service.add_coach_record(new_user.user_id, coach_data, session)
 
     return new_user

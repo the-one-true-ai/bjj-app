@@ -63,10 +63,8 @@ class Coaches(SQLModel, TimestampMixin, table=True):
         sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid4)
     )
     user_id: UUID = Field(foreign_key="dim_users.user_id")  # Foreign key to User table
-    expertise: Optional[list[str]] = Field(
-        sa_column=Column(ARRAY(String), nullable=True)
-    )  # E.g., ['Leglocks', 'Escapes', 'Takedowns']
-    affiliations: Optional[str]  # E.g., Gym name
+    expertise: Optional[list[str]] = Field(sa_column=Column(ARRAY(String), nullable=True))
+    affiliations: Optional[list[str]]  = Field(sa_column=Column(ARRAY(String), nullable=True))
     coach_bio: Optional[str]  # Bio specific to their coaching experience
     price: Optional[int] = Field(
         default=5,

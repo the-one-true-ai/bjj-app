@@ -3,15 +3,18 @@ Content-Type: application/json
 
 
 {
-  "email": "heleeelere34oee@example.com",
+  "email": "user2@example.com",
   "password": "securepassword",
-  "role": "Coach",
-  "username": "erre",
+  "role": "Both",
+  "username": "user2",
   "belt": "Black",
   "coach_bio": "SomeeStupuid",
   "price": 7,
-  "expertise": ["legloc","takedown"],
-  "affiliation": ["mave", "andy"]
+  "height": 150,
+  "weight": 23423423,
+  "expertise": ["leglocks","takedowns"],
+  "affiliations": ["maven bjj", "andy roberts"],
+  "areas_working_on": ["escapes", "holding mount"]
 }
 
 ###
@@ -30,17 +33,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsI
 GET http://sick-bjj-app.onrender.com/api/v1/users/public/coach/AnaCarolina_1981
 
 ###
-POST http://sick-bjj-app.onrender.com/api/v1/auth/login
+POST http://127.0.0.1:8000/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "adamhightowerellis@example.com",
+  "email": "randomuser14@example.com",
   "password": "securepassword"
 }
 
 ###
-GET http://sick-bjj-app.onrender.com/api/v1/users/my_profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYWRhbWhpZ2h0b3dlcmVsbGlzQGV4YW1wbGUuY29tIiwidXNlcl9pZCI6ImI0ODIxNDFlLWFjZTUtNGI3OS05OTY5LTMzMzRmZDllMmI0OCIsInJvbGUiOiJTdHVkZW50In0sImV4cCI6MTc0MzAxMjUyNCwianRpIjoiMzhmZDIyYTItOGJjYS00OTU1LWFiMWItZGZmNTRmYWU2ZjE1IiwicmVmcmVzaCI6ZmFsc2V9.Dbo8y9QBCeRdJ8JncOyQUmewoLrWv0lSJxkymmAqpAA
+GET http://127.0.0.1:8000/api/v1/users/my_profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoicmFuZG9tdXNlcjE0QGV4YW1wbGUuY29tIiwidXNlcl9pZCI6IjkwN2QxZDVmLTZmNGEtNDQyMy1hMmRkLTBlZjdkNmRjODdlOSIsInJvbGUiOiJDb2FjaCJ9LCJleHAiOjE3NDMwNzcwNDQsImp0aSI6ImM5YzMxNmZiLWM2NmItNDNmNC05ZTNhLTc4NzQzMjQyNDZkOSIsInJlZnJlc2giOmZhbHNlfQ.pcvnRRaLpPohgRZ_XlsffVZ_DMqM05QIDZoib31Fycs
 
 ###
 POST http://sick-bjj-app.onrender.com/api/v1/sessions/create_feedback_session
