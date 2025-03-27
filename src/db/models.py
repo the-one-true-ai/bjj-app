@@ -32,17 +32,13 @@ class User(SQLModel, TimestampMixin, PIIMixin, table=True):
     # Optional fields  
     height: Optional[int] = Field(
         default=None,
-        ge=100,  # Minimum value for height
-        le=250,  # Maximum value for height
-        nullable=True
+        sa_column=Column(pg.INTEGER, nullable=True)
     )
     weight: Optional[int] = Field(
         default=None,
-        ge=30,  # Minimum value for weight
-        le=250,  # Maximum value for weight
-        nullable=True
+        sa_column=Column(pg.INTEGER, nullable=True)
     )
-    birthdate: Optional[datetime] = Field(default=None, nullable=True)
+    birthdate: Optional[datetime] = Field(default=None, sa_column=Column(pg.DATE, nullable=True)
     belt: Belt = Field(sa_column=Column(Enum(Belt), nullable=False))
 
     
@@ -66,15 +62,8 @@ class Coaches(SQLModel, TimestampMixin, table=True):
     expertise: Optional[list[str]] = Field(sa_column=Column(ARRAY(String), nullable=True))
     affiliations: Optional[list[str]]  = Field(sa_column=Column(ARRAY(String), nullable=True))
     coach_bio: Optional[str]  # Bio specific to their coaching experience
-    price: Optional[int] = Field(
-        default=5,
-        ge=5,  # Minimum value for price
-        le=99,  # Maximum value for price
-        nullable=True
-    )
-    accepting_responses: bool = Field(
-        default=True, nullable=False
-    )  # Determines if the coach is currently accepting requests    
+    price: Optional[int] = Field(default=5, nullable=True)
+    accepting_responses: bool = Field(default=True, nullable=False)
 
     # Relationship with User
     user: "User" = Relationship(back_populates="coach")  #TODO: Fix the weird column at the end
@@ -83,13 +72,10 @@ class Coaches(SQLModel, TimestampMixin, table=True):
 class Students(SQLModel, TimestampMixin, table=True):
     __tablename__ = "dim_students"
     
-    student_id: UUID = Field(
-        sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid4)
-    )
-    user_id: UUID = Field(foreign_key="dim_users.user_id")  # Foreign key to User table
-    areas_working_on: Optional[list[str]] = Field(
-        sa_column=Column(ARRAY(String), nullable=True)
-    )  # E.g., ['Guard Passing', 'Sweeps', 'Takedowns']  
+    student_id: UUID = Field(sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid4))
+    user_id: UUID = Field(foreign_key="dim_users.user_id")
+    areas_working_on: Optional[list[str]] = Field(sa_column=Column(ARRAY(String), nullable=True))
+
     # Relationship with User
     user: "User" = Relationship(back_populates="student")  #TODO: Fix the weird column at the end
 
@@ -104,13 +90,13 @@ class FeedbackSession(SQLModel, TimestampMixin, table=True):
     )
     student_id: UUID = Field(foreign_key="dim_students.student_id", nullable=False)
     coach_id: UUID = Field(foreign_key="dim_coaches.coach_id", nullable=False)
-    title: str = Field(..., min_length=10, max_length=50, nullable=True)
+    title: str = Field(nullable=True)
     status: FeedbackStatus = Field(nullable=False)
     is_closed: bool = Field(default=False, nullable=False)
     closed_by_coach: bool = Field(default=False, nullable=False)
     closed_by_student: bool = Field(default=False, nullable=False)
-    review_by_student: str = Field(..., min_length=30, max_length=200, nullable=True)
-    review_by_coach: str = Field(..., min_length=30, max_length=200, nullable=True)
+    review_by_student: str = Field(nullable=True)
+    review_by_coach: str = Field(nullable=True)
     date_closed: Optional[datetime] = Field(default=None, nullable=True)
 
     # One-to-many relationship with messages
