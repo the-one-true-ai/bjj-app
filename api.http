@@ -19,7 +19,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://sick-bjj-app.onrender.com/api/v1/users/public/get_all_coaches
+GET http://127.0.0.1:8000/api/v1/users/public/get_all_coaches
 
 ###
 GET http://sick-bjj-app.onrender.com/api/v1/users/authorised/get_all_coaches
@@ -38,22 +38,22 @@ POST http://127.0.0.1:8000/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "user8@example.com",
+  "email": "user1@example.com",
   "password": "securepassword"
 }
 
 ###
 GET http://127.0.0.1:8000/api/v1/users/my_profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlcjhAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiYmYzOTQ5YjQtMDNlNy00YmRjLTgyY2MtODNmMjk0YWIwMDQwIiwicm9sZSI6IkJvdGgifSwiZXhwIjoxNzQzMDc4MDM4LCJqdGkiOiJmZmM2NWY0Zi1mMDk2LTRiYjYtYmIyNi01YzlkNWMzNGViYzMiLCJyZWZyZXNoIjpmYWxzZX0.WFC7iY83lG8osgL234s7TZJfGX3Pg23V0YR1JYCSaNA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlcjFAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiNDI4M2M0NTEtYTM4My00ZDcyLWFiNzQtMDE4YWRlZWUxN2ZmIiwicm9sZSI6IkJvdGgifSwiZXhwIjoxNzQzMDg4MjUxLCJqdGkiOiI3NWM2YWRmNC0wYWYwLTQxYjItYmYxYS1hYzRmODhkMTUwNTgiLCJyZWZyZXNoIjpmYWxzZX0.yw9OJ0ofYnJ_iHBStlz_xj5GAOpr-5zoaTgGOldlHtQ
 
 ###
-POST http://sick-bjj-app.onrender.com/api/v1/sessions/create_feedback_session
+POST http://127.0.0.1:8000/api/v1/sessions/create_feedback_session
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYWRhbWhpZ2h0b3dlcmVsbGlzQGV4YW1wbGUuY29tIiwidXNlcl9pZCI6ImI0ODIxNDFlLWFjZTUtNGI3OS05OTY5LTMzMzRmZDllMmI0OCIsInJvbGUiOiJTdHVkZW50In0sImV4cCI6MTc0MzAxMjUyNCwianRpIjoiMzhmZDIyYTItOGJjYS00OTU1LWFiMWItZGZmNTRmYWU2ZjE1IiwicmVmcmVzaCI6ZmFsc2V9.Dbo8y9QBCeRdJ8JncOyQUmewoLrWv0lSJxkymmAqpAA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlcjFAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiNDI4M2M0NTEtYTM4My00ZDcyLWFiNzQtMDE4YWRlZWUxN2ZmIiwicm9sZSI6IkJvdGgifSwiZXhwIjoxNzQzMDg4MjUxLCJqdGkiOiI3NWM2YWRmNC0wYWYwLTQxYjItYmYxYS1hYzRmODhkMTUwNTgiLCJyZWZyZXNoIjpmYWxzZX0.yw9OJ0ofYnJ_iHBStlz_xj5GAOpr-5zoaTgGOldlHtQ
 
 {
-  "title": "Improve My Armbar",
+  "title": "Armbar help please",
   "video": "https://example.com/video.mp4",
   "message": "Hey coach, I need help refining my armbar technique.",
-  "coach_username": "CrisCyborg_7029"
+  "coach_username": "user10"
 }
