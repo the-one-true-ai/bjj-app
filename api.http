@@ -3,10 +3,10 @@ Content-Type: application/json
 
 
 {
-  "email": "user10@example.com",
+  "email": "user1@example.com",
   "password": "securepassword",
   "role": "Both",
-  "username": "user10",
+  "username": "user1",
   "belt": "Black",
   "coach_bio": "SomeeStupuid",
   "price": 7,
@@ -15,7 +15,7 @@ Content-Type: application/json
   "expertise": ["leglocks", "dlr", "takedowns"],
   "affiliations": ["maven bjj", "andy roberts"],
   "areas_working_on": ["escapes", "holding mount"],
-  "birthdate": "1951-01-01"
+  "birthdate": "2004-01-01"
 }
 
 ###

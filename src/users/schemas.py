@@ -29,12 +29,12 @@ class Input_forPublic_UserCreateSchema(Input_forSelf_CoachCreateModel, Input_for
     username: str = Field(min_length=5, max_length=30, description="The username of the user.")
     email: str = Field(min_length=10, max_length=40, description="The email address of the user.")
     password: str = Field(min_length=6, max_length=50, description="The user's password.")
-    role: Role = Role.Student
+    role: Role = Field(default=Role.Student, description="The users current belt.")
 
     # Optional User fields
     height: Optional[int] = Field(default=None, ge=75, le=300, description="User's height in cm (75-300cm).")
     weight: Optional[int] = Field(default=None, ge=50, le=300, description="User's weight in kg (50-300kg).")
-    birthdate: Optional[date] = Field(default=None, description="The users birthday (must be 18+).") #TODO Add validation to make them 18+
+    birthdate: Optional[date] = Field(default=None, description="The users birthday (must be 18+).")
     belt: Belt = Field(default=Belt.White, description="The users current belt.")
 
     @field_validator("birthdate")
@@ -80,20 +80,3 @@ class Response_forAccountHolder_CoachProfile(Response_forPublic_CoachProfile):
 class Response_forSelf_CoachProfile(Response_forAccountHolder_CoachProfile):
     settings: str = "<Some user specific settings e.g., settings>"
 
-
-
-
-# Will be deprecated soon
-
-class SudentModel(BaseModel): # ! This will change soon
-    student_id: uuid.UUID
-    user_id: uuid.UUID  # Foreign key to User
-    areas_working_on: Optional[List[str]]  # E.g., 'Guard Passing, Sweeps'
-
-    class Config:
-        from_attributes = True
-
-
-class UserUpdateModel(BaseModel): # ! Will be going soon. Split out each field for fact tables
-    username: Optional[str] = None
-    role: Optional[Role] = None        
