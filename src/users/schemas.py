@@ -44,7 +44,7 @@ class Input_forPublic_UserCreateSchema(Input_forSelf_CoachCreateModel, Input_for
 
 # Responses
 
-class Response_forSelf_UserSchema(BaseModel):
+class Response_forSelf_UserProfile(BaseModel):
     user_id: uuid.UUID
     username: str
     email: str
@@ -60,7 +60,34 @@ class Response_forSelf_UserSchema(BaseModel):
         from_attributes = True
         use_enum_values = True
 
-class Response_forSelf_ProfileSchema(Response_forSelf_UserSchema):
+
+class Response_forSelf_StudentProfile(BaseModel):
+    student_id: uuid.UUID
+    areas_working_on: Optional[list[str]]
+    created_at: datetime
+    updated_at: datetime    
+
+    class Config:
+        from_attributes = True
+        use_enum_values = True
+
+
+class Response_forSelf_CoachProfile(BaseModel):
+    coach_id: uuid.UUID
+    expertise: Optional[list[str]]
+    affiliations: Optional[list[str]]
+    role: str
+    coach_bio: Optional[str]
+    price: Optional[int]
+    accepting_responses: bool
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+        use_enum_values = True                
+
+class Response_forSelf_ProfileSchema(Response_forSelf_UserProfile):
     pass
 
 

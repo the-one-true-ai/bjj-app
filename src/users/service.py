@@ -47,17 +47,17 @@ class UserService:
                 raise HTTPException(status_code=404, detail="User not found")# TODO: better errors
 
             # Extract user profile data
-            user_profile = {field: getattr(user, field) for field in user.__table__.columns.keys()}
+            user_profile = {field: getattr(user, field) for field in user.__table__.columns.keys()} #TODO: This needs to be a service with its own response schema
 
             # Extract coach profile data if it exists
             coach_profile = (
-                {field: getattr(user.coach, field) for field in user.coach.__table__.columns.keys()} 
+                {field: getattr(user.coach, field) for field in user.coach.__table__.columns.keys()} #TODO: This needs to be a service with its own response schema
                 if user.coach else None
             )
 
             # Extract student profile data if it exists
             student_profile = (
-                {field: getattr(user.student, field) for field in user.student.__table__.columns.keys()} 
+                {field: getattr(user.student, field) for field in user.student.__table__.columns.keys()} #TODO: This needs to be a service with its own response schema
                 if user.student else None
             )
 
