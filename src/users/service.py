@@ -4,7 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import selectinload
 from uuid import UUID
 from src.db.models import User, Coaches, Students
-from src.users.schemas import Input_forPublic_UserCreateSchema, Input_forSelf_CoachCreateModel, Input_forSelf_StudentCreateModel
+from src.users.schemas import Input_forPublic_UserCreateSchema, Input_forSelf_CoachCreateModel, Input_forSelf_StudentCreateModel, Response_forSelf_CoachProfile, Response_forSelf_UserProfile, Response_forSelf_StudentProfile
 from src.auth.utils import generate_passwd_hash
 from fastapi import HTTPException
 
@@ -36,40 +36,38 @@ class UserService:
             # Query user with related Coach and Student profiles
             statement = (
                 select(User)
-                .options(selectinload(User.coach))  # Load the related Coach if it exists
-                .options(selectinload(User.student))  # Load the related Student if it exists
+                .options(selectinload(User.coach))
+                .options(selectinload(User.student))
                 .where(User.user_id == user_id)
             )
-            result = await session.exec(statement)
-            user = result.first()
+            result = await session.execute(statement)
+            user = result.scalar_one_or_none()
 
             if not user:
-                raise HTTPException(status_code=404, detail="User not found")# TODO: better errors
+                raise HTTPException(status_code=404, detail="User not found")
 
-            # Extract user profile data
-            user_profile = {field: getattr(user, field) for field in user.__table__.columns.keys()} #TODO: This needs to be a service with its own response schema
+            # Serialize user profile
+            user_profile = Response_forSelf_UserProfile.model_validate(user)
 
-            # Extract coach profile data if it exists
+            # Serialize coach profile if exists
             coach_profile = (
-                {field: getattr(user.coach, field) for field in user.coach.__table__.columns.keys()} #TODO: This needs to be a service with its own response schema
-                if user.coach else None
+                Response_forSelf_CoachProfile.model_validate(user.coach) if user.coach else None
             )
 
-            # Extract student profile data if it exists
+            # Serialize student profile if exists
             student_profile = (
-                {field: getattr(user.student, field) for field in user.student.__table__.columns.keys()} #TODO: This needs to be a service with its own response schema
-                if user.student else None
+                Response_forSelf_StudentProfile.model_validate(user.student) if user.student else None
             )
 
             return {
                 "user_profile": user_profile,
                 "coach_profile": coach_profile,
-                "student_profile": student_profile
+                "student_profile": student_profile,
             }
 
         except SQLAlchemyError as e:
             print(f"Database error trying to get full user profile: {e}")
-            raise HTTPException(status_code=500, detail="Internal Server Error") # TODO: better errors
+            raise HTTPException(status_code=500, detail="Internal Server Error")
 
     async def _get_user_by_email(self, email: str, session: AsyncSession):
         try:
