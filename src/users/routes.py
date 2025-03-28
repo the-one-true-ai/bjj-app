@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
 from typing import List
 from src.db.models import User, Coaches, Students
-from src.users.schemas import Input_forPublic_UserCreateSchema, Input_forSelf_CoachCreateModel, Input_forSelf_StudentCreateModel, Response_forSelf_UserProfile, Response_forPublic_CoachProfile, Response_forAccountHolder_CoachProfile
+from src.users.schemas import Input_forPublic_UserCreateSchema, Input_forSelf_CoachCreateModel, Input_forSelf_StudentCreateModel, Response_forSelf_UserProfile, Response_forPublic_CoachProfile, Response_forAccountHolder_CoachProfile, Response_forSelf_FullProfileSchema
 from src.users.service import UserService, CoachService, StudentService
 from src.db.main import get_session
 from sqlmodel import select
@@ -43,8 +43,8 @@ async def create_user(user_data: Input_forPublic_UserCreateSchema, session: Asyn
 
     return new_user
 
-@user_router.get("/my_profile") # TODO: This should be a new Response_forSelf_ProfileSchema
-async def my_profile(user = Depends(get_current_user), session: AsyncSession = Depends(get_session), token_data: dict = Depends(AccessTokenBearer())):# -> Response_forSelf_UserSchema: # TODO: This should be a new Response_forSelf_ProfileSchema
+@user_router.get("/my_profile", response_model=Response_forSelf_FullProfileSchema)
+async def my_profile(user = Depends(get_current_user), session: AsyncSession = Depends(get_session), token_data: dict = Depends(AccessTokenBearer())) -> Response_forSelf_FullProfileSchema:
     result = await user_service.get_full_user_profile(user_id=user.user_id,session=session)
     return result
 

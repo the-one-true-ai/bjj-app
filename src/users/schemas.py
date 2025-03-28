@@ -87,6 +87,15 @@ class Response_forSelf_CoachProfile(BaseModel):
         from_attributes = True
         use_enum_values = True                
 
+class Response_forSelf_FullProfileSchema(BaseModel):
+    user_profile: Response_forSelf_UserProfile
+    coach_profile: Optional[Response_forSelf_CoachProfile] = None
+    student_profile: Optional[Response_forSelf_StudentProfile] = None
+
+    class Config:
+        from_attributes = True
+        use_enum_values = True        
+
 class Response_forSelf_ProfileSchema(Response_forSelf_UserProfile):
     pass
 
