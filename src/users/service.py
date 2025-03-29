@@ -4,7 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import selectinload
 from uuid import UUID
 from src.db.models import User, Coaches, Students
-from src.users.schemas import Input_forPublic_UserCreateSchema, Input_forSelf_CoachCreateModel, StudentCreateModel
+from src.users.schemas import Input_forPublic_UserCreateSchema, Input_forSelf_CoachCreateModel, Input_forSelf_StudentCreateModel, Response_forSelf_CoachProfile, Response_forSelf_UserProfile, Response_forSelf_StudentProfile
 from src.auth.utils import generate_passwd_hash
 from fastapi import HTTPException
 
@@ -14,45 +14,60 @@ class UserService:
         self.coach_service = CoachService()
         self.student_service = StudentService()
 
+    async def _get_userID_from_studentID(self, student_id: UUID, session: AsyncSession):
+        try:
+            # Query the dim_students table to get the user_id by student_id
+            statement = select(Students.user_id).where(Students.student_id == student_id)
+            result = await session.exec(statement)
+            user_id = result.scalar_one_or_none()  # Get the user_id or None if not found
+
+            if not user_id:
+                raise HTTPException(status_code=404, detail="Student not found")  # Handle the case if no user found
+
+            return user_id  # Return the user_id directly
+
+        except SQLAlchemyError as e:
+            print(f"Database error trying to get user ID from student ID: {e}")
+            raise HTTPException(status_code=500, detail="Internal Server Error")
+
+
     async def get_full_user_profile(self, user_id: UUID, session: AsyncSession):
         try:
             # Query user with related Coach and Student profiles
             statement = (
                 select(User)
-                .options(selectinload(User.coach))  # Load the related Coach if it exists
-                .options(selectinload(User.student))  # Load the related Student if it exists
+                .options(selectinload(User.coach))
+                .options(selectinload(User.student))
                 .where(User.user_id == user_id)
             )
-            result = await session.exec(statement)
-            user = result.first()
+            result = await session.execute(statement)
+            user = result.scalar_one_or_none()
 
             if not user:
-                raise HTTPException(status_code=404, detail="User not found")# TODO: better errors
+                raise HTTPException(status_code=404, detail="User not found")
 
-            # Extract user profile data
-            user_profile = {field: getattr(user, field) for field in user.__table__.columns.keys()}
+            # Serialize user profile
+            user_profile = Response_forSelf_UserProfile.model_validate(user)
 
-            # Extract coach profile data if it exists
+            # Serialize coach profile if exists
             coach_profile = (
-                {field: getattr(user.coach, field) for field in user.coach.__table__.columns.keys()} 
-                if user.coach else None
+                Response_forSelf_CoachProfile.model_validate(user.coach) if user.coach else None
             )
 
-            # Extract student profile data if it exists
+            # Serialize student profile if exists
             student_profile = (
-                {field: getattr(user.student, field) for field in user.student.__table__.columns.keys()} 
-                if user.student else None
+                Response_forSelf_StudentProfile.model_validate(user.student) if user.student else None
             )
 
             return {
                 "user_profile": user_profile,
                 "coach_profile": coach_profile,
-                "student_profile": student_profile
+                "student_profile": student_profile,
             }
 
         except SQLAlchemyError as e:
             print(f"Database error trying to get full user profile: {e}")
-            raise HTTPException(status_code=500, detail="Internal Server Error") # TODO: better errors
+            raise HTTPException(status_code=500, detail="Internal Server Error")
 
     async def _get_user_by_email(self, email: str, session: AsyncSession):
         try:
@@ -177,7 +192,7 @@ class StudentService:
             return None
 
     
-    async def create_student(self,user_id: UUID, student_data: StudentCreateModel, session: AsyncSession):
+    async def create_student(self,user_id: UUID, student_data: Input_forSelf_StudentCreateModel, session: AsyncSession):
         try:
             # Prepare student data
             student_data_dict = student_data.model_dump()

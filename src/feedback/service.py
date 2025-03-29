@@ -4,12 +4,13 @@ from fastapi import HTTPException, status
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 from src.auth.dependencies import get_current_user  # Assuming this function exists for fetching the current user
-from src.users.service import CoachService
+from src.users.service import CoachService, UserService
 from uuid import UUID
 from src.feedback.schemas import Input_forStudent_FeedbackSessionCreateSchema
 from src.feedback.validators import FeedbackStatus
 
 coach_service = CoachService()
+user_service = UserService()
 
 class FeedbackSessionService:
     async def create_feedback_session(self, student_id: UUID, new_session_data: Input_forStudent_FeedbackSessionCreateSchema, session: AsyncSession):
@@ -35,7 +36,7 @@ class FeedbackSessionService:
             message_content = new_session_data.message if new_session_data.message else None
             initial_message = Messages(
                 feedback_session_id=feedback_session.feedback_session_id,
-                sender_user_id=user.user_id, #! This is currently giving the coach's user_id, it should be the students User_id.
+                sender_user_id= await user_service._get_userID_from_studentID(student_id=student_id, session=session),
                 message_type="TEXT",  # Assuming TEXT for now #TODO: Have a smarter way of determining type of message.
                 message_content=message_content
             )

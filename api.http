@@ -3,19 +3,23 @@ Content-Type: application/json
 
 
 {
-  "email": "heleeelere34oee@example.com",
+  "email": "Coach1@example.com",
   "password": "securepassword",
   "role": "Coach",
-  "username": "erre",
+  "username": "Coach1",
   "belt": "Black",
-  "coach_bio": "SomeeStupuid",
-  "price": 7,
-  "expertise": ["legloc","takedown"],
-  "affiliation": ["mave", "andy"]
+  "coach_bio": "I am  a coach",
+  "price": 69,
+  "height": 175,
+  "weight": 200,
+  "expertise": ["everything", "im", "awesome"],
+  "affiliations": ["maven", "dpg"],
+  "areas_working_on": ["none", "should exist"],
+  "birthdate": "1975-01-01"
 }
 
 ###
-GET http://sick-bjj-app.onrender.com/api/v1/users/public/get_all_coaches
+GET http://127.0.0.1:8000/api/v1/users/public/get_all_coaches
 
 ###
 GET http://sick-bjj-app.onrender.com/api/v1/users/authorised/get_all_coaches
@@ -30,26 +34,27 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsI
 GET http://sick-bjj-app.onrender.com/api/v1/users/public/coach/AnaCarolina_1981
 
 ###
-POST http://sick-bjj-app.onrender.com/api/v1/auth/login
+POST http://127.0.0.1:8000/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "adamhightowerellis@example.com",
+  "email": "student1@example.com",
   "password": "securepassword"
 }
 
 ###
-GET http://sick-bjj-app.onrender.com/api/v1/users/my_profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYWRhbWhpZ2h0b3dlcmVsbGlzQGV4YW1wbGUuY29tIiwidXNlcl9pZCI6ImI0ODIxNDFlLWFjZTUtNGI3OS05OTY5LTMzMzRmZDllMmI0OCIsInJvbGUiOiJTdHVkZW50In0sImV4cCI6MTc0MzAxMjUyNCwianRpIjoiMzhmZDIyYTItOGJjYS00OTU1LWFiMWItZGZmNTRmYWU2ZjE1IiwicmVmcmVzaCI6ZmFsc2V9.Dbo8y9QBCeRdJ8JncOyQUmewoLrWv0lSJxkymmAqpAA
+GET http://127.0.0.1:8000/api/v1/users/my_profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoic3R1ZGVudDFAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMGYxMjMyYTMtMmIxMS00M2JiLWI1ZjAtOWFhN2JhOTgxZmRlIiwicm9sZSI6IlN0dWRlbnQifSwiZXhwIjoxNzQzMTA1MTQ5LCJqdGkiOiI1MmNiMDZjOC00N2JjLTQ4NTEtOWMyOC01OWM2ZDUwZjk3ZDgiLCJyZWZyZXNoIjpmYWxzZX0.C5eedGlNxTP0wKQEXghbBGsbn0uicy7i1UqF3ozN1d4
+
 
 ###
-POST http://sick-bjj-app.onrender.com/api/v1/sessions/create_feedback_session
+POST http://127.0.0.1:8000/api/v1/sessions/create_feedback_session
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYWRhbWhpZ2h0b3dlcmVsbGlzQGV4YW1wbGUuY29tIiwidXNlcl9pZCI6ImI0ODIxNDFlLWFjZTUtNGI3OS05OTY5LTMzMzRmZDllMmI0OCIsInJvbGUiOiJTdHVkZW50In0sImV4cCI6MTc0MzAxMjUyNCwianRpIjoiMzhmZDIyYTItOGJjYS00OTU1LWFiMWItZGZmNTRmYWU2ZjE1IiwicmVmcmVzaCI6ZmFsc2V9.Dbo8y9QBCeRdJ8JncOyQUmewoLrWv0lSJxkymmAqpAA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoic3R1ZGVudDFAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMGYxMjMyYTMtMmIxMS00M2JiLWI1ZjAtOWFhN2JhOTgxZmRlIiwicm9sZSI6IlN0dWRlbnQifSwiZXhwIjoxNzQzMTA0OTkxLCJqdGkiOiI4MjNmZjY2Ny1hNjcxLTRhOTItOGY1ZS1lNzc1ZjdjNzFkZDMiLCJyZWZyZXNoIjpmYWxzZX0.2KW98fSa2VTN8xYsS-3-cwQZj9Cm4EigDCVZN_TFyKA
 
 {
-  "title": "Improve My Armbar",
+  "title": "I am a spaz please help me bro",
   "video": "https://example.com/video.mp4",
-  "message": "Hey coach, I need help refining my armbar technique.",
-  "coach_username": "CrisCyborg_7029"
+  "message": "Help me i suck at BJJ!",
+  "coach_username": "Coach1"
 }

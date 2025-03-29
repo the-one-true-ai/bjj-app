@@ -16,7 +16,7 @@ from .dependencies import (
 )
 from .schemas import (
     UserLoginModel,
-    Response_forSelf_UserSchema,
+    Response_forSelf_UserProfile,
     EmailModel,
     PasswordResetRequestModel,
     PasswordResetConfirmModel,
@@ -95,7 +95,7 @@ async def get_new_access_token(token_details: dict = Depends(RefreshTokenBearer(
     raise InvalidToken
 
 
-@auth_router.get("/me", response_model=Response_forSelf_UserSchema)
+@auth_router.get("/me", response_model=Response_forSelf_UserProfile)
 async def get_current_user(
     user=Depends(get_current_user), _: bool = Depends(role_checker)
 ):
