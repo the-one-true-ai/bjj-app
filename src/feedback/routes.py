@@ -13,7 +13,6 @@ feedback_service = FeedbackSessionService()
 user_service = UserService()
 
 @feedback_router.post("/create_feedback_session", dependencies=[Depends(RoleChecker(["Student"]))])
-# TODO: Limit this so that only students can access this
 async def create_feedback_session_route(
     new_session_data: Input_forStudent_FeedbackSessionCreateSchema,
     session: AsyncSession = Depends(get_session),
