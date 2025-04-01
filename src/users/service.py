@@ -40,8 +40,8 @@ class UserService:
                 .options(selectinload(User.student))
                 .where(User.user_id == user_id)
             )
-            result = await session.execute(statement)
-            user = result.scalar_one_or_none()
+            result = await session.exec(statement)
+            user = result.first()
 
             if not user:
                 raise HTTPException(status_code=404, detail="User not found")

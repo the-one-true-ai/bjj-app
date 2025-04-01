@@ -50,7 +50,6 @@ async def my_profile(user = Depends(get_current_user), session: AsyncSession = D
 
 # Routes for Coaches
 
-
 # Route to get all coaches
 @user_router.get("/public/get_all_coaches", response_model=List[Response_forPublic_CoachProfile])
 async def get_all_coaches(session: AsyncSession = Depends(get_session)) -> List[Response_forPublic_CoachProfile]:

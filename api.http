@@ -38,22 +38,22 @@ POST http://127.0.0.1:8000/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "student1@example.com",
+  "email": "bernardofaria_11@example.com",
   "password": "securepassword"
 }
 
 ###
 GET http://127.0.0.1:8000/api/v1/users/my_profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoic3R1ZGVudDFAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMGYxMjMyYTMtMmIxMS00M2JiLWI1ZjAtOWFhN2JhOTgxZmRlIiwicm9sZSI6IlN0dWRlbnQifSwiZXhwIjoxNzQzNTAzNjE3LCJqdGkiOiI0ZTg1NmFmMS0xZWJkLTQxOTktYWYwOS1iMmE1ZmM5ZGQzODciLCJyZWZyZXNoIjpmYWxzZX0.3bpsGYvAurDfZiv-bvu7BNfad9wqQg45dJ-iMRTXk0A
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYmVybmFyZG9mYXJpYV8xMUBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzNGYwMjAyOC0zYjdjLTQxYWUtYWNkMi01ZDFiNzc5OTdlZjQiLCJyb2xlIjoiU3R1ZGVudCJ9LCJleHAiOjE3NDM1MTEwNDksImp0aSI6Ijc1MTk2NjFhLTI1MjEtNDQ0Yy04ZDA5LTNiODY2MDhkMjc3NCIsInJlZnJlc2giOmZhbHNlfQ.hldyj1i93jXrsCI1y5aDrwJJU6s800u_sXz6mLp6sN0
 
 
 ###
 POST http://127.0.0.1:8000/api/v1/sessions/create_feedback_session
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoic3R1ZGVudDFAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMGYxMjMyYTMtMmIxMS00M2JiLWI1ZjAtOWFhN2JhOTgxZmRlIiwicm9sZSI6IlN0dWRlbnQifSwiZXhwIjoxNzQzNTAzNjE3LCJqdGkiOiI0ZTg1NmFmMS0xZWJkLTQxOTktYWYwOS1iMmE1ZmM5ZGQzODciLCJyZWZyZXNoIjpmYWxzZX0.3bpsGYvAurDfZiv-bvu7BNfad9wqQg45dJ-iMRTXk0A
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYmVybmFyZG9mYXJpYV8xMUBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzNGYwMjAyOC0zYjdjLTQxYWUtYWNkMi01ZDFiNzc5OTdlZjQiLCJyb2xlIjoiU3R1ZGVudCJ9LCJleHAiOjE3NDM1MTEwNDksImp0aSI6Ijc1MTk2NjFhLTI1MjEtNDQ0Yy04ZDA5LTNiODY2MDhkMjc3NCIsInJlZnJlc2giOmZhbHNlfQ.hldyj1i93jXrsCI1y5aDrwJJU6s800u_sXz6mLp6sN0
 
 {
   "title": "New feedback session2",
   "video": "https://example.com/video.mp4",
-  "coach_username": "user10"
+  "coach_username": "MarioSperry_85"
 }

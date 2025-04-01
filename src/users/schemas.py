@@ -76,7 +76,6 @@ class Response_forSelf_CoachProfile(BaseModel):
     coach_id: uuid.UUID
     expertise: Optional[list[str]]
     affiliations: Optional[list[str]]
-    role: str
     coach_bio: Optional[str]
     price: Optional[int]
     accepting_responses: bool
@@ -112,7 +111,3 @@ class Response_forPublic_CoachProfile(BaseModel):
 class Response_forAccountHolder_CoachProfile(Response_forPublic_CoachProfile):
     price: int
     accepting_responses: bool
-
-class Response_forSelf_CoachProfile(Response_forAccountHolder_CoachProfile):
-    settings: str = "<Some user specific settings e.g., settings>"
-
