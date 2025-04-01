@@ -19,7 +19,7 @@ class UserService:
             # Query the dim_students table to get the user_id by student_id
             statement = select(Students.user_id).where(Students.student_id == student_id)
             result = await session.exec(statement)
-            user_id = result.scalar_one_or_none()  # Get the user_id or None if not found
+            user_id = result.first()  # Get the user_id or None if not found
 
             if not user_id:
                 raise HTTPException(status_code=404, detail="Student not found")  # Handle the case if no user found
