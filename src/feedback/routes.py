@@ -31,7 +31,7 @@ async def create_feedback_session_route(
      #TODO: Improve warnings
     
     # Extract the student_id from the full profile (accessing it as a key in the dictionary)
-    student_id = full_profile['student_profile']['student_id']
+    student_id = full_profile['student_profile'].student_id
 
     # Now, pass the student_id to the service to create the feedback session
     feedback_session = await feedback_service.create_feedback_session(

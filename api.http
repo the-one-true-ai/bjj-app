@@ -44,17 +44,16 @@ Content-Type: application/json
 
 ###
 GET http://127.0.0.1:8000/api/v1/users/my_profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoic3R1ZGVudDFAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMGYxMjMyYTMtMmIxMS00M2JiLWI1ZjAtOWFhN2JhOTgxZmRlIiwicm9sZSI6IlN0dWRlbnQifSwiZXhwIjoxNzQzMTA1MTQ5LCJqdGkiOiI1MmNiMDZjOC00N2JjLTQ4NTEtOWMyOC01OWM2ZDUwZjk3ZDgiLCJyZWZyZXNoIjpmYWxzZX0.C5eedGlNxTP0wKQEXghbBGsbn0uicy7i1UqF3ozN1d4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoic3R1ZGVudDFAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMGYxMjMyYTMtMmIxMS00M2JiLWI1ZjAtOWFhN2JhOTgxZmRlIiwicm9sZSI6IlN0dWRlbnQifSwiZXhwIjoxNzQzNTAzNjE3LCJqdGkiOiI0ZTg1NmFmMS0xZWJkLTQxOTktYWYwOS1iMmE1ZmM5ZGQzODciLCJyZWZyZXNoIjpmYWxzZX0.3bpsGYvAurDfZiv-bvu7BNfad9wqQg45dJ-iMRTXk0A
 
 
 ###
 POST http://127.0.0.1:8000/api/v1/sessions/create_feedback_session
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoic3R1ZGVudDFAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMGYxMjMyYTMtMmIxMS00M2JiLWI1ZjAtOWFhN2JhOTgxZmRlIiwicm9sZSI6IlN0dWRlbnQifSwiZXhwIjoxNzQzMTA0OTkxLCJqdGkiOiI4MjNmZjY2Ny1hNjcxLTRhOTItOGY1ZS1lNzc1ZjdjNzFkZDMiLCJyZWZyZXNoIjpmYWxzZX0.2KW98fSa2VTN8xYsS-3-cwQZj9Cm4EigDCVZN_TFyKA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoic3R1ZGVudDFAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMGYxMjMyYTMtMmIxMS00M2JiLWI1ZjAtOWFhN2JhOTgxZmRlIiwicm9sZSI6IlN0dWRlbnQifSwiZXhwIjoxNzQzNTAzNjE3LCJqdGkiOiI0ZTg1NmFmMS0xZWJkLTQxOTktYWYwOS1iMmE1ZmM5ZGQzODciLCJyZWZyZXNoIjpmYWxzZX0.3bpsGYvAurDfZiv-bvu7BNfad9wqQg45dJ-iMRTXk0A
 
 {
-  "title": "I am a spaz please help me bro",
+  "title": "New feedback session2",
   "video": "https://example.com/video.mp4",
-  "message": "Help me i suck at BJJ!",
-  "coach_username": "Coach1"
+  "coach_username": "user10"
 }
