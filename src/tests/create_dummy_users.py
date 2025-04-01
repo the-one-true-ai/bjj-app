@@ -4,7 +4,7 @@ import time
 from datetime import datetime, timedelta
 
 # API Endpoint
-url = "http://sick-bjj-app.onrender.com/api/v1/users/create_user"
+url = "http://127.0.0.1:8000/api/v1/users/create_user"
 
 # List of famous BJJ practitioners and additional usernames
 bjj_names = [
