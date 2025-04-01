@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
 from src.db.main import get_session
-from src.auth.dependencies import AccessTokenBearer, get_current_user
+from src.auth.dependencies import RoleChecker, get_current_user
 from src.feedback.service import FeedbackSessionService
 from src.feedback.schemas import Input_forStudent_FeedbackSessionCreateSchema
 from fastapi import HTTPException
@@ -12,7 +12,7 @@ feedback_router = APIRouter()
 feedback_service = FeedbackSessionService()
 user_service = UserService()
 
-@feedback_router.post("/create_feedback_session")
+@feedback_router.post("/create_feedback_session", dependencies=[Depends(RoleChecker(["Student"]))])
 # TODO: Limit this so that only students can access this
 async def create_feedback_session_route(
     new_session_data: Input_forStudent_FeedbackSessionCreateSchema,
@@ -21,15 +21,7 @@ async def create_feedback_session_route(
 
     # Get the full profile for the logged-in user
     full_profile = await user_service.get_full_user_profile(user_id=user.user_id, session=session)
-    
-    # Check if the student_profile exists (now accessed as a key in the dictionary)
-    if not full_profile.get('student_profile'):
-        raise HTTPException(
-            status_code=400,
-            detail="Student profile not found. Ensure the user is assigned as a student."
-        )
-     #TODO: Improve warnings
-    
+        
     # Extract the student_id from the full profile (accessing it as a key in the dictionary)
     student_id = full_profile['student_profile'].student_id
 
