@@ -14,6 +14,50 @@ class UserService:
         self.coach_service = CoachService()
         self.student_service = StudentService()
 
+    async def _get_coachID_from_userID(self, user_id: UUID, session: AsyncSession):
+        try:
+            # Query the dim_students table to get the user_id by student_id
+            statement = select(Coaches.coach_id).where(Coaches.user_id == user_id)
+            result = await session.exec(statement)
+            coach_id = result.first()  # Get the user_id or None if not found
+
+            if not user_id:
+                raise HTTPException(status_code=404, detail="Coach not found")  # Handle the case if no user found
+
+            return coach_id  # Return the user_id directly
+
+    async def _get_studentID_from_userID(self, user_id: UUID, session: AsyncSession):
+        try:
+            # Query the dim_students table to get the user_id by student_id
+            statement = select(Students.student_id).where(Students.user_id == user_id)
+            result = await session.exec(statement)
+            student_id = result.first()  # Get the user_id or None if not found
+
+            if not user_id:
+                raise HTTPException(status_code=404, detail="Student not found")  # Handle the case if no user found
+
+            return student_id  # Return the user_id directly
+
+        except SQLAlchemyError as e:
+            print(f"Database error trying to get user ID from student ID: {e}")
+            raise HTTPException(status_code=500, detail="Internal Server Error")  
+
+    async def _get_userID_from_coachID(self, coach_id: UUID, session: AsyncSession):
+        try:
+            # Query the dim_students table to get the user_id by student_id
+            statement = select(Coaches.user_id).where(Coaches.coach_id == coach_id)
+            result = await session.exec(statement)
+            user_id = result.first()  # Get the user_id or None if not found
+
+            if not user_id:
+                raise HTTPException(status_code=404, detail="Coach not found")  # Handle the case if no user found
+
+            return user_id  # Return the user_id directly
+
+        except SQLAlchemyError as e:
+            print(f"Database error trying to get user ID from student ID: {e}")
+            raise HTTPException(status_code=500, detail="Internal Server Error")        
+
     async def _get_userID_from_studentID(self, student_id: UUID, session: AsyncSession):
         try:
             # Query the dim_students table to get the user_id by student_id
