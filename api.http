@@ -38,22 +38,26 @@ POST http://127.0.0.1:8000/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "pablopopovitch_50@example.com",
+  "email": "nickyryan_62@example.com",
   "password": "securepassword"
 }
 
 ###
 GET http://127.0.0.1:8000/api/v1/users/my_profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoicGFibG9wb3Bvdml0Y2hfNTBAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMjM2MzZhNTktMjFjMS00NzhkLTkyYzMtMjgzNzg2MGJlY2I3Iiwicm9sZSI6IkJvdGgifSwiZXhwIjoxNzQzNTE0MTAzLCJqdGkiOiI2NGNlNDIxYy0xZWZiLTQxMmQtOTVjMi1hODQ4Nzk1ZmRkYTciLCJyZWZyZXNoIjpmYWxzZX0.FNNSoZ-k-4mxRzPnIEfAOWc9p-CNCjxyhVEpjb90IJo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoibmlja3lyeWFuXzYyQGV4YW1wbGUuY29tIiwidXNlcl9pZCI6IjJiNTUwYTA5LTcxY2YtNDM1Ny05MjAxLWExZTcyMWNhNWE5NyIsInJvbGUiOiJDb2FjaCJ9LCJleHAiOjE3NDM1NTE2MzEsImp0aSI6ImYzOTcwNTZjLTY4NTYtNGUwZC1hZTljLWIwZDc1MGQ5MmE4MSIsInJlZnJlc2giOmZhbHNlfQ.V4FnRCwLW9EG8izqcNOlPUmoJgd7eOphVMnFp6hHBuQ
+
+###
+GET http://127.0.0.1:8000/api/v1/sessions/get_my_feedback_sessions
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoibmlja3lyeWFuXzYyQGV4YW1wbGUuY29tIiwidXNlcl9pZCI6IjJiNTUwYTA5LTcxY2YtNDM1Ny05MjAxLWExZTcyMWNhNWE5NyIsInJvbGUiOiJDb2FjaCJ9LCJleHAiOjE3NDM1NTE2MzEsImp0aSI6ImYzOTcwNTZjLTY4NTYtNGUwZC1hZTljLWIwZDc1MGQ5MmE4MSIsInJlZnJlc2giOmZhbHNlfQ.V4FnRCwLW9EG8izqcNOlPUmoJgd7eOphVMnFp6hHBuQ
 
 
 ###
 POST http://127.0.0.1:8000/api/v1/sessions/create_feedback_session
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoibWFyaW9zcGVycnlfODVAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiNGY3ZjNiZGYtZTYxNC00MWEwLWExMzUtMDhjOTFmODdkNjNhIiwicm9sZSI6IkNvYWNoIn0sImV4cCI6MTc0MzUxMTI5OSwianRpIjoiYTQwY2RkNzQtMzI5ZC00NTA0LWFlODUtNzg1MzFiNTIxZGEyIiwicmVmcmVzaCI6ZmFsc2V9.Flbp92AIPHUl4Th2rsY5AmK3fLrRQR99OsIW3v3gwIU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoibmlja3lyeWFuXzYyQGV4YW1wbGUuY29tIiwidXNlcl9pZCI6IjJiNTUwYTA5LTcxY2YtNDM1Ny05MjAxLWExZTcyMWNhNWE5NyIsInJvbGUiOiJDb2FjaCJ9LCJleHAiOjE3NDM1NTE2MzEsImp0aSI6ImYzOTcwNTZjLTY4NTYtNGUwZC1hZTljLWIwZDc1MGQ5MmE4MSIsInJlZnJlc2giOmZhbHNlfQ.V4FnRCwLW9EG8izqcNOlPUmoJgd7eOphVMnFp6hHBuQ
 
 {
-  "title": "New feedback session2",
+  "title": "1st feedback sesh",
   "video": "https://example.com/video.mp4",
-  "coach_username": "MarioSperry_85"
+  "coach_username": "NickyRyan_62"
 }
