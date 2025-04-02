@@ -6,6 +6,7 @@ from src.auth.dependencies import RoleChecker, get_current_user
 from src.feedback.service import FeedbackSessionService
 from src.feedback.schemas import Input_forStudent_FeedbackSessionCreateSchema
 from fastapi import HTTPException
+from fastapi import WebSocketDisconnect
 from src.users.service import UserService
 from fastapi import FastAPI, WebSocket
 from fastapi.responses import HTMLResponse
@@ -14,6 +15,7 @@ feedback_router = APIRouter()
 feedback_service = FeedbackSessionService()
 user_service = UserService()
 
+active_connections = []  # Global list of active WebSocket connections
 
 html = """
 <!DOCTYPE html>
@@ -55,10 +57,17 @@ async def get():
 
 @feedback_router.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()  # Accept all connections for now
-    while True:
-        data = await websocket.receive_text()
-        await websocket.send_text(f"Message text was: {data}")
+    await websocket.accept()
+    active_connections.append(websocket)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            # Broadcast the message to all connected clients
+            for connection in active_connections:
+                await connection.send_text(f"Message text was: {data}")
+    except WebSocketDisconnect:
+        # Remove the disconnected client from the active list
+        active_connections.remove(websocket)
 
 
 
