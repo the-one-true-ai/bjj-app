@@ -55,8 +55,10 @@ html = """
 async def get():
     return HTMLResponse(html)
 
-@feedback_router.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
+@feedback_router.websocket("/chat/{feedback_session_id}")
+async def websocket_endpoint(websocket: WebSocket, feedback_session_id: UUID, session: AsyncSession = Depends(get_session)):
+    
+    
     await websocket.accept()
     active_connections.append(websocket)
     try:
