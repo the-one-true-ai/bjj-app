@@ -80,9 +80,7 @@ class FeedbackSessionService:
             )
             initial_message = Messages(
                 feedback_session_id=feedback_session.feedback_session_id,
-                sender_user_id=await user_service._get_userID_from_studentID(
-                    student_id=student_id, session=session
-                ),
+                sender_user_id=await user_service._get_userID_from_studentID(student_id=student_id, session=session),
                 message_type="TEXT",  # Assuming TEXT for now #TODO: Have a smarter way of determining type of message.
                 message_content=message_content,
             )

@@ -33,7 +33,7 @@ class UserService:
                     status_code=404, detail="Coach not found"
                 )  # Handle the case if no user found
 
-            return coach_id  # Return the user_id directly
+            return coach_id  
 
         except SQLAlchemyError as e:
             print(f"Database error trying to get user ID from student ID: {e}")
@@ -51,7 +51,7 @@ class UserService:
                     status_code=404, detail="Student not found"
                 )  # Handle the case if no user found
 
-            return student_id  # Return the user_id directly
+            return student_id  
 
         except SQLAlchemyError as e:
             print(f"Database error trying to get user ID from student ID: {e}")
@@ -69,7 +69,7 @@ class UserService:
                     status_code=404, detail="Coach not found"
                 )  # Handle the case if no user found
 
-            return user_id  # Return the user_id directly
+            return user_id  
 
         except SQLAlchemyError as e:
             print(f"Database error trying to get user ID from student ID: {e}")
@@ -89,7 +89,7 @@ class UserService:
                     status_code=404, detail="Student not found"
                 )  # Handle the case if no user found
 
-            return user_id  # Return the user_id directly
+            return user_id  
 
         except SQLAlchemyError as e:
             print(f"Database error trying to get user ID from student ID: {e}")
@@ -147,7 +147,7 @@ class UserService:
             print(f"Database error trying to get user by email: {e}")
             return None
 
-    async def _get_user_by_id(self, user_id: UUID, session: AsyncSession):
+    async def _get_user_by_id(self, user_id: UUID, session: AsyncSession): #TODO: Rename to _get_user_by_userID
         try:
             statement = select(User).where(User.user_id == user_id)
             result = await session.exec(statement)
