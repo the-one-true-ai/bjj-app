@@ -7,10 +7,64 @@ from src.feedback.service import FeedbackSessionService
 from src.feedback.schemas import Input_forStudent_FeedbackSessionCreateSchema
 from fastapi import HTTPException
 from src.users.service import UserService
+from fastapi import FastAPI, WebSocket
+from fastapi.responses import HTMLResponse
 
 feedback_router = APIRouter()
 feedback_service = FeedbackSessionService()
 user_service = UserService()
+
+
+html = """
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chat</title>
+    </head>
+    <body>
+        <h1>WebSocket Chat</h1>
+        <form action="" onsubmit="sendMessage(event)">
+            <input type="text" id="messageText" autocomplete="off"/>
+            <button>Send</button>
+        </form>
+        <ul id='messages'>
+        </ul>
+        <script>
+            var ws = new WebSocket("ws://localhost:8000/api/v1/sessions/ws");
+            ws.onmessage = function(event) {
+                var messages = document.getElementById('messages')
+                var message = document.createElement('li')
+                var content = document.createTextNode(event.data)
+                message.appendChild(content)
+                messages.appendChild(message)
+            };
+            function sendMessage(event) {
+                var input = document.getElementById("messageText")
+                ws.send(input.value)
+                input.value = ''
+                event.preventDefault()
+            }
+        </script>
+    </body>
+</html>
+"""
+
+@feedback_router.get("/")
+async def get():
+    return HTMLResponse(html)
+
+@feedback_router.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()  # Accept all connections for now
+    while True:
+        data = await websocket.receive_text()
+        await websocket.send_text(f"Message text was: {data}")
+
+
+
+
+
+
 
 
 @feedback_router.get("/get_my_feedback_sessions")
