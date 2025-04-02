@@ -17,6 +17,37 @@ user_service = UserService()
 
 
 class FeedbackSessionService:
+    async def _get_feedback_session(self, feedback_session_id, session: AsyncSession):
+        statement = select(FeedbackSession).where(FeedbackSession.feedback_session_id == feedback_session_id)
+        result = await session.exec(statement)
+        messages = result.first()
+
+        if result:
+            return messages
+        else:
+            return None #TODO: Better error/null handling
+        
+    async def _get_past_messages(self, feedback_session_id: UUID, session: AsyncSession): #TODO: Add pagination for speed
+        """Retrieve past messages from the database."""
+        statement = select(Messages).where(Messages.feedback_session_id == feedback_session_id).order_by(Messages.created_at)
+        result = await session.exec(statement)
+        return result.all()
+
+
+    async def _does_user_have_access(self, user_id: UUID, feedback_session_id: UUID, session: AsyncSession):
+        feedback_session = await self._get_feedback_session(feedback_session_id=feedback_session_id, session=session)
+        
+        user_coach_id = await user_service._get_coachID_from_userID(user_id=user_id, session=session)
+        print(feedback_session)
+        if user_coach_id == feedback_session.coach_id:
+            return True
+        else:
+            user_student_id = await user_service._get_studentID_from_userID(user_id=user_id, session=session)
+            if user_student_id == feedback_session.student_id:
+                return True
+            else:
+                return False
+                
     async def get_all_feedback_sessions(self, user_id: UUID, session: AsyncSession):
         user_profile = await user_service.get_full_user_profile(
             user_id=user_id, session=session

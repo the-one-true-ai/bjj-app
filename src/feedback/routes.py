@@ -57,10 +57,15 @@ async def get():
 
 @feedback_router.websocket("/chat/{feedback_session_id}")
 async def websocket_endpoint(websocket: WebSocket, feedback_session_id: UUID, session: AsyncSession = Depends(get_session)):
-    
+    # Call the method without passing 'feedback_session_id' explicitly
+    past_messages = await feedback_service._get_past_messages(feedback_session_id=feedback_session_id, session=session)
     
     await websocket.accept()
     active_connections.append(websocket)
+
+    for message in past_messages:
+        await websocket.send_text(f"{message.sender_user_id} sent: {message.message_content}")
+
     try:
         while True:
             data = await websocket.receive_text()
@@ -68,8 +73,11 @@ async def websocket_endpoint(websocket: WebSocket, feedback_session_id: UUID, se
             for connection in active_connections:
                 await connection.send_text(f"Message text was: {data}")
     except WebSocketDisconnect:
-        # Remove the disconnected client from the active list
         active_connections.remove(websocket)
+
+
+
+
 
 
 
