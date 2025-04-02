@@ -57,7 +57,8 @@ async def get():
 
 @feedback_router.websocket("/chat/{feedback_session_id}")
 async def websocket_endpoint(websocket: WebSocket, feedback_session_id: UUID, session: AsyncSession = Depends(get_session)):
-    # Call the method without passing 'feedback_session_id' explicitly
+    sender_user_id = "27e4a9d9-ed28-4681-9017-d83f5489d880" # Hardcoding this until i figure out how to pass auth tokens on websocket client.
+
     past_messages = await feedback_service._get_past_messages(feedback_session_id=feedback_session_id, session=session)
     
     await websocket.accept()
@@ -69,6 +70,8 @@ async def websocket_endpoint(websocket: WebSocket, feedback_session_id: UUID, se
     try:
         while True:
             data = await websocket.receive_text()
+            await feedback_service.send_message(sender_user_id, feedback_session_id, data, session)
+
             # Broadcast the message to all connected clients
             for connection in active_connections:
                 await connection.send_text(f"Message text was: {data}")

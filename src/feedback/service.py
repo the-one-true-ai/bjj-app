@@ -47,6 +47,16 @@ class FeedbackSessionService:
                 return True
             else:
                 return False
+            
+    async def send_message(self, sender_user_id, feedback_session_id, message: str, session: AsyncSession):
+        new_message = Messages(
+            feedback_session_id=feedback_session_id,
+            sender_user_id=sender_user_id,
+            message_content=message,
+            message_type="Text"
+        )
+        session.add(new_message)
+        await session.commit()
                 
     async def get_all_feedback_sessions(self, user_id: UUID, session: AsyncSession):
         user_profile = await user_service.get_full_user_profile(
