@@ -41,7 +41,7 @@ class FeedbackSessionService:
                 message_content=message_content
             )
             session.add(initial_message)
-            await session.commit()
+            await session.commit() 
 
             return feedback_session  # Return the created feedback session
 
