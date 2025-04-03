@@ -28,9 +28,10 @@ app = FastAPI(
     openapi_url=f"{version_prefix}/openapi.json"
 )
 
-register_all_errors(app)
 
 register_middleware(app)
+register_all_errors(app)
+
 
 
 app.include_router(auth_router, prefix=f"{version_prefix}/auth", tags=["auth"])
