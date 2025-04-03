@@ -110,7 +110,7 @@ class Messages(SQLModel, TimestampMixin, table=True):
     feedback_session_id: UUID = Field(foreign_key="fact_feedbacksessions.feedback_session_id", nullable=False)
     sender_user_id: UUID = Field(foreign_key="dim_users.user_id", nullable=False)
     message_type: MessageType = Field(nullable=False)
-    message_content: str = Field(nullable=False)  # Text or link to audio file
+    message_content: str = Field(nullable=False)  # Text or link to audio file, add default
 
     # Back-populating the feedback session relationship
     feedback_session: FeedbackSession = Relationship(back_populates="messages")

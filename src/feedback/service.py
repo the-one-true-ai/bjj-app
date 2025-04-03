@@ -38,7 +38,6 @@ class FeedbackSessionService:
         feedback_session = await self._get_feedback_session(feedback_session_id=feedback_session_id, session=session)
         
         user_coach_id = await user_service._get_coachID_from_userID(user_id=user_id, session=session)
-        print(feedback_session)
         if user_coach_id == feedback_session.coach_id:
             return True
         else:
