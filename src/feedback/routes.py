@@ -79,16 +79,6 @@ async def websocket_endpoint(websocket: WebSocket, feedback_session_id: UUID, se
         active_connections.remove(websocket)
 
 
-
-
-
-
-
-
-
-
-
-
 @feedback_router.get("/get_my_feedback_sessions")
 async def get_my_feedback_sessions(
     session: AsyncSession = Depends(get_session), user=Depends(get_current_user)
