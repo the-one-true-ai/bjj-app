@@ -6,11 +6,77 @@ from src.auth.dependencies import RoleChecker, get_current_user
 from src.feedback.service import FeedbackSessionService
 from src.feedback.schemas import Input_forStudent_FeedbackSessionCreateSchema
 from fastapi import HTTPException
+from fastapi import WebSocketDisconnect
 from src.users.service import UserService
+from fastapi import FastAPI, WebSocket
+from fastapi.responses import HTMLResponse
 
 feedback_router = APIRouter()
 feedback_service = FeedbackSessionService()
 user_service = UserService()
+
+active_connections = []  # Global list of active WebSocket connections
+
+html = """
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chat</title>
+    </head>
+    <body>
+        <h1>WebSocket Chat</h1>
+        <form action="" onsubmit="sendMessage(event)">
+            <input type="text" id="messageText" autocomplete="off"/>
+            <button>Send</button>
+        </form>
+        <ul id='messages'>
+        </ul>
+        <script>
+            var ws = new WebSocket("ws://localhost:8000/api/v1/sessions/ws");
+            ws.onmessage = function(event) {
+                var messages = document.getElementById('messages')
+                var message = document.createElement('li')
+                var content = document.createTextNode(event.data)
+                message.appendChild(content)
+                messages.appendChild(message)
+            };
+            function sendMessage(event) {
+                var input = document.getElementById("messageText")
+                ws.send(input.value)
+                input.value = ''
+                event.preventDefault()
+            }
+        </script>
+    </body>
+</html>
+"""
+
+@feedback_router.get("/")
+async def get():
+    return HTMLResponse(html)
+
+@feedback_router.websocket("/chat/{feedback_session_id}")
+async def websocket_endpoint(websocket: WebSocket, feedback_session_id: UUID, session: AsyncSession = Depends(get_session)):
+    sender_user_id = "27e4a9d9-ed28-4681-9017-d83f5489d880" # Hardcoding this until i figure out how to pass auth tokens on websocket client.
+
+    past_messages = await feedback_service._get_past_messages(feedback_session_id=feedback_session_id, session=session)
+    
+    await websocket.accept()
+    active_connections.append(websocket)
+
+    for message in past_messages:
+        await websocket.send_text(f"{message.sender_user_id} sent: {message.message_content}")
+
+    try:
+        while True:
+            data = await websocket.receive_text()
+            await feedback_service.send_message(sender_user_id, feedback_session_id, data, session)
+
+            # Broadcast the message to all connected clients
+            for connection in active_connections:
+                await connection.send_text(f"Message text was: {data}")
+    except WebSocketDisconnect:
+        active_connections.remove(websocket)
 
 
 @feedback_router.get("/get_my_feedback_sessions")

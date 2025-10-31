@@ -21,6 +21,7 @@ class UserService:
         self.coach_service = CoachService()
         self.student_service = StudentService()
 
+    # ID converters. #? Can we combine these into one?
     async def _get_coachID_from_userID(self, user_id: UUID, session: AsyncSession):
         try:
             # Query the dim_students table to get the user_id by student_id
@@ -147,7 +148,7 @@ class UserService:
             print(f"Database error trying to get user by email: {e}")
             return None
 
-    async def _get_user_by_id(self, user_id: UUID, session: AsyncSession): #TODO: Rename to _get_user_by_userID
+    async def _get_user_by_id(self, user_id: UUID, session: AsyncSession): #TODO: Maybe we need to return full_profile here
         try:
             statement = select(User).where(User.user_id == user_id)
             result = await session.exec(statement)
@@ -165,7 +166,7 @@ class UserService:
             return user is not None  # Returns True if user exists, False otherwise
         except SQLAlchemyError as e:
             print(f"Database error trying to get user by username: {e}")
-            return None
+            return None #? False instead of None?
 
     async def create_a_user(
         self, user_data: Input_forPublic_UserCreateSchema, session: AsyncSession
