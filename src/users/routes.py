@@ -150,6 +150,7 @@ async def get_coach_by_username(
     coach, user = await coach_service.get_coach_by_username(coach_username=coach_username, session=session)
     return Response_forPublic_CoachProfile(
         **coach.model_dump(),  # This will include coach fields
-        username=user.username  # Add the user field
+        username=user.username,  # Add the user field
+        affiliation=coach.affiliations if coach.affiliations else None  # Handle optional affiliation
     )
 
