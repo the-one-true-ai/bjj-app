@@ -22,16 +22,16 @@ Content-Type: application/json
 GET http://127.0.0.1:8000/api/v1/users/public/get_all_coaches
 
 ###
-GET http://sick-bjj-app.onrender.com/api/v1/users/authorised/get_all_coaches
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYWNoYWwyQGV4YW1wbGUuY29tIiwidXNlcl9pZCI6IjU1Y2IwNWY4LWY2OWItNGE3Yi1hMzJjLTkxNjJkZjVjOGFlNyIsInJvbGUiOiJDb2FjaCJ9LCJleHAiOjE3NDI5MjIxOTcsImp0aSI6IjkyOWExMTAyLTNhNDMtNGFlYy05NzU3LTdkY2NiMzk0MzVlMyIsInJlZnJlc2giOmZhbHNlfQ.w93sy_LMOGpVgF4itjQMBu8hcdJng0uNpzkdwxxI32I
+GET http://127.0.0.1:8000/api/v1/users/authorised/get_all_coaches
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoibmlja3lyeWFuXzYyQGV4YW1wbGUuY29tIiwidXNlcl9pZCI6IjJiNTUwYTA5LTcxY2YtNDM1Ny05MjAxLWExZTcyMWNhNWE5NyIsInJvbGUiOiJDb2FjaCJ9LCJleHAiOjE3NjU4MDY5NTgsImp0aSI6ImIxNmM5MjhjLWY0MmUtNGI1YS1iZDBlLTVjMDE5ZDBlYjhmYSIsInJlZnJlc2giOmZhbHNlfQ.EtgLIPpDZsPn9DaCOkQynAjNMIVzqOb-nFb3xkEf0Vo
 
 
 ###
-GET http://sick-bjj-app.onrender.com/api/v1/users/authorised/coach/AnaCarolina_1981
+GET http://127.0.0.1:8000/api/v1/users/authorised/coach/AnaCarolina_1981
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYWRhbWhpZ2h0b3dlcmVsbGlzQGV4YW1wbGUuY29tIiwidXNlcl9pZCI6ImI0ODIxNDFlLWFjZTUtNGI3OS05OTY5LTMzMzRmZDllMmI0OCIsInJvbGUiOiJTdHVkZW50In0sImV4cCI6MTc0MzAwODM1NCwianRpIjoiODNhMWYwZGMtNDI3YS00NmM3LTgwYTQtZDkwYmM5YjY1OWUzIiwicmVmcmVzaCI6ZmFsc2V9.ccBT6NDegTrnC6lZ_cb5V6yw_9FxCJAGu9Eto3RGfb4
 
 ###
-GET http://sick-bjj-app.onrender.com/api/v1/users/public/coach/AnaCarolina_1981
+GET http://127.0.0.1:8000/api/v1/users/public/coach/AnaCarolina_1981
 
 ###
 POST http://127.0.0.1:8000/api/v1/auth/login
@@ -44,7 +44,8 @@ Content-Type: application/json
 
 ###
 GET http://127.0.0.1:8000/api/v1/users/my_profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoibmlja3lyeWFuXzYyQGV4YW1wbGUuY29tIiwidXNlcl9pZCI6IjJiNTUwYTA5LTcxY2YtNDM1Ny05MjAxLWExZTcyMWNhNWE5NyIsInJvbGUiOiJDb2FjaCJ9LCJleHAiOjE3NDM1NTE2MzEsImp0aSI6ImYzOTcwNTZjLTY4NTYtNGUwZC1hZTljLWIwZDc1MGQ5MmE4MSIsInJlZnJlc2giOmZhbHNlfQ.V4FnRCwLW9EG8izqcNOlPUmoJgd7eOphVMnFp6hHBuQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoibmlja3lyeWFuXzYyQGV4YW1wbGUuY29tIiwidXNlcl9pZCI6IjJiNTUwYTA5LTcxY2YtNDM1Ny05MjAxLWExZTcyMWNhNWE5NyIsInJvbGUiOiJDb2FjaCJ9LCJleHAiOjE3NjE5MjUzNTMsImp0aSI6IjYwZjhmOTZhLTQ2N2QtNDEzZS04OTg3LWE2NTIzYzJjNGYyNCIsInJlZnJlc2giOmZhbHNlfQ.mPKVdMI4ffp4t3rc3dt0-74BW_agl7MQp9BLBaRzyjc
+
 
 ###
 GET http://127.0.0.1:8000/api/v1/sessions/get_my_feedback_sessions
