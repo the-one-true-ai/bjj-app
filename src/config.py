@@ -1,12 +1,11 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-
 class Settings(BaseSettings):
     DATABASE_URL: str
     JWT_SECRET: str
     JWT_ALGORITHM: str
-    REDIS_URL: str = "redis://Achal:KimuraTrap1!@redis-18921.c338.eu-west-2-1.ec2.redns.redis-cloud.com:18921"
+    REDIS_URL: str = "redis://Achal:KimuraTrap1!@redis-12037.c232.us-east-1-2.ec2.cloud.redislabs.com:12037"
     MAIL_USERNAME: str
     MAIL_PASSWORD: str
     MAIL_FROM: str
