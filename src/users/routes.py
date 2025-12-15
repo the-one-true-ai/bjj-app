@@ -43,6 +43,60 @@ async def create_user(user_data: Input_forPublic_UserCreateSchema, session: Asyn
 
     return new_user
 
+@user_router.post("/add_coach") # POST??
+async def add_coach_record():
+    pass
+
+@user_router.post("/remove_coach") # POST??
+async def remove_coach_record():
+    pass
+
+@user_router.post("/add_student")
+async def add_student_record():
+    pass
+
+@user_router.post("/remove_student") # POST??
+async def remove_student_record():
+    pass
+
+@user_router.post("/change_belt")
+async def remove_student_record():  # POST??
+    pass
+
+@user_router.post("/change_height")
+async def remove_student_record():  # POST??
+    pass
+
+@user_router.post("/change_weight")
+async def remove_student_record():  # POST??
+    pass
+
+@user_router.post("/change_expertise")
+async def remove_student_record():  # POST??
+    pass
+
+@user_router.post("/change_affiliations")
+async def remove_student_record():  # POST??
+    pass
+
+@user_router.post("/change_coach_bio")
+async def remove_student_record():  # POST??
+    pass
+
+@user_router.post("/change_price")
+async def remove_student_record():  # POST??
+    pass
+
+@user_router.post("/toggle_accepting_responses")
+async def remove_student_record():  # POST??
+    pass
+
+@user_router.post("/change_areas_working_on")
+async def remove_student_record():  # POST??
+    pass
+
+
+
 @user_router.get("/my_profile", response_model=Response_forSelf_FullProfileSchema)
 async def my_profile(user = Depends(get_current_user), session: AsyncSession = Depends(get_session), token_data: dict = Depends(AccessTokenBearer())) -> Response_forSelf_FullProfileSchema:
     result = await user_service.get_full_user_profile(user_id=user.user_id,session=session)
@@ -96,6 +150,7 @@ async def get_coach_by_username(
     coach, user = await coach_service.get_coach_by_username(coach_username=coach_username, session=session)
     return Response_forPublic_CoachProfile(
         **coach.model_dump(),  # This will include coach fields
-        username=user.username  # Add the user field
+        username=user.username,  # Add the user field
+        affiliation=coach.affiliations if coach.affiliations else None  # Handle optional affiliation
     )
 
