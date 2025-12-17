@@ -6,73 +6,73 @@ from sqlalchemy.exc import SQLAlchemyError
 
 #TODO: Figure out a better way to have these. Maybe from a dictionary.
 
-class BooklyException(Exception):
+class BJJException(Exception):
     """This is the base class for all bookly errors"""
 
     pass
 
 
-class InvalidToken(BooklyException):
+class InvalidToken(BJJException):
     """User has provided an invalid or expired token"""
 
     pass
 
 
-class RevokedToken(BooklyException):
+class RevokedToken(BJJException):
     """User has provided a token that has been revoked"""
 
     pass
 
 
-class AccessTokenRequired(BooklyException):
+class AccessTokenRequired(BJJException):
     """User has provided a refresh token when an access token is needed"""
 
     pass
 
 
-class RefreshTokenRequired(BooklyException):
+class RefreshTokenRequired(BJJException):
     """User has provided an access token when a refresh token is needed"""
 
     pass
 
 
-class UserAlreadyExists(BooklyException):
+class UserAlreadyExists(BJJException):
     """User has provided an email for a user who exists during sign up."""
 
     pass
 
 
-class InvalidCredentials(BooklyException):
+class InvalidCredentials(BJJException):
     """User has provided wrong email or password during log in."""
 
     pass
 
 
-class InsufficientPermission(BooklyException):
+class InsufficientPermission(BJJException):
     """User does not have the neccessary permissions to perform an action."""
 
     pass
 
 
-class BookNotFound(BooklyException):
+class BookNotFound(BJJException):
     """Book Not found"""
 
     pass
 
 
-class TagNotFound(BooklyException):
+class TagNotFound(BJJException):
     """Tag Not found"""
 
     pass
 
 
-class TagAlreadyExists(BooklyException):
+class TagAlreadyExists(BJJException):
     """Tag already exists"""
 
     pass
 
 
-class UserNotFound(BooklyException):
+class UserNotFound(BJJException):
     """User Not found"""
 
     pass
@@ -86,7 +86,7 @@ def create_exception_handler(
     status_code: int, initial_detail: Any
 ) -> Callable[[Request, Exception], JSONResponse]:
 
-    async def exception_handler(request: Request, exc: BooklyException):
+    async def exception_handler(request: Request, exc: BJJException):
 
         return JSONResponse(content=initial_detail, status_code=status_code)
 

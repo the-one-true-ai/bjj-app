@@ -29,7 +29,7 @@ class UserService:
             result = await session.exec(statement)
             coach_id = result.first()  # Get the user_id or None if not found
 
-            if not user_id:
+            if not coach_id:
                 raise HTTPException(
                     status_code=404, detail="Coach not found"
                 )  # Handle the case if no user found
@@ -37,7 +37,7 @@ class UserService:
             return coach_id  
 
         except SQLAlchemyError as e:
-            print(f"Database error trying to get user ID from student ID: {e}")
+            print(f"Database error trying to get user ID from student ID: {e}") #TODO: This should be logged and a generic message sent.
             raise HTTPException(status_code=500, detail="Internal Server Error")
 
     async def _get_studentID_from_userID(self, user_id: UUID, session: AsyncSession):

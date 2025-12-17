@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
 from typing import List
@@ -21,7 +21,7 @@ student_service = StudentService()
 # Routes for Users
 
 # Route to create a user
-@user_router.post("/create_user")
+@user_router.post("/create_user", status_code=status.HTTP_201_CREATED)
 async def create_user(user_data: Input_forPublic_UserCreateSchema, session: AsyncSession = Depends(get_session)):
     new_user = await user_service.create_a_user(user_data, session)
     if new_user.role == "Coach":
