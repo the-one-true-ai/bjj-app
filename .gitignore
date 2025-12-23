@@ -162,3 +162,4 @@ sample.py
 node_modules
 .ruff_cache
 .hypothesis
+.env
